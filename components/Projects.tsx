@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { projects } from '@/lib/data'
+import { projects } from '@/lib/data' // Make sure this import exists
 import { Github, ExternalLink, Star, Eye, Code2, Zap, Sparkles, ArrowRight, Filter } from 'lucide-react'
-import { Project } from '@/types'
+import { Project } from '@/types' // Make sure this import exists
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function ProjectsComponent() {
@@ -23,6 +23,15 @@ export default function ProjectsComponent() {
           tag.toLowerCase().includes(filter)
         )
       )
+
+  // Type guard for project ID - FIX: Ensure proper type handling
+  const handleSetHoveredProject = (id: string | number) => {
+    setHoveredProject(id.toString())
+  }
+
+  const handleClearHoveredProject = () => {
+    setHoveredProject(null)
+  }
 
   return (
     <section id="projects" className="relative py-24 px-4 sm:px-6 overflow-hidden">
@@ -128,8 +137,8 @@ export default function ProjectsComponent() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
-                onMouseEnter={() => setHoveredProject(project.id)}
-                onMouseLeave={() => setHoveredProject(null)}
+                onMouseEnter={() => handleSetHoveredProject(project.id)}
+                onMouseLeave={handleClearHoveredProject}
                 className="group relative bg-gradient-to-br from-white to-gray-50 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
               >
                 {/* Project Image/Thumbnail */}
@@ -150,7 +159,7 @@ export default function ProjectsComponent() {
                   {/* Project initial or icon */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <motion.div
-                      animate={hoveredProject === project.id ? { scale: 1.1 } : { scale: 1 }}
+                      animate={hoveredProject === project.id.toString() ? { scale: 1.1 } : { scale: 1 }}
                       className="text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
                     >
                       {project.title.charAt(0)}
@@ -187,7 +196,7 @@ export default function ProjectsComponent() {
                       {project.title}
                     </h3>
                     <motion.div
-                      animate={hoveredProject === project.id ? { rotate: 360 } : { rotate: 0 }}
+                      animate={hoveredProject === project.id.toString() ? { rotate: 360 } : { rotate: 0 }}
                       transition={{ duration: 0.5 }}
                       className="text-blue-500"
                     >
@@ -308,3 +317,8 @@ export default function ProjectsComponent() {
     </section>
   )
 }
+
+// REMOVED the extra exports below - they should be in separate files:
+// export const personalInfo = {...}
+// export const skills = {...}
+// etc.
