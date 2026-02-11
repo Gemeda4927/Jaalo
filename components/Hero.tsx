@@ -1,9 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import {
-  personalInfo,
-  socialLinks,
-} from "@/lib/data";
+import { personalInfo, socialLinks } from "@/lib/data";
 import {
   Github,
   Linkedin,
@@ -29,14 +26,11 @@ import {
   Layers,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 export default function Hero() {
-  const [currentRole, setCurrentRole] =
-    useState(0);
+  const [currentRole, setCurrentRole] = useState(0);
   const [typedText, setTypedText] = useState("");
-  const [currentLine, setCurrentLine] =
-    useState(0);
+  const [currentLine, setCurrentLine] = useState(0);
 
   const roles = [
     "Full-Stack Developer",
@@ -49,7 +43,7 @@ export default function Hero() {
 
   const codeLines = [
     "const gemeda = new Developer();",
-    "gemeda.skills = ['React', 'Next.js', 'Flutter'];",
+    "gemeda.skills = ['React', 'Next.js', 'Flutter', 'Flutter', 'Native'];",
     "gemeda.passion = 'Building amazing things';",
     "gemeda.mission = 'Solve real-world problems';",
     "export default gemeda;",
@@ -57,9 +51,7 @@ export default function Hero() {
 
   useEffect(() => {
     const roleInterval = setInterval(() => {
-      setCurrentRole(
-        (prev) => (prev + 1) % roles.length
-      );
+      setCurrentRole((prev) => (prev + 1) % roles.length);
     }, 2000);
     return () => clearInterval(roleInterval);
   }, []);
@@ -122,9 +114,9 @@ export default function Hero() {
     },
     {
       icon: Cloud,
-      label: "AWS Cloud",
-      color: "from-orange-500 to-yellow-500",
-      bg: "bg-gradient-to-r from-orange-500 to-yellow-500",
+      label: "Next.js",
+      color: "from-black to-gray-800",
+      bg: "bg-gradient-to-r from-black to-gray-800",
     },
   ];
 
@@ -133,7 +125,7 @@ export default function Hero() {
       {/* Enhanced Background with Gradient Mesh */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
-        
+
         {/* Animated Gradient Orbs */}
         <motion.div
           className="absolute top-1/4 -left-20 w-72 h-72 bg-purple-300/30 rounded-full blur-3xl"
@@ -162,28 +154,26 @@ export default function Hero() {
 
         {/* Floating Particles */}
         <div className="absolute inset-0">
-          {Array.from({ length: 60 }).map(
-            (_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  y: [0, -40, 0],
-                  x: [0, Math.random() * 20 - 10, 0],
-                  opacity: [0.1, 0.4, 0.1],
-                }}
-                transition={{
-                  duration: Math.random() * 5 + 4,
-                  repeat: Infinity,
-                  delay: Math.random() * 3,
-                }}
-              />
-            )
-          )}
+          {Array.from({ length: 60 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -40, 0],
+                x: [0, Math.random() * 20 - 10, 0],
+                opacity: [0.1, 0.4, 0.1],
+              }}
+              transition={{
+                duration: Math.random() * 5 + 4,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            />
+          ))}
         </div>
       </div>
 
@@ -210,88 +200,7 @@ export default function Hero() {
               <span className="text-sm font-medium text-blue-700">
                 Available for Opportunities
               </span>
-              <Sparkles
-                size={14}
-                className="text-yellow-500 animate-pulse"
-              />
-            </motion.div>
-
-            {/* Profile Image for Mobile */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="lg:hidden flex justify-center mb-6"
-            >
-              <div className="relative w-56 h-56">
-                {/* Profile Image Container */}
-                <div className="relative w-full h-full">
-                  {/* Decorative Border */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full p-1.5"
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  >
-                    <div className="w-full h-full bg-white rounded-full p-1.5">
-                      {/* Main Image Container */}
-                      <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
-                        {/* Your Profile Image */}
-                        <Image
-                          src="/image.png" // Your image path
-                          alt="Gemeda Tamiru"
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 224px, 224px"
-                          priority
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                  
-                  {/* Floating Elements */}
-                  <motion.div
-                    className="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-xl"
-                    animate={{
-                      y: [0, -12, 0],
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      y: {
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                      rotate: {
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "linear",
-                      },
-                    }}
-                  >
-                    <Star className="w-6 h-6 text-white" />
-                  </motion.div>
-                  <motion.div
-                    className="absolute -bottom-3 -left-3 w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center shadow-xl"
-                    animate={{
-                      y: [0, 12, 0],
-                      scale: [1, 1.1, 1],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Rocket className="w-6 h-6 text-white" />
-                  </motion.div>
-                </div>
-              </div>
+              <Sparkles size={14} className="text-yellow-500 animate-pulse" />
             </motion.div>
 
             {/* Main Title */}
@@ -302,9 +211,7 @@ export default function Hero() {
                 transition={{ delay: 0.4 }}
               >
                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight">
-                  <span className="block text-gray-800">
-                    Hi, I'm
-                  </span>
+                  <span className="block text-gray-800">Hi, I'm</span>
                   <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                     Gemeda Tamiru
                   </span>
@@ -345,11 +252,9 @@ export default function Hero() {
               <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                 digital experiences
               </span>{" "}
-              that blend beautiful design with
-              powerful functionality. With
-              expertise across the full stack, I
-              bring ideas to life through clean
-              code and innovative solutions.
+              that blend beautiful design with powerful functionality. With
+              expertise across the full stack, I bring ideas to life through
+              clean code and innovative solutions.
             </motion.p>
 
             {/* Quick Stats */}
@@ -383,7 +288,9 @@ export default function Hero() {
                   key={stat.label}
                   className="text-center p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className={`w-10 h-10 mx-auto mb-2 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center`}>
+                  <div
+                    className={`w-10 h-10 mx-auto mb-2 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center`}
+                  >
                     <stat.icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-xl font-bold text-gray-800">
@@ -435,9 +342,7 @@ export default function Hero() {
               transition={{ delay: 0.8 }}
               className="pt-6"
             >
-              <p className="text-sm text-gray-500 mb-3">
-                Connect with me
-              </p>
+              <p className="text-sm text-gray-500 mb-3">Connect with me</p>
               <div className="flex gap-3">
                 {[
                   {
@@ -456,7 +361,8 @@ export default function Hero() {
                     icon: Mail,
                     href: `mailto:${personalInfo.email}`,
                     label: "Email",
-                    color: "hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white",
+                    color:
+                      "hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white",
                   },
                 ].map((social) => (
                   <motion.a
@@ -478,7 +384,7 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right Column - Terminal & Profile */}
+          {/* Right Column - Terminal Only */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -488,98 +394,6 @@ export default function Hero() {
             }}
             className="relative mt-8 lg:mt-0"
           >
-            {/* Profile Image for Desktop */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4 }}
-              className="hidden lg:flex justify-center mb-10 relative"
-            >
-              <div className="relative w-72 h-72">
-                {/* Profile Image Container */}
-                <div className="relative w-full h-full">
-                  {/* Animated Gradient Border */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full p-2"
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  >
-                    <div className="w-full h-full bg-white rounded-full p-2">
-                      {/* Main Image Container */}
-                      <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
-                        {/* Your Profile Image */}
-                        <Image
-                          src="/image.png" // Your image path
-                          alt="Gemeda Tamiru"
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 288px, 288px"
-                          priority
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                  
-                  {/* Floating Tech Badges */}
-                  <motion.div
-                    className="absolute -top-5 -right-5 w-14 h-14 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-2xl"
-                    animate={{
-                      y: [0, -18, 0],
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      y: {
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                      rotate: {
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: "linear",
-                      },
-                    }}
-                  >
-                    <Code className="w-7 h-7 text-white" />
-                  </motion.div>
-                  <motion.div
-                    className="absolute -bottom-5 -left-5 w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl"
-                    animate={{
-                      y: [0, 18, 0],
-                      scale: [1, 1.2, 1],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Smartphone className="w-7 h-7 text-white" />
-                  </motion.div>
-                  <motion.div
-                    className="absolute -top-5 left-10 w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-400 rounded-full flex items-center justify-center shadow-2xl"
-                    animate={{
-                      y: [0, -12, 0],
-                      x: [0, 12, 0],
-                    }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Terminal className="w-6 h-6 text-white" />
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-
             {/* Terminal Window */}
             <div className="relative bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
               {/* Terminal Header */}
@@ -598,9 +412,7 @@ export default function Hero() {
               <div className="p-5 font-mono">
                 {/* Command line */}
                 <div className="text-green-400 mb-4 text-sm flex items-center">
-                  <span className="text-blue-400">
-                    $
-                  </span>
+                  <span className="text-blue-400">$</span>
                   <span className="ml-2">npm run dev</span>
                   <motion.div
                     className="ml-1 w-2 h-4 bg-green-400"
@@ -616,29 +428,25 @@ export default function Hero() {
 
                 {/* Status message */}
                 <div className="text-cyan-400 mb-5 text-sm flex items-center">
-                  <span className="text-purple-400">
-                    →
-                  </span>
+                  <span className="text-purple-400">→</span>
                   <span className="ml-2">Starting development server...</span>
                 </div>
 
                 {/* Code lines with proper spacing */}
                 <div className="space-y-2.5 mb-7">
-                  {codeLines
-                    .slice(0, currentLine)
-                    .map((line, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start text-gray-300 group"
-                      >
-                        <span className="text-gray-500 mr-4 w-5 text-right text-xs">
-                          {idx + 1}
-                        </span>
-                        <span className="text-sm leading-relaxed tracking-wide group-hover:text-cyan-300 transition-colors duration-300">
-                          {line}
-                        </span>
-                      </div>
-                    ))}
+                  {codeLines.slice(0, currentLine).map((line, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start text-gray-300 group"
+                    >
+                      <span className="text-gray-500 mr-4 w-5 text-right text-xs">
+                        {idx + 1}
+                      </span>
+                      <span className="text-sm leading-relaxed tracking-wide group-hover:text-cyan-300 transition-colors duration-300">
+                        {line}
+                      </span>
+                    </div>
+                  ))}
                   {typedText && (
                     <div className="flex items-start">
                       <span className="text-gray-500 mr-4 w-5 text-right text-xs">
@@ -654,19 +462,14 @@ export default function Hero() {
 
                 {/* Footer message */}
                 <div className="flex items-center text-gray-500 text-xs mb-3">
-                  <Coffee
-                    className="mr-2 animate-pulse"
-                    size={14}
-                  />
+                  <Coffee className="mr-2 animate-pulse" size={14} />
                   Building something amazing...
                 </div>
 
                 {/* Branch indicator */}
                 <div className="text-gray-500 text-xs flex items-center">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse" />
-                  <span className="font-medium">
-                    main
-                  </span>
+                  <span className="font-medium">main</span>
                 </div>
               </div>
             </div>
@@ -679,10 +482,7 @@ export default function Hero() {
               className="mt-6 bg-gradient-to-br from-white/95 to-blue-50/95 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100/50"
             >
               <h3 className="text-sm font-semibold text-gray-700 mb-5 flex items-center gap-2">
-                <Monitor
-                  size={18}
-                  className="text-blue-500"
-                />
+                <Monitor size={18} className="text-blue-500" />
                 Tech Stack
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -700,7 +500,7 @@ export default function Hero() {
                     transition={{
                       delay: 0.8 + index * 0.1,
                     }}
-                    whileHover={{ 
+                    whileHover={{
                       y: -5,
                       scale: 1.05,
                     }}
@@ -709,10 +509,7 @@ export default function Hero() {
                     <div
                       className={`w-12 h-12 ${tech.bg} rounded-xl flex items-center justify-center mb-3 shadow-lg group-hover:shadow-xl transition-all duration-300`}
                     >
-                      <tech.icon
-                        className="text-white"
-                        size={22}
-                      />
+                      <tech.icon className="text-white" size={22} />
                     </div>
                     <div className="text-xs font-semibold text-gray-800 text-center leading-tight px-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
                       {tech.label}
@@ -754,7 +551,9 @@ export default function Hero() {
                   whileHover={{ y: -5 }}
                   className="text-center p-4 bg-white/90 backdrop-blur-sm rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300"
                 >
-                  <div className={`w-10 h-10 mx-auto mb-2 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center shadow-md`}>
+                  <div
+                    className={`w-10 h-10 mx-auto mb-2 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center shadow-md`}
+                  >
                     <stat.icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-xl font-bold text-gray-800">
