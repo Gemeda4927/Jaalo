@@ -25,7 +25,10 @@ import {
   Sun,
   Moon,
   Download,
-  ExternalLink
+  ExternalLink,
+  FileText,
+  CheckCircle,
+  DownloadCloud
 } from 'lucide-react'
 
 export default function Navbar() {
@@ -34,7 +37,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [downloading, setDownloading] = useState(false)
+  const [downloadComplete, setDownloadComplete] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -68,10 +72,51 @@ export default function Navbar() {
     { name: 'Contact', path: '/contact', icon: Phone, color: 'from-indigo-500 to-purple-500' },
   ]
 
+  // Fixed resume download function
+  const handleResumeDownload = () => {
+    setDownloading(true)
+    
+    // Simulate download preparation
+    setTimeout(() => {
+      // Create a link to the resume file
+      // Make sure your "Gemeda Tamiru.docx" file is in the public folder
+      const link = document.createElement('a')
+      link.href = '/Gemeda Tamiru.docx' // Path to your resume in public folder
+      link.download = 'Gemeda_Tamiru_Resume.docx' // Custom filename for download
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      
+      setDownloading(false)
+      setDownloadComplete(true)
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => {
+        setDownloadComplete(false)
+      }, 3000)
+    }, 1000)
+  }
+
   const quickActions = [
-    { name: 'Resume', icon: Download, action: () => window.open('/resume.pdf', '_blank'), color: 'bg-emerald-500' },
-    { name: 'GitHub', icon: Github, action: () => window.open(socialLinks.github, '_blank'), color: 'bg-gray-800' },
-    { name: 'LinkedIn', icon: Linkedin, action: () => window.open(socialLinks.linkedin, '_blank'), color: 'bg-blue-600' },
+    { 
+      name: 'Resume', 
+      icon: downloading ? DownloadCloud : (downloadComplete ? CheckCircle : FileText), 
+      action: handleResumeDownload, 
+      color: 'bg-gradient-to-r from-emerald-500 to-green-600',
+      status: downloading ? 'Downloading...' : (downloadComplete ? 'Downloaded!' : 'Resume')
+    },
+    { 
+      name: 'GitHub', 
+      icon: Github, 
+      action: () => window.open(socialLinks.github, '_blank'), 
+      color: 'bg-gradient-to-r from-gray-800 to-gray-900' 
+    },
+    { 
+      name: 'LinkedIn', 
+      icon: Linkedin, 
+      action: () => window.open(socialLinks.linkedin, '_blank'), 
+      color: 'bg-gradient-to-r from-blue-600 to-blue-700' 
+    },
   ]
 
   if (!mounted) {
@@ -255,12 +300,44 @@ export default function Navbar() {
                   <motion.button
                     key={action.name}
                     onClick={action.action}
-                    className={`p-2.5 rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300 ${action.color}`}
+                    className={`p-2.5 rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300 ${action.color} relative overflow-hidden`}
                     whileHover={{ y: -3, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     title={action.name}
+                    disabled={downloading && action.name === 'Resume'}
                   >
-                    <Icon size={18} />
+                    {/* Loading animation for resume */}
+                    {downloading && action.name === 'Resume' && (
+                      <motion.div
+                        className="absolute inset-0 bg-white/30"
+                        animate={{
+                          x: ['-100%', '100%'],
+                        }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                    )}
+                    
+                    {/* Success animation for resume */}
+                    {downloadComplete && action.name === 'Resume' && (
+                      <motion.div
+                        className="absolute inset-0 bg-green-400/30"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: [0, 1.5, 0] }}
+                        transition={{ duration: 0.8 }}
+                      />
+                    )}
+                    
+                    <Icon 
+                      size={18} 
+                      className={`
+                        ${downloading && action.name === 'Resume' ? 'animate-bounce' : ''}
+                        ${downloadComplete && action.name === 'Resume' ? 'text-white' : ''}
+                      `} 
+                    />
                   </motion.button>
                 )
               })}
@@ -423,12 +500,33 @@ export default function Navbar() {
                         <motion.button
                           key={action.name}
                           onClick={action.action}
-                          className={`flex flex-col items-center gap-2 p-3 rounded-xl text-white ${action.color} shadow-lg`}
+                          className={`flex flex-col items-center gap-2 p-3 rounded-xl text-white ${action.color} shadow-lg relative overflow-hidden`}
                           whileHover={{ y: -3, scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          disabled={downloading && action.name === 'Resume'}
                         >
-                          <Icon size={18} />
-                          <span className="text-xs font-medium">{action.name}</span>
+                          {/* Loading animation for resume */}
+                          {downloading && action.name === 'Resume' && (
+                            <motion.div
+                              className="absolute inset-0 bg-white/30"
+                              animate={{
+                                x: ['-100%', '100%'],
+                              }}
+                              transition={{
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: "linear",
+                              }}
+                            />
+                          )}
+                          
+                          <Icon size={18} className={downloading && action.name === 'Resume' ? 'animate-spin' : ''} />
+                          <span className="text-xs font-medium">
+                            {action.name === 'Resume' 
+                              ? (downloading ? '...' : (downloadComplete ? 'Done!' : action.name))
+                              : action.name
+                            }
+                          </span>
                         </motion.button>
                       )
                     })}

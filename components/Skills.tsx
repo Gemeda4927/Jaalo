@@ -10,12 +10,9 @@ import {
   FaCode,
   FaRocket,
   FaHeart,
-  FaStar,
-  FaGitAlt,
-  FaAward,
-  FaChartLine,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 // Skill category icons
 const skillIcons = {
@@ -26,6 +23,17 @@ const skillIcons = {
 };
 
 export default function SkillsCompnent() {
+  const [mounted, setMounted] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    setMounted(true);
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }, []);
+
   return (
     <>
       <section
@@ -287,11 +295,11 @@ export default function SkillsCompnent() {
                     transition={{ delay: 0.4 }}
                     className="flex items-center gap-3"
                   >
-                    <FaAward className="text-yellow-300 text-xl" />
+                    <FaHeart className="text-yellow-300 text-xl" />
                     <p className="text-amber-200 text-lg md:text-xl font-medium">
                       @Gemeda4927
                     </p>
-                    <FaAward className="text-yellow-300 text-xl" />
+                    <FaHeart className="text-yellow-300 text-xl" />
                   </motion.div>
                 </div>
               </div>
@@ -305,8 +313,8 @@ export default function SkillsCompnent() {
               >
                 {[
                   { label: "Repos", value: "24+", color: "from-purple-500 to-purple-600", icon: FaCode },
-                  { label: "Contributions", value: "1.2k+", color: "from-amber-500 to-yellow-500", icon: FaChartLine },
-                  { label: "Followers", value: "156", color: "from-fuchsia-500 to-purple-500", icon: FaStar },
+                  { label: "Contributions", value: "1.2k+", color: "from-amber-500 to-yellow-500", icon: FaRocket },
+                  { label: "Followers", value: "156", color: "from-fuchsia-500 to-purple-500", icon: FaHeart },
                 ].map((stat, i) => (
                   <motion.div
                     key={stat.label}
@@ -393,32 +401,35 @@ export default function SkillsCompnent() {
           />
         </motion.div>
 
-        {/* Floating gold particles */}
-        {[...Array(30)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-            }}
-            animate={{
-              y: [null, -50, 50, -50],
-              x: [null, 50, -50, 50],
-              opacity: [0.2, 0.9, 0.2],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 8 + Math.random() * 7,
-              delay: Math.random() * 5,
-            }}
-            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full shadow-lg"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
+        {/* Floating particles - FIXED: Only render when mounted */}
+        {mounted && dimensions.width > 0 && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{
+                  x: Math.random() * dimensions.width,
+                  y: Math.random() * dimensions.height,
+                }}
+                animate={{
+                  y: [null, -30, 30, -30],
+                  x: [null, 30, -30, 30],
+                  opacity: [0.2, 0.8, 0.2],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 5 + Math.random() * 5,
+                  delay: Math.random() * 5,
+                }}
+                className="absolute w-1 h-1 bg-white rounded-full"
+                style={{
+                  left: 0,
+                  top: 0,
+                }}
+              />
+            ))}
+          </div>
+        )}
       </motion.section>
 
       <style jsx>{`
