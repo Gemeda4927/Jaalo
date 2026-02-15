@@ -671,11 +671,15 @@ export default function AboutComponent() {
                       <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 transform rotate-45 translate-x-8 -translate-y-8" />
                     </motion.div>
 
-                    {/* Floating icon */}
                     <motion.div
-                      variants={floatingAnimation}
-                      animate="animate"
-                      className="absolute bottom-2 right-2 opacity-10"
+                      animate={{
+                        y: [0, -10, 0],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
                     >
                       <Medal
                         size={32}
