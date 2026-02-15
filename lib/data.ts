@@ -43,6 +43,7 @@ export const projects = [
   },
 ]
 
+
 export const experience = [
   {
     company: "Marsa PLC",
@@ -56,7 +57,16 @@ export const experience = [
     period: "2022 - 2023",
     description: "Mentored 50+ students in C++ programming, guided lab sessions"
   },
-]
+  {
+    company: "Tech Innovators Ltd.",
+    role: "Frontend Developer Intern",
+    period: "2021 - 2022",
+    description: "Developed responsive web interfaces using React.js and CSS frameworks, collaborated on design implementation"
+  },
+
+];
+
+
 
 export const socialLinks = {
   github: "https://github.com/gemeda",
