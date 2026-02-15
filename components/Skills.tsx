@@ -38,7 +38,7 @@ export default function SkillsCompnent() {
     <>
       <section
         id="skills"
-        className="py-24 px-6 bg-gradient-to-br from-gray-50 via-white to-gray-50 font-sans relative overflow-hidden"
+        className="py-24 px-6 bg-linear-to-br from-gray-50 via-white to-gray-50 font-sans relative overflow-hidden"
         style={{ fontFamily: "'Poppins', sans-serif" }}
       >
         {/* Animated background blobs */}
@@ -70,7 +70,7 @@ export default function SkillsCompnent() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-              className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center"
+              className="w-20 h-20 mx-auto mb-6 bg-linear-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center"
             >
               <FaCode className="text-white text-3xl" />
             </motion.div>
