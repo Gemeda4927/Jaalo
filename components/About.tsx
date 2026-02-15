@@ -276,7 +276,7 @@ export default function AboutComponent() {
       transition: {
         duration: 3,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: [0.42, 0, 0.58, 1],
       },
     },
   };
