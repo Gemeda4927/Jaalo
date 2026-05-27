@@ -1,56 +1,77 @@
 import { personalInfo, socialLinks } from '@/lib/data'
-import { Heart } from 'lucide-react'
+
+const G = "#22c55e"
+
+const LINKS = [
+  { label: "GitHub",   href: socialLinks.github   },
+  { label: "LinkedIn", href: socialLinks.linkedin  },
+  { label: "Twitter",  href: socialLinks.twitter   },
+]
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-  
+  const year = new Date().getFullYear()
+
   return (
-    <footer className="bg-gray-900 text-gray-300 py-12">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <div>
-            <h3 className="text-2xl font-bold text-white mb-2">
-              {personalInfo.name}
-            </h3>
-            <p className="text-gray-400">Building the future, one line of code at a time.</p>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .ft *, .ft *::before, .ft *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        .ft { font-family: 'Inter', sans-serif; }
+        .ft-link { font-size: 13px; font-weight: 500; color: #6b7280; text-decoration: none; transition: color .15s; }
+        .ft-link:hover { color: ${G}; }
+        @keyframes ft-pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+        .ft-dot { animation: ft-pulse 2s infinite; }
+      `}</style>
+
+      <footer className="ft" style={{ background: "#f3f4f6", borderTop: "1px solid #e5e7eb", padding: "48px 24px" }}>
+        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+
+          {/* TOP ROW */}
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 24, marginBottom: 28 }}>
+
+            {/* Name + tagline */}
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+                <span className="ft-dot" style={{ width: 7, height: 7, borderRadius: "50%", background: G, display: "inline-block", flexShrink: 0 }} />
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#111827", letterSpacing: "-0.3px" }}>
+                  {personalInfo.name}
+                </h3>
+              </div>
+              <p style={{ fontSize: 13, color: "#6b7280", paddingLeft: 15 }}>
+                Building the future, one line of code at a time.
+              </p>
+            </div>
+
+            {/* Nav links */}
+            <nav style={{ display: "flex", gap: 28 }}>
+              {LINKS.map(l => (
+                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" className="ft-link">
+                  {l.label}
+                </a>
+              ))}
+            </nav>
           </div>
-          
-          <div className="flex gap-6">
-            <a 
-              href={socialLinks.github}
-              target="_blank"
-              className="hover:text-white transition-colors"
-            >
-              GitHub
-            </a>
-            <a 
-              href={socialLinks.linkedin}
-              target="_blank"
-              className="hover:text-white transition-colors"
-            >
-              LinkedIn
-            </a>
-            <a 
-              href={socialLinks.twitter}
-              target="_blank"
-              className="hover:text-white transition-colors"
-            >
-              Twitter
-            </a>
+
+          {/* DIVIDER */}
+          <div style={{ height: "1px", background: "#e5e7eb", marginBottom: 24 }} />
+
+          {/* BOTTOM ROW */}
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <p style={{ fontSize: 12, color: "#6b7280" }}>
+              Made with{" "}
+              <span style={{ color: G, fontWeight: 700 }}>&#9829;</span>
+              {" "}by{" "}
+              <span style={{ color: "#111827", fontWeight: 600 }}>{personalInfo.name}</span>
+            </p>
+            <p style={{ fontSize: 12, color: "#6b7280" }}>
+              Built with Next.js, TypeScript &amp; Tailwind
+              <span style={{ margin: "0 8px", color: "#d1d5db" }}>·</span>
+              <span style={{ color: "#374151", fontWeight: 500 }}>© {year}</span>
+            </p>
           </div>
+
         </div>
-        
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="flex items-center justify-center gap-2">
-            Made with <Heart size={16} className="text-red-500 fill-red-500" /> by {personalInfo.name}
-            <span className="text-gray-500">•</span>
-            © {currentYear} All rights reserved.
-          </p>
-          <p className="mt-2 text-sm text-gray-500">
-            Built with Next.js, TypeScript, and Tailwind CSS
-          </p>
-        </div>
-      </div>
-    </footer>
+      </footer>
+    </>
   )
 }

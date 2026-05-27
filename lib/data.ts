@@ -11,13 +11,13 @@ export const personalInfo = {
 }
 
 export const skills = {
-  frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Flutter", "React Native"],
-  backend: ["Node.js", "Express", "Python", "Java", "PHP", "Prisma"],
-  databases: ["MongoDB", "PostgreSQL", "MySQL", "Firebase", "Supabase", "SQLite"],
-  tools: ["Git", "Figma", "VS Code", "Postman", "Docker", "Jira", "Swagger"],
+  frontend: ["React", "Next.js", "Flutter", "React Native"],
+  backend: ["Node.js", "Express","PHP"],
+  databases: ["MongoDB","MySQL", "Firebase"],
+  tools: ["Git", "Figma", "VS Code", "Postman","Swagger"],
   languages: ["JavaScript", "TypeScript", "Dart", "Python", "Java", "C++", "PHP"],
-  mobile: ["Flutter", "React Native", "Android (Java)", "iOS Basics"],
-  architecture: ["Clean Architecture", "BLoC", "Provider", "MVC", "MVVM", "REST API Design", "Domain-Driven Design"],
+  mobile: ["Flutter", "React Native", "Android (Java)"],
+  architecture: ["Clean Architecture","MVC"],
   flutterAdvanced: ["Advanced Flutter Architecture", "State Management (BLoC/Provider)", "Custom Widgets", "Performance Optimization", "Flutter Testing", "CI/CD for Flutter", "Flutter Modular Development"]
 }
 

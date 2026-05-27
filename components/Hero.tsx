@@ -1,36 +1,16 @@
 "use client";
-import { motion } from "framer-motion";
 import { personalInfo, socialLinks } from "@/lib/data";
 import {
   Github,
   Linkedin,
   Mail,
   ArrowRight,
-  FileText,
-  Sparkles,
   Code,
-  Terminal,
-  Cpu,
-  Database,
-  Smartphone,
-  Cloud,
-  Zap,
-  Coffee,
-  ChevronRight,
-  User,
-  Award,
-  Clock,
-  Monitor,
-  Star,
-  Rocket,
-  Layers,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Hero() {
   const [currentRole, setCurrentRole] = useState(0);
-  const [typedText, setTypedText] = useState("");
-  const [currentLine, setCurrentLine] = useState(0);
 
   const roles = [
     "Full-Stack Developer",
@@ -41,534 +21,442 @@ export default function Hero() {
     "Problem Solver",
   ];
 
-  const codeLines = [
-    "const gemeda = new Developer();",
-    "gemeda.skills = ['React', 'Next.js', 'Flutter', 'Flutter', 'Native'];",
-    "gemeda.passion = 'Building amazing things';",
-    "gemeda.mission = 'Solve real-world problems';",
-    "export default gemeda;",
-  ];
-
   useEffect(() => {
-    const roleInterval = setInterval(() => {
-      setCurrentRole((prev) => (prev + 1) % roles.length);
-    }, 2000);
-    return () => clearInterval(roleInterval);
+    const id = setInterval(
+      () => setCurrentRole((p) => (p + 1) % roles.length),
+      2500
+    );
+    return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    if (currentLine < codeLines.length) {
-      const line = codeLines[currentLine];
-      let i = 0;
-      const typingInterval = setInterval(() => {
-        if (i <= line.length) {
-          setTypedText(line.substring(0, i));
-          i++;
-        } else {
-          clearInterval(typingInterval);
-          setTimeout(() => {
-            setCurrentLine((prev) => prev + 1);
-            setTypedText("");
-          }, 1000);
-        }
-      }, 50);
-      return () => clearInterval(typingInterval);
-    } else {
-      setTimeout(() => {
-        setCurrentLine(0);
-        setTypedText("");
-      }, 2000);
-    }
-  }, [currentLine]);
 
-  const techStack = [
-    {
-      icon: Code,
-      label: "React/Next.js",
-      color: "from-cyan-500 to-blue-500",
-      bg: "bg-gradient-to-r from-cyan-500 to-blue-500",
-    },
-    {
-      icon: Smartphone,
-      label: "Flutter",
-      color: "from-blue-400 to-cyan-300",
-      bg: "bg-gradient-to-r from-blue-400 to-cyan-300",
-    },
-    {
-      icon: Database,
-      label: "MongoDB",
-      color: "from-green-600 to-green-400",
-      bg: "bg-gradient-to-r from-green-600 to-green-400",
-    },
-    {
-      icon: Terminal,
-      label: "Node.js",
-      color: "from-green-500 to-green-400",
-      bg: "bg-gradient-to-r from-green-500 to-green-400",
-    },
-    {
-      icon: Cpu,
-      label: "TypeScript",
-      color: "from-blue-600 to-blue-400",
-      bg: "bg-gradient-to-r from-blue-600 to-blue-400",
-    },
-    {
-      icon: Cloud,
-      label: "Next.js",
-      color: "from-black to-gray-800",
-      bg: "bg-gradient-to-r from-black to-gray-800",
-    },
-  ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-20 pb-16 md:pt-24 md:pb-20">
-      {/* Enhanced Background with Gradient Mesh */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
+    <section
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-20 pb-16 md:pt-24 md:pb-20"
+      style={{ background: "#ffffff" }}
+    >
+      {/* Subtle grid */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(#f3f4f6 1px, transparent 1px), linear-gradient(90deg, #f3f4f6 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+          opacity: 0.7,
+        }}
+      />
+      {/* Glow top-left */}
+      <div
+        className="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)" }}
+      />
+      {/* Glow bottom-right */}
+      <div
+        className="absolute -bottom-32 -right-32 w-[380px] h-[380px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)" }}
+      />
 
-        {/* Animated Gradient Orbs */}
-        <motion.div
-          className="absolute top-1/4 -left-20 w-72 h-72 bg-purple-300/30 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 -right-20 w-80 h-80 bg-blue-300/30 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.4, 0.2, 0.4],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+      <div className="relative z-10 max-w-6xl mx-auto w-full">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
 
-        {/* Floating Particles */}
-        <div className="absolute inset-0">
-          {Array.from({ length: 60 }).map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -40, 0],
-                x: [0, Math.random() * 20 - 10, 0],
-                opacity: [0.1, 0.4, 0.1],
-              }}
-              transition={{
-                duration: Math.random() * 5 + 4,
-                repeat: Infinity,
-                delay: Math.random() * 3,
-              }}
-            />
-          ))}
-        </div>
-      </div>
+          {/* ══════════ LEFT ══════════ */}
+          <div className="flex flex-col gap-7">
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
-          {/* Left Column - Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-7 md:space-y-9"
-          >
-            {/* Availability Badge */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                type: "spring",
-                delay: 0.2,
-              }}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-200/50 backdrop-blur-sm px-5 py-2.5 md:px-6 md:py-3 rounded-full"
-            >
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-sm font-medium text-blue-700">
-                Available for Opportunities
-              </span>
-              <Sparkles size={14} className="text-yellow-500 animate-pulse" />
-            </motion.div>
-
-            {/* Main Title */}
-            <div className="space-y-5">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+            {/* Name & Role */}
+            <div className="flex flex-col gap-3">
+              <p className="text-sm font-medium" style={{ color: "#9ca3af" }}>
+                Hello, I'm
+              </p>
+              <h1
+                className="text-4xl md:text-5xl font-bold tracking-tight leading-tight"
+                style={{ color: "#111827" }}
               >
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight">
-                  <span className="block text-gray-800">Hi, I'm</span>
-                  <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    Gemeda Tamiru
-                  </span>
-                </h1>
-              </motion.div>
-
-              {/* Animated Role */}
-              <div className="h-12 md:h-14 flex items-center">
-                <motion.div
-                  key={currentRole}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  className="text-lg md:text-xl lg:text-2xl font-semibold"
-                >
-                  <span className="text-gray-600">
-                    <Zap
-                      size={20}
-                      className="inline mr-2 text-yellow-500 animate-pulse"
-                    />
-                    Transforming ideas into
-                  </span>
-                  <span className="ml-2 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                    {roles[currentRole]}
-                  </span>
-                </motion.div>
+                Gemeda Tamiru
+              </h1>
+              <div
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium w-fit"
+                style={{ background: "#f0fdf4", color: "#16a34a" }}
+              >
+                <span
+                  className="w-1 h-4 rounded-sm inline-block"
+                  style={{ background: "#22c55e" }}
+                />
+                {roles[currentRole]}
               </div>
             </div>
 
             {/* Description */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl"
-            >
+            <p className="text-[14px] leading-relaxed" style={{ color: "#6b7280" }}>
               I craft{" "}
-              <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              <span className="font-semibold" style={{ color: "#22c55e" }}>
                 digital experiences
               </span>{" "}
-              that blend beautiful design with powerful functionality. With
-              expertise across the full stack, I bring ideas to life through
-              clean code and innovative solutions.
-            </motion.p>
+              that blend beautiful design with powerful functionality. Full-stack
+              expertise delivering clean code and innovative solutions.
+            </p>
 
-            {/* Quick Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="grid grid-cols-3 gap-3 py-4 lg:hidden"
-            >
-              {[
-                {
-                  value: "50+",
-                  label: "Projects",
-                  icon: Layers,
-                  color: "from-blue-500 to-cyan-500",
-                },
-                {
-                  value: "3+",
-                  label: "Years Exp",
-                  icon: Award,
-                  color: "from-purple-500 to-pink-500",
-                },
-                {
-                  value: "100%",
-                  label: "Satisfaction",
-                  icon: Star,
-                  color: "from-orange-500 to-yellow-500",
-                },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="text-center p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div
-                    className={`w-10 h-10 mx-auto mb-2 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center`}
-                  >
-                    <stat.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="text-xl font-bold text-gray-800">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs text-gray-600 mt-1">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2"
-            >
-              <motion.a
+            {/* CTAs */}
+            <div className="flex flex-row gap-3">
+              <a
                 href="/projects"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 md:px-8 py-3.5 md:py-4 rounded-xl font-semibold flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="flex items-center justify-center gap-2 text-[13px] font-semibold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:-translate-y-0.5"
+                style={{
+                  background: "#22c55e",
+                  color: "#ffffff",
+                  boxShadow: "0 4px 16px rgba(34,197,94,0.30)",
+                }}
               >
-                <Code size={20} />
-                <span>View Projects</span>
-                <ArrowRight
-                  className="group-hover:translate-x-2 transition-transform duration-300"
-                  size={20}
-                />
-              </motion.a>
-
-              <motion.a
+                <Code size={14} />
+                View Projects
+                <ArrowRight size={13} />
+              </a>
+              <a
                 href="/contact"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group flex-1 bg-white text-gray-800 px-6 md:px-8 py-3.5 md:py-4 rounded-xl font-semibold flex items-center justify-center gap-3 shadow-lg hover:shadow-xl border border-gray-200 hover:border-blue-300 transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"
+                className="flex items-center justify-center gap-2 text-[13px] font-semibold px-5 py-2.5 rounded-xl transition-all hover:bg-gray-50"
+                style={{
+                  background: "#ffffff",
+                  color: "#374151",
+                  border: "1px solid #e5e7eb",
+                }}
               >
-                <Mail size={20} />
-                <span>Hire Me</span>
-              </motion.a>
-            </motion.div>
+                <Mail size={14} />
+                Hire Me
+              </a>
+            </div>
 
-            {/* Social Links */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="pt-6"
-            >
-              <p className="text-sm text-gray-500 mb-3">Connect with me</p>
-              <div className="flex gap-3">
+            {/* Socials */}
+            <div className="flex flex-col gap-3">
+              <p
+                className="text-[11px] font-semibold uppercase tracking-widest"
+                style={{ color: "#d1d5db" }}
+              >
+                Connect with me
+              </p>
+              <div className="flex gap-2">
                 {[
-                  {
-                    icon: Github,
-                    href: socialLinks.github,
-                    label: "GitHub",
-                    color: "hover:bg-gray-900 hover:text-white",
-                  },
-                  {
-                    icon: Linkedin,
-                    href: socialLinks.linkedin,
-                    label: "LinkedIn",
-                    color: "hover:bg-blue-700 hover:text-white",
-                  },
-                  {
-                    icon: Mail,
-                    href: `mailto:${personalInfo.email}`,
-                    label: "Email",
-                    color:
-                      "hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white",
-                  },
-                ].map((social) => (
-                  <motion.a
-                    key={social.href}
-                    href={social.href}
+                  { icon: Github,   href: socialLinks.github,            label: "GitHub"   },
+                  { icon: Linkedin, href: socialLinks.linkedin,           label: "LinkedIn" },
+                  { icon: Mail,     href: `mailto:${personalInfo.email}`, label: "Email"    },
+                ].map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{
-                      y: -5,
-                      scale: 1.1,
+                    aria-label={s.label}
+                    className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-gray-100 hover:-translate-y-0.5"
+                    style={{
+                      background: "#f9fafb",
+                      border: "1px solid #e5e7eb",
+                      color: "#6b7280",
                     }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`p-3.5 bg-white rounded-xl shadow-md hover:shadow-lg text-gray-700 transition-all duration-300 ${social.color}`}
                   >
-                    <social.icon size={22} />
-                  </motion.a>
+                    <s.icon size={16} />
+                  </a>
                 ))}
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Right Column - Terminal Only */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{
-              duration: 0.8,
-              delay: 0.3,
-            }}
-            className="relative mt-8 lg:mt-0"
-          >
-            {/* Terminal Window */}
-            <div className="relative bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
-              {/* Terminal Header */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-700">
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 bg-red-500 rounded-full" />
-                  <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full" />
-                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full" />
-                </div>
-                <div className="ml-3 text-xs font-mono text-gray-300 font-medium tracking-wide">
-                  gemeda.js — portfolio
-                </div>
-              </div>
+          {/* ══════════ RIGHT ══════════ */}
+          <div className="flex flex-col gap-6">
 
-              {/* Terminal Content */}
-              <div className="p-5 font-mono">
-                {/* Command line */}
-                <div className="text-green-400 mb-4 text-sm flex items-center">
-                  <span className="text-blue-400">$</span>
-                  <span className="ml-2">npm run dev</span>
-                  <motion.div
-                    className="ml-1 w-2 h-4 bg-green-400"
-                    animate={{
-                      opacity: [1, 0, 1],
-                    }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                    }}
-                  />
+            {/* ══════════ MOBILE FIRST — Creative 3D Person on Ladder ══════════ */}
+            <div
+              className="rounded-2xl overflow-hidden relative"
+              style={{
+                background: "#0a0f1e",
+                border: "1px solid #1e293b",
+                boxShadow: "0 4px 32px rgba(0,0,0,0.28)",
+                minHeight: 220,
+              }}
+            >
+              {/* Subtle star field background */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle, rgba(34,197,94,0.09) 0%, transparent 65%), radial-gradient(circle at 80% 20%, rgba(59,130,246,0.06) 0%, transparent 50%)",
+                }}
+              />
+
+              <div className="flex items-stretch relative z-10">
+
+                {/* SVG Illustration */}
+                <div className="flex-shrink-0" style={{ padding: "16px 0 0 16px" }}>
+                  <svg
+                    viewBox="0 0 210 290"
+                    width="210"
+                    height="290"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{ display: "block" }}
+                  >
+                    {/* ── Phone (tilted 3D) ── */}
+                    <g transform="translate(86,22) rotate(-7)">
+                      {/* Body */}
+                      <rect x="0" y="0" width="88" height="176" rx="18" fill="#1e293b" stroke="#334155" strokeWidth="1.5"/>
+                      {/* Screen */}
+                      <rect x="5" y="16" width="78" height="148" rx="12" fill="#0a0f1e"/>
+                      {/* Notch */}
+                      <rect x="27" y="7" width="34" height="6" rx="3" fill="#0a0f1e"/>
+                      {/* Screen glow header */}
+                      <rect x="5" y="16" width="78" height="36" rx="12" fill="#22c55e" fillOpacity="0.08"/>
+                      {/* App bar */}
+                      <rect x="11" y="20" width="46" height="5" rx="2.5" fill="#22c55e" fillOpacity="0.75"/>
+                      <rect x="11" y="29" width="32" height="3" rx="1.5" fill="#334155"/>
+                      {/* Cards */}
+                      {[
+                        { y: 38, accent: "#22c55e", w1: 28, w2: 42 },
+                        { y: 60, accent: "#3b82f6", w1: 20, w2: 46 },
+                        { y: 82, accent: "#a855f7", w1: 34, w2: 36 },
+                      ].map((card, idx) => (
+                        <g key={idx}>
+                          <rect x="11" y={card.y} width="66" height="18" rx="6" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
+                          <rect x="15" y={card.y + 4} width={card.w1} height="3.5" rx="1.5" fill={card.accent} fillOpacity="0.85"/>
+                          <rect x="15" y={card.y + 10} width={card.w2} height="3" rx="1.5" fill="#475569"/>
+                        </g>
+                      ))}
+                      {/* Stat pills */}
+                      {[
+                        { x: 11, color: "#22c55e" },
+                        { x: 34, color: "#3b82f6" },
+                        { x: 57, color: "#a855f7" },
+                      ].map((s, i) => (
+                        <g key={i}>
+                          <rect x={s.x} y="105" width="20" height="16" rx="5" fill={s.color} fillOpacity="0.12" stroke={s.color} strokeOpacity="0.28" strokeWidth="0.8"/>
+                          <rect x={s.x + 4} y="109" width="12" height="3" rx="1.5" fill={s.color} fillOpacity="0.6"/>
+                          <rect x={s.x + 4} y="114" width="9" height="2" rx="1" fill="#475569"/>
+                        </g>
+                      ))}
+                      {/* Bottom nav */}
+                      <rect x="11" y="127" width="66" height="18" rx="6" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
+                      {[16, 37, 57].map((x, i) => (
+                        <rect key={i} x={x} y="132" width="12" height="8" rx="2.5" fill={i === 0 ? "#22c55e" : "#334155"} fillOpacity={i === 0 ? 0.35 : 0.5}/>
+                      ))}
+                      {/* Home indicator */}
+                      <rect x="30" y="153" width="28" height="2.5" rx="2" fill="#334155"/>
+                      {/* Side shine */}
+                      <rect x="85" y="0" width="3" height="176" rx="2" fill="white" fillOpacity="0.025"/>
+                    </g>
+
+                    {/* ── Ladder ── */}
+                    {/* Left rail */}
+                    <line x1="22" y1="284" x2="74" y2="56" stroke="#2d3f5e" strokeWidth="4" strokeLinecap="round"/>
+                    {/* Right rail */}
+                    <line x1="62" y1="284" x2="106" y2="82" stroke="#2d3f5e" strokeWidth="4" strokeLinecap="round"/>
+                    {/* Rungs */}
+                    {[
+                      { y: 262, x1: 25, x2: 65 },
+                      { y: 234, x1: 30, x2: 70 },
+                      { y: 206, x1: 36, x2: 76 },
+                      { y: 178, x1: 42, x2: 84 },
+                      { y: 150, x1: 49, x2: 91 },
+                      { y: 122, x1: 55, x2: 97 },
+                      { y: 96,  x1: 61, x2: 103 },
+                    ].map((r, i) => (
+                      <line key={i} x1={r.x1} y1={r.y} x2={r.x2} y2={r.y} stroke="#3d5278" strokeWidth="2.5" strokeLinecap="round"/>
+                    ))}
+
+                    {/* ── Person standing on rung at y≈122 ── */}
+
+                    {/* Ground shadow */}
+                    <ellipse cx="44" cy="285" rx="22" ry="4.5" fill="#000" fillOpacity="0.4"/>
+
+                    {/* Back leg */}
+                    <path d="M 78 182 Q 70 165 62 150" stroke="#1d4ed8" strokeWidth="7.5" strokeLinecap="round" fill="none"/>
+                    <ellipse cx="61" cy="149" rx="7" ry="4" fill="#1e3a8a" transform="rotate(-20 61 149)"/>
+
+                    {/* Front leg */}
+                    <path d="M 86 182 Q 82 170 80 158" stroke="#1d4ed8" strokeWidth="7.5" strokeLinecap="round" fill="none"/>
+                    <ellipse cx="79" cy="157" rx="7" ry="4" fill="#1e3a8a" transform="rotate(-25 79 157)"/>
+
+                    {/* Torso */}
+                    <rect x="72" y="142" width="24" height="43" rx="9" fill="#22c55e"/>
+                    {/* Shirt highlight */}
+                    <rect x="74" y="145" width="9" height="18" rx="4.5" fill="white" fillOpacity="0.09"/>
+                    {/* Collar */}
+                    <rect x="77" y="139" width="14" height="7" rx="3.5" fill="#16a34a"/>
+
+                    {/* Right arm — reaching up to paint/build the phone */}
+                    <path d="M 96 150 Q 116 132 122 112" stroke="#fbbf24" strokeWidth="6.5" strokeLinecap="round" fill="none"/>
+                    {/* Right hand */}
+                    <circle cx="124" cy="109" r="5.5" fill="#fbbf24"/>
+                    {/* Paintbrush / stylus */}
+                    <line x1="124" y1="104" x2="132" y2="90" stroke="#92400e" strokeWidth="2.5" strokeLinecap="round"/>
+                    <ellipse cx="132.5" cy="88.5" rx="3.5" ry="2.2" fill="#22c55e" transform="rotate(-32 132.5 88.5)"/>
+                    {/* Brush tip glow */}
+                    <circle cx="134" cy="87" r="3" fill="#22c55e" fillOpacity="0.35"/>
+
+                    {/* Left arm — balancing outward */}
+                    <path d="M 72 150 Q 55 144 46 136" stroke="#fbbf24" strokeWidth="6.5" strokeLinecap="round" fill="none"/>
+                    <circle cx="44" cy="134" r="5" fill="#fbbf24"/>
+
+                    {/* Neck */}
+                    <rect x="78" y="132" width="12" height="11" rx="6" fill="#fbbf24"/>
+
+                    {/* Head */}
+                    <ellipse cx="84" cy="122" rx="14" ry="13" fill="#fbbf24"/>
+                    {/* Hair */}
+                    <path d="M 70 120 Q 72 104 84 102 Q 96 102 98 116 Q 96 108 84 108 Q 74 108 70 120Z" fill="#1f2937"/>
+                    {/* Eyes */}
+                    <circle cx="78.5" cy="121" r="2.2" fill="#1f2937"/>
+                    <circle cx="89.5" cy="121" r="2.2" fill="#1f2937"/>
+                    {/* Eye shine */}
+                    <circle cx="79.3" cy="120.2" r="0.9" fill="white"/>
+                    <circle cx="90.3" cy="120.2" r="0.9" fill="white"/>
+                    {/* Smile */}
+                    <path d="M 78 128 Q 84 133 90 128" stroke="#1f2937" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                    {/* Eyebrows — focused */}
+                    <path d="M 75 116 Q 78.5 113.5 82 115.5" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+                    <path d="M 86 115.5 Q 89.5 113.5 93 116" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+
+                    {/* Hard hat */}
+                    <ellipse cx="84" cy="111" rx="16" ry="7" fill="#facc15"/>
+                    <rect x="69" y="105" width="30" height="9" rx="4.5" fill="#eab308"/>
+                    <rect x="70" y="108" width="28" height="5" rx="2.5" fill="#facc15"/>
+                    {/* Hat brim shadow */}
+                    <rect x="67" y="113" width="34" height="2" rx="1" fill="#ca8a04" fillOpacity="0.4"/>
+
+                    {/* ── Arrow callout pointing up-right toward phone ── */}
+                    {/* Curved arrow path */}
+                    <path
+                      d="M 14 80 Q 28 52 56 40"
+                      stroke="#22c55e"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeDasharray="5 3"
+                      fill="none"
+                    />
+                    {/* Arrowhead */}
+                    <polygon points="56,40 46,38 50,48" fill="#22c55e"/>
+
+                    {/* Callout bubble */}
+                    <rect x="0" y="84" width="82" height="38" rx="10" fill="#0d2218" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
+                    {/* Bubble pointer */}
+                    <polygon points="24,84 32,76 40,84" fill="#0d2218"/>
+                    <line x1="24" y1="84" x2="32" y2="76" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
+                    <line x1="32" y1="76" x2="40" y2="84" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
+                    {/* Callout text line 1 */}
+                    <text x="41" y="99" textAnchor="middle" fontSize="7.5" fill="#22c55e" fontFamily="'SF Mono',monospace" fontWeight="700" letterSpacing="0.5">
+                      Gemeda builds
+                    </text>
+                    {/* Callout text line 2 */}
+                    <text x="41" y="111" textAnchor="middle" fontSize="7" fill="#86efac" fontFamily="'SF Mono',monospace">
+                      smart apps ✦
+                    </text>
+
+                    {/* Floating code symbols */}
+                    <text x="8"   y="52"  fontSize="9.5" fill="#22c55e" fillOpacity="0.55" fontFamily="monospace">{"</>"}</text>
+                    <text x="158" y="68"  fontSize="9"   fill="#3b82f6" fillOpacity="0.5"  fontFamily="monospace">{"{ }"}</text>
+                    <text x="4"   y="168" fontSize="9"   fill="#a855f7" fillOpacity="0.5"  fontFamily="monospace">{"fn()"}</text>
+                    <text x="160" y="120" fontSize="9"   fill="#22c55e" fillOpacity="0.5"  fontFamily="monospace">{"tsx"}</text>
+                    <text x="155" y="152" fontSize="9"   fill="#fbbf24" fillOpacity="0.45" fontFamily="monospace">{"⚡"}</text>
+
+                    {/* Sparkle stars */}
+                    <g fill="#22c55e" fillOpacity="0.45">
+                      <polygon points="170,44 172,38 174,44 168,40 176,40"/>
+                      <polygon points="6,228 7.5,224 9,228 5,226 11,226" transform="scale(0.8)"/>
+                    </g>
+                    <circle cx="164" cy="180" r="1.5" fill="#3b82f6" fillOpacity="0.5"/>
+                    <circle cx="7"   cy="195" r="1.5" fill="#22c55e" fillOpacity="0.4"/>
+                  </svg>
                 </div>
 
-                {/* Status message */}
-                <div className="text-cyan-400 mb-5 text-sm flex items-center">
-                  <span className="text-purple-400">→</span>
-                  <span className="ml-2">Starting development server...</span>
-                </div>
-
-                {/* Code lines with proper spacing */}
-                <div className="space-y-2.5 mb-7">
-                  {codeLines.slice(0, currentLine).map((line, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-start text-gray-300 group"
+                {/* Right side text content */}
+                <div
+                  className="flex flex-col gap-3 relative z-10"
+                  style={{ padding: "28px 18px 24px 6px", justifyContent: "center" }}
+                >
+                  <div>
+                    <p
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        color: "#22c55e",
+                        margin: "0 0 6px",
+                      }}
                     >
-                      <span className="text-gray-500 mr-4 w-5 text-right text-xs">
-                        {idx + 1}
-                      </span>
-                      <span className="text-sm leading-relaxed tracking-wide group-hover:text-cyan-300 transition-colors duration-300">
-                        {line}
-                      </span>
-                    </div>
-                  ))}
-                  {typedText && (
-                    <div className="flex items-start">
-                      <span className="text-gray-500 mr-4 w-5 text-right text-xs">
-                        {currentLine + 1}
-                      </span>
-                      <span className="text-gray-300 text-sm leading-relaxed tracking-wide">
-                        {typedText}
-                      </span>
-                      <span className="ml-0.5 w-1.5 h-5 bg-gray-400 animate-pulse" />
-                    </div>
-                  )}
-                </div>
+                      Mobile First
+                    </p>
+                    <p
+                      style={{
+                        fontSize: 13.5,
+                        fontWeight: 600,
+                        color: "#f1f5f9",
+                        lineHeight: 1.45,
+                        margin: 0,
+                      }}
+                    >
+                      Beautiful apps built with Flutter &amp; React Native
+                    </p>
+                  </div>
 
-                {/* Footer message */}
-                <div className="flex items-center text-gray-500 text-xs mb-3">
-                  <Coffee className="mr-2 animate-pulse" size={14} />
-                  Building something amazing...
-                </div>
+                  {/* Tech pills */}
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {["Flutter", "Dart", "React Native", "Firebase"].map((t) => (
+                      <span
+                        key={t}
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                          padding: "3px 9px",
+                          borderRadius: 6,
+                          background: "#1e293b",
+                          color: "#94a3b8",
+                          border: "1px solid #334155",
+                        }}
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
 
-                {/* Branch indicator */}
-                <div className="text-gray-500 text-xs flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse" />
-                  <span className="font-medium">main</span>
+                  {/* Feature list */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                    {["Cross-platform", "60fps animations", "Offline-ready"].map((f) => (
+                      <div key={f} style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                        <div
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            background: "#22c55e",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <span style={{ fontSize: 11.5, color: "#64748b" }}>{f}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* "Can build" badge */}
+                  <div
+                    style={{
+                      marginTop: 4,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      background: "#0d2218",
+                      border: "1px solid #22c55e44",
+                      borderRadius: 8,
+                      padding: "5px 10px",
+                      width: "fit-content",
+                    }}
+                  >
+                    <span style={{ fontSize: 11, color: "#22c55e", fontWeight: 700 }}>
+                      ✦ Gemeda can build this for you
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
+            {/* ══════════ END MOBILE FIRST ══════════ */}
 
-            {/* Tech Stack */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-              className="mt-6 bg-gradient-to-br from-white/95 to-blue-50/95 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100/50"
-            >
-              <h3 className="text-sm font-semibold text-gray-700 mb-5 flex items-center gap-2">
-                <Monitor size={18} className="text-blue-500" />
-                Tech Stack
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {techStack.map((tech, index) => (
-                  <motion.div
-                    key={tech.label}
-                    initial={{
-                      opacity: 0,
-                      scale: 0,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                    }}
-                    transition={{
-                      delay: 0.8 + index * 0.1,
-                    }}
-                    whileHover={{
-                      y: -5,
-                      scale: 1.05,
-                    }}
-                    className="flex flex-col items-center group cursor-pointer"
-                  >
-                    <div
-                      className={`w-12 h-12 ${tech.bg} rounded-xl flex items-center justify-center mb-3 shadow-lg group-hover:shadow-xl transition-all duration-300`}
-                    >
-                      <tech.icon className="text-white" size={22} />
-                    </div>
-                    <div className="text-xs font-semibold text-gray-800 text-center leading-tight px-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
-                      {tech.label}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Stats for Desktop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2 }}
-              className="hidden lg:grid grid-cols-3 gap-4 mt-6"
-            >
-              {[
-                {
-                  value: "50+",
-                  label: "Projects",
-                  icon: Layers,
-                  color: "from-blue-500 to-cyan-500",
-                },
-                {
-                  value: "3+",
-                  label: "Years Exp",
-                  icon: Award,
-                  color: "from-purple-500 to-pink-500",
-                },
-                {
-                  value: "100%",
-                  label: "Satisfaction",
-                  icon: Star,
-                  color: "from-orange-500 to-yellow-500",
-                },
-              ].map((stat) => (
-                <motion.div
-                  key={stat.label}
-                  whileHover={{ y: -5 }}
-                  className="text-center p-4 bg-white/90 backdrop-blur-sm rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300"
-                >
-                  <div
-                    className={`w-10 h-10 mx-auto mb-2 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center shadow-md`}
-                  >
-                    <stat.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="text-xl font-bold text-gray-800">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs text-gray-600 mt-1">
-                    {stat.label}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
+          </div>
         </div>
-
-      
       </div>
     </section>
   );

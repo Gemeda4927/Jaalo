@@ -3,578 +3,320 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { personalInfo, socialLinks } from '@/lib/data'
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Menu, 
-  X, 
-  Github, 
-  Linkedin, 
-  Mail,
-  Sparkles,
-  Code,
-  ChevronRight,
-  Home,
-  User,
-  FolderGit2,
-  Phone,
-  Award,
-  Brain,
-  Rocket,
-  Zap,
-  ChevronDown,
-  Sun,
-  Moon,
-  Download,
-  ExternalLink,
-  FileText,
-  CheckCircle,
-  DownloadCloud
+import {
+  Menu, X, Github, Codepen, Mail,
+  Download, Check,
 } from 'lucide-react'
+
+const ACCENT = '#22c55e'
+
+const navItems = [
+  { name: 'Home',     path: '/' },
+  { name: 'About',    path: '/about' },
+  { name: 'Projects', path: '/projects' },
+  { name: 'Skills',   path: '/skills' },
+  { name: 'Contact',  path: '/contact' },
+]
+
+const socialIcons = [
+  { icon: Github,  href: () => socialLinks.github,             label: 'GitHub'  },
+  { icon: Codepen, href: () => socialLinks.codepen ?? '#',     label: 'CodePen' },
+  { icon: Mail,    href: () => `mailto:${personalInfo.email}`, label: 'Email'   },
+]
 
 export default function Navbar() {
   const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  const [downloading, setDownloading] = useState(false)
-  const [downloadComplete, setDownloadComplete] = useState(false)
+  const [isOpen,    setIsOpen]    = useState(false)
+  const [mounted,   setMounted]   = useState(false)
+  const [done,      setDone]      = useState(false)
+  const [loading,   setLoading]   = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
   }, [isOpen])
 
-  const navItems = [
-    { name: 'Home', path: '/', icon: Home, color: 'from-blue-500 to-cyan-500' },
-    { name: 'About', path: '/about', icon: User, color: 'from-purple-500 to-pink-500' },
-    { name: 'Projects', path: '/projects', icon: FolderGit2, color: 'from-emerald-500 to-teal-500' },
-    { name: 'Skills', path: '/skills', icon: Brain, color: 'from-amber-500 to-orange-500' },
-    { name: 'Achievements', path: '/achievements', icon: Award, color: 'from-rose-500 to-red-500' },
-    { name: 'Contact', path: '/contact', icon: Phone, color: 'from-indigo-500 to-purple-500' },
-  ]
-
-  // Fixed resume download function
-  const handleResumeDownload = () => {
-    setDownloading(true)
-    
-    // Simulate download preparation
+  const handleResume = () => {
+    if (loading) return
+    setLoading(true)
     setTimeout(() => {
-      // Create a link to the resume file
-      // Make sure your "Gemeda Tamiru.docx" file is in the public folder
-      const link = document.createElement('a')
-      link.href = '/Gemeda Tamiru.docx' // Path to your resume in public folder
-      link.download = 'Gemeda_Tamiru_Resume.docx' // Custom filename for download
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-      setDownloading(false)
-      setDownloadComplete(true)
-      
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setDownloadComplete(false)
-      }, 3000)
-    }, 1000)
+      const a = document.createElement('a')
+      a.href = '/Gemeda Tamiru.pdf'
+      a.download = 'Gemeda_Tamiru_Resume.pdf'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      setLoading(false)
+      setDone(true)
+      setTimeout(() => setDone(false), 2500)
+    }, 800)
   }
 
-  const quickActions = [
-    { 
-      name: 'Resume', 
-      icon: downloading ? DownloadCloud : (downloadComplete ? CheckCircle : FileText), 
-      action: handleResumeDownload, 
-      color: 'bg-gradient-to-r from-emerald-500 to-green-600',
-      status: downloading ? 'Downloading...' : (downloadComplete ? 'Downloaded!' : 'Resume')
-    },
-    { 
-      name: 'GitHub', 
-      icon: Github, 
-      action: () => window.open(socialLinks.github, '_blank'), 
-      color: 'bg-gradient-to-r from-gray-800 to-gray-900' 
-    },
-    { 
-      name: 'LinkedIn', 
-      icon: Linkedin, 
-      action: () => window.open(socialLinks.linkedin, '_blank'), 
-      color: 'bg-gradient-to-r from-blue-600 to-blue-700' 
-    },
-  ]
+  if (!mounted) return null
 
-  if (!mounted) {
-    return null
+  const ResumeIcon = done ? Check : Download
+
+  /* ─── shared styles ─────────────────────────────────── */
+  const iconLinkStyle: React.CSSProperties = {
+    fontSize: 20,
+    color: '#9ca3af',
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none',
+    transition: 'color 0.15s',
   }
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled 
-            ? 'bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)]' 
-            : 'bg-white/80 backdrop-blur-md border-b border-gray-100/50'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo - Enhanced */}
-            <Link href="/" onClick={() => setIsOpen(false)} className="group">
-              <motion.div 
-                className="flex items-center gap-3"
-                whileHover="hover"
-                variants={{
-                  hover: { scale: 1.02 }
+      {/* ── DESKTOP NAV ──────────────────────────────────── */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+        background: '#fff',
+        borderBottom: '1px solid #f3f4f6',
+        height: 64,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 28px',
+      }}>
+
+        {/* Logo */}
+        <Link href="/" onClick={() => setIsOpen(false)}
+          style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <div style={{
+            position: 'relative', width: 36, height: 36,
+            background: '#111827', borderRadius: 10,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontSize: 17, fontWeight: 500, color: '#fff', letterSpacing: -1 }}>G</span>
+            <span style={{
+              position: 'absolute', top: 6, right: 6,
+              width: 6, height: 6, background: ACCENT, borderRadius: '50%',
+            }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, lineHeight: 1 }}>
+            <span style={{ fontSize: 13, fontWeight: 500, color: '#111827' }}>Gemeda</span>
+            <span style={{ fontSize: 11, color: '#9ca3af' }}>Full-Stack Developer</span>
+          </div>
+        </Link>
+
+        {/* Desktop links */}
+        <div className="hidden md:flex" style={{ alignItems: 'center', gap: 4 }}>
+          {navItems.map(({ name, path }) => {
+            const active = pathname === path
+            return (
+              <Link key={name} href={path} style={{
+                fontSize: 13,
+                fontWeight: active ? 500 : 400,
+                color: active ? ACCENT : '#9ca3af',
+                textDecoration: 'none',
+                padding: '6px 12px',
+                borderRadius: 8,
+                transition: 'background 0.15s, color 0.15s',
+              }}
+                onMouseEnter={e => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.background = '#f9fafb'
+                    ;(e.currentTarget as HTMLElement).style.color = '#374151'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.background = 'transparent'
+                    ;(e.currentTarget as HTMLElement).style.color = '#9ca3af'
+                  }
                 }}
               >
-                <div className="relative">
-                  <motion.div 
-                    className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-xl shadow-purple-500/30 group-hover:shadow-2xl group-hover:shadow-purple-500/50 transition-all duration-500"
-                    animate={{
-                      rotate: [0, 5, -5, 0],
-                    }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <Code className="text-white" size={22} />
-                  </motion.div>
-                  
-                  {/* Animated rings */}
-                  <motion.div 
-                    className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-500"
-                    animate={{
-                      scale: [1, 1.1, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
-                  />
-                  
-                  {/* Sparkle effect */}
-                  <motion.div 
-                    className="absolute -top-1 -right-1"
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                    }}
-                  >
-                    <Sparkles size={14} className="text-yellow-400" />
-                  </motion.div>
-                </div>
-                
-                <div className="hidden sm:block">
-                  <motion.div 
-                    className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
-                    animate={{
-                      backgroundPosition: ['0%', '100%', '0%'],
-                    }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                    }}
-                    style={{
-                      backgroundSize: '200% auto',
-                    }}
-                  >
-                    {personalInfo.name.split(' ')[0]}
-                  </motion.div>
-                  <div className="text-xs text-gray-600 flex items-center gap-1">
-                    <motion.div
-                      animate={{
-                        scale: [1, 1.2, 1],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                      }}
-                    >
-                      <Zap size={10} className="text-blue-500" />
-                    </motion.div>
-                    <span>Full-Stack Developer</span>
-                    <motion.div
-                      animate={{
-                        rotate: [0, 360],
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                      }}
-                    >
-                      <Sparkles size={10} className="text-purple-500" />
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-            </Link>
+                {name}
+              </Link>
+            )
+          })}
+        </div>
 
-            {/* Desktop Navigation - Enhanced */}
-            <div className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => {
-                const Icon = item.icon
-                const isActive = pathname === item.path
-                
+        {/* Right side */}
+        <div className="hidden md:flex" style={{ alignItems: 'center', gap: 10 }}>
+          {socialIcons.map(({ icon: Icon, href, label }) => (
+            <a key={label} href={href()} target="_blank" rel="noopener noreferrer"
+              title={label} aria-label={label}
+              style={iconLinkStyle}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = ACCENT }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#9ca3af' }}
+            >
+              <Icon size={18} />
+            </a>
+          ))}
+
+          <button onClick={handleResume} disabled={loading}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 16px',
+              background: done ? '#f0fdf4' : ACCENT,
+              border: done ? '1px solid #bbf7d0' : 'none',
+              borderRadius: 20,
+              fontSize: 12, fontWeight: 500,
+              color: done ? '#16a34a' : '#fff',
+              cursor: loading ? 'wait' : 'pointer',
+              transition: 'background 0.15s',
+              fontFamily: 'inherit',
+              whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={e => { if (!done) (e.currentTarget as HTMLElement).style.background = '#16a34a' }}
+            onMouseLeave={e => { if (!done) (e.currentTarget as HTMLElement).style.background = ACCENT }}
+          >
+            <ResumeIcon size={13} />
+            {loading ? 'Wait…' : done ? 'Got it!' : 'Resume'}
+          </button>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: '#6b7280', display: 'flex', alignItems: 'center',
+          }}
+          aria-label={isOpen ? 'Close menu' : 'Open menu'}
+        >
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </nav>
+
+      {/* ── MOBILE DRAWER ────────────────────────────────── */}
+      {isOpen && (
+        <>
+          {/* Overlay */}
+          <div onClick={() => setIsOpen(false)} style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.18)',
+            zIndex: 40,
+          }} />
+
+          {/* Drawer */}
+          <div style={{
+            position: 'fixed', top: 0, right: 0, bottom: 0,
+            width: 260, background: '#fff', zIndex: 50,
+            display: 'flex', flexDirection: 'column',
+          }}>
+            {/* Header */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '0 18px', height: 64,
+              borderBottom: '1px solid #f3f4f6',
+            }}>
+              <Link href="/" onClick={() => setIsOpen(false)}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+                <div style={{
+                  position: 'relative', width: 30, height: 30,
+                  background: '#111827', borderRadius: 8,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: '#fff', letterSpacing: -1 }}>G</span>
+                  <span style={{
+                    position: 'absolute', top: 5, right: 5,
+                    width: 5, height: 5, background: ACCENT, borderRadius: '50%',
+                  }} />
+                </div>
+                <div style={{ lineHeight: 1 }}>
+                  <div style={{ fontSize: 12, fontWeight: 500, color: '#111827' }}>Gemeda</div>
+                  <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>Full-Stack Developer</div>
+                </div>
+              </Link>
+              <button onClick={() => setIsOpen(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', display: 'flex' }}
+                aria-label="Close menu"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Nav items */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 12px' }}>
+              <p style={{
+                fontSize: 10, fontWeight: 500, letterSpacing: '2px',
+                textTransform: 'uppercase', color: '#9ca3af',
+                padding: '0 8px', marginBottom: 6,
+              }}>Navigate</p>
+
+              {navItems.map(({ name, path }) => {
+                const active = pathname === path
                 return (
-                  <Link
-                    key={item.name}
-                    href={item.path}
-                    className="relative px-3 py-2 group"
+                  <Link key={name} href={path} onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '10px 10px', borderRadius: 8, marginBottom: 2,
+                      background: active ? '#f0fdf4' : 'transparent',
+                      color: active ? '#16a34a' : '#6b7280',
+                      fontSize: 13, fontWeight: active ? 500 : 400,
+                      textDecoration: 'none',
+                    }}
                   >
-                    <motion.div
-                      className="flex items-center gap-2 px-3 py-2 rounded-xl relative"
-                      whileHover={{ y: -2 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                    >
-                      <motion.div
-                        animate={isActive ? {
-                          rotate: [0, 10, -10, 0],
-                        } : {}}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <Icon size={18} className={`transition-colors ${
-                          isActive ? `text-transparent bg-clip-text bg-gradient-to-r ${item.color}` : 'text-gray-600 group-hover:text-gray-900'
-                        }`} />
-                      </motion.div>
-                      
-                      <span className={`text-sm lg:text-base font-medium transition-all ${
-                        isActive
-                          ? `text-transparent bg-clip-text bg-gradient-to-r ${item.color}`
-                          : 'text-gray-700 group-hover:text-gray-900'
-                      }`}>
-                        {item.name}
-                      </span>
-
-                      {/* Active indicator with animation */}
-                      {isActive && (
-                        <motion.div
-                          layoutId="navbar-indicator"
-                          className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl"
-                          transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                        />
-                      )}
-                    </motion.div>
-
-                    {/* Bottom line animation */}
-                    <motion.div 
-                      className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                      initial={{ width: 0 }}
-                      whileHover={{ width: '80%' }}
-                      transition={{ duration: 0.3 }}
-                    />
+                    <span style={{
+                      width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+                      background: active ? ACCENT : '#d1d5db',
+                    }} />
+                    {name}
                   </Link>
                 )
               })}
-            </div>
 
-            {/* Right Side Actions */}
-            <div className="hidden md:flex items-center gap-3">
-              {/* Quick Action Buttons */}
-              {quickActions.map((action) => {
-                const Icon = action.icon
-                return (
-                  <motion.button
-                    key={action.name}
-                    onClick={action.action}
-                    className={`p-2.5 rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300 ${action.color} relative overflow-hidden`}
-                    whileHover={{ y: -3, scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    title={action.name}
-                    disabled={downloading && action.name === 'Resume'}
+              <p style={{
+                fontSize: 10, fontWeight: 500, letterSpacing: '2px',
+                textTransform: 'uppercase', color: '#9ca3af',
+                padding: '0 8px', marginTop: 20, marginBottom: 6,
+              }}>Find me</p>
+
+              <div style={{ display: 'flex', gap: 8 }}>
+                {socialIcons.map(({ icon: Icon, href, label }) => (
+                  <a key={label} href={href()} target="_blank" rel="noopener noreferrer"
+                    aria-label={label}
+                    style={{
+                      flex: 1, height: 36,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      border: '1px solid #e5e7eb', borderRadius: 8,
+                      color: '#9ca3af', textDecoration: 'none',
+                      transition: 'color 0.13s, border-color 0.13s',
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.color = ACCENT
+                      ;(e.currentTarget as HTMLElement).style.borderColor = ACCENT
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.color = '#9ca3af'
+                      ;(e.currentTarget as HTMLElement).style.borderColor = '#e5e7eb'
+                    }}
                   >
-                    {/* Loading animation for resume */}
-                    {downloading && action.name === 'Resume' && (
-                      <motion.div
-                        className="absolute inset-0 bg-white/30"
-                        animate={{
-                          x: ['-100%', '100%'],
-                        }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      />
-                    )}
-                    
-                    {/* Success animation for resume */}
-                    {downloadComplete && action.name === 'Resume' && (
-                      <motion.div
-                        className="absolute inset-0 bg-green-400/30"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: [0, 1.5, 0] }}
-                        transition={{ duration: 0.8 }}
-                      />
-                    )}
-                    
-                    <Icon 
-                      size={18} 
-                      className={`
-                        ${downloading && action.name === 'Resume' ? 'animate-bounce' : ''}
-                        ${downloadComplete && action.name === 'Resume' ? 'text-white' : ''}
-                      `} 
-                    />
-                  </motion.button>
-                )
-              })}
-
-              {/* Theme Toggle */}
-              <motion.button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                whileHover={{ rotate: 180, scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-              </motion.button>
-            </div>
-
-            {/* Mobile menu button - Enhanced */}
-            <motion.button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            >
-              <AnimatePresence mode="wait">
-                {isOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X size={20} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu size={20} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
-        </div>
-      </motion.nav>
-
-      {/* Mobile Menu - Enhanced */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-gradient-to-br from-black/80 via-black/70 to-purple-900/80 backdrop-blur-xl z-40 md:hidden"
-            />
-            
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-gradient-to-b from-white to-gray-50 z-50 md:hidden overflow-y-auto shadow-2xl"
-            >
-              <div className="p-6">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                  <motion.div 
-                    className="flex items-center gap-3"
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                      <Code className="text-white" size={18} />
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Menu
-                      </div>
-                      <div className="text-xs text-gray-500">Navigate & Explore</div>
-                    </div>
-                  </motion.div>
-                  
-                  <motion.button
-                    onClick={() => setIsOpen(false)}
-                    className="p-2 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 rounded-xl transition-all duration-300"
-                    whileHover={{ rotate: 90 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <X size={20} />
-                  </motion.button>
-                </div>
-
-                {/* Navigation Items */}
-                <div className="space-y-2 mb-8">
-                  {navItems.map((item, index) => {
-                    const Icon = item.icon
-                    const isActive = pathname === item.path
-                    
-                    return (
-                      <motion.div
-                        key={item.name}
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.1 + index * 0.05 }}
-                      >
-                        <Link
-                          href={item.path}
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <motion.div
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                              isActive
-                                ? `bg-gradient-to-r ${item.color} text-white shadow-lg`
-                                : 'text-gray-700 hover:bg-gray-100'
-                            }`}
-                            whileHover={{ x: 5 }}
-                          >
-                            <Icon size={20} />
-                            <span className="font-medium">{item.name}</span>
-                            {isActive && (
-                              <motion.div
-                                className="ml-auto"
-                                animate={{ x: [0, 5, 0] }}
-                                transition={{ repeat: Infinity, duration: 1.5 }}
-                              >
-                                <ChevronRight size={16} />
-                              </motion.div>
-                            )}
-                          </motion.div>
-                        </Link>
-                      </motion.div>
-                    )
-                  })}
-                </div>
-
-                {/* Quick Actions */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="mb-8"
-                >
-                  <div className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
-                    <Zap size={14} />
-                    <span>Quick Actions</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {quickActions.map((action) => {
-                      const Icon = action.icon
-                      return (
-                        <motion.button
-                          key={action.name}
-                          onClick={action.action}
-                          className={`flex flex-col items-center gap-2 p-3 rounded-xl text-white ${action.color} shadow-lg relative overflow-hidden`}
-                          whileHover={{ y: -3, scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          disabled={downloading && action.name === 'Resume'}
-                        >
-                          {/* Loading animation for resume */}
-                          {downloading && action.name === 'Resume' && (
-                            <motion.div
-                              className="absolute inset-0 bg-white/30"
-                              animate={{
-                                x: ['-100%', '100%'],
-                              }}
-                              transition={{
-                                duration: 1,
-                                repeat: Infinity,
-                                ease: "linear",
-                              }}
-                            />
-                          )}
-                          
-                          <Icon size={18} className={downloading && action.name === 'Resume' ? 'animate-spin' : ''} />
-                          <span className="text-xs font-medium">
-                            {action.name === 'Resume' 
-                              ? (downloading ? '...' : (downloadComplete ? 'Done!' : action.name))
-                              : action.name
-                            }
-                          </span>
-                        </motion.button>
-                      )
-                    })}
-                  </div>
-                </motion.div>
-
-                {/* Theme Toggle for Mobile */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100"
-                >
-                  <div className="flex items-center gap-3">
-                    {isDarkMode ? <Sun size={20} className="text-amber-600" /> : <Moon size={20} className="text-indigo-600" />}
-                    <span className="font-medium text-gray-700">Dark Mode</span>
-                  </div>
-                  <motion.button
-                    onClick={() => setIsDarkMode(!isDarkMode)}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ${
-                      isDarkMode ? 'bg-indigo-600' : 'bg-amber-400'
-                    }`}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <motion.div
-                      className="w-4 h-4 bg-white rounded-full shadow-md"
-                      animate={{ x: isDarkMode ? 6 : 0 }}
-                      transition={{ type: 'spring', stiffness: 300 }}
-                    />
-                  </motion.button>
-                </motion.div>
-
-                {/* Footer */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="mt-8 text-center"
-                >
-                  <p className="text-xs text-gray-400">
-                    © 2024 {personalInfo.name}. All rights reserved.
-                  </p>
-                </motion.div>
+                    <Icon size={17} />
+                  </a>
+                ))}
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            </div>
+
+            {/* Resume CTA */}
+            <div style={{ padding: '14px 12px', borderTop: '1px solid #f3f4f6' }}>
+              <button
+                onClick={() => { handleResume(); setIsOpen(false) }}
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  padding: '12px 0',
+                  background: done ? '#f0fdf4' : ACCENT,
+                  border: done ? '1px solid #bbf7d0' : 'none',
+                  borderRadius: 20,
+                  fontSize: 12, fontWeight: 500,
+                  color: done ? '#16a34a' : '#fff',
+                  cursor: loading ? 'wait' : 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                <ResumeIcon size={15} />
+                {loading ? 'Preparing…' : done ? 'Downloaded!' : 'Download Resume'}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </>
   )
 }

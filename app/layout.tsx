@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} bg-gray-50 text-gray-900`}>
         <Navbar />
-        <main className="min-h-screen pt-24"> {/* Added pt-24 for spacing */}
+        <main className="min-h-screen pt-24"> 
           {children}
         </main>
         <Footer />

@@ -1,1840 +1,347 @@
 "use client";
-import {
-  useState,
-  useEffect,
-  useRef,
-} from "react";
-import {
-  motion,
-  AnimatePresence,
-  useInView,
-} from "framer-motion";
-import {
-  Send,
-  Mail,
-  Phone,
-  MapPin,
-  Github,
-  Linkedin,
-  Twitter,
-  MessageCircle,
-  Facebook,
-  Sparkles,
-  Copy,
-  Check,
-  Globe,
-  Zap,
-  Heart,
-  ArrowRight,
-  X,
-  PartyPopper,
-  AlertCircle,
-  Clock,
-  CheckCircle,
-  Award,
-  Coffee,
-  Smile,
-  Rocket,
-  Star,
-  Compass,
-  MessageSquare,
-  Brain,
-  Cpu,
-  Bell,
-  BellRing,
-  ThumbsUp,
-  Timer,
-  Gift,
-  Crown,
-  Sparkle,
-} from "lucide-react";
 
-// ==================== TOAST TYPES ====================
-type ToastType = {
-  id: string;
-  variant:
-    | "success"
-    | "error"
-    | "info"
-    | "warning"
-    | "celebrate"
-    | "coffee";
-  title: string;
-  message: string;
-  duration?: number;
-};
+import { useState } from "react";
+import emailjs from "@emailjs/browser";
 
-// ==================== CUSTOM TOAST HOOK ====================
-const useToast = () => {
-  const [toasts, setToasts] = useState<
-    ToastType[]
-  >([]);
+const EMAILJS_SERVICE_ID  = "service_ddftk0f";
+const EMAILJS_TEMPLATE_ID = "template_vsl5of8";
+const EMAILJS_PUBLIC_KEY  = "h7PUBGSHAtOjbLw7N";
 
-  const addToast = (
-    toast: Omit<ToastType, "id">
-  ) => {
-    const id = Math.random()
-      .toString(36)
-      .substring(2, 9);
-    setToasts((prev) => [
-      ...prev,
-      { ...toast, id },
-    ]);
 
-    // Auto remove after duration
-    setTimeout(() => {
-      removeToast(id);
-    }, toast.duration || 4000);
-  };
+const G  = "#22c55e";
+const GD = "#16a34a";
+const GL = "#f0fdf4";
 
-  const removeToast = (id: string) => {
-    setToasts((prev) =>
-      prev.filter((toast) => toast.id !== id)
-    );
-  };
+const SOCIALS = [
+  { label: "GitHub",   href: "https://github.com/Gemeda4927",                       d: "M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.907-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.912.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/gemeda-tamiru-8863b635a", d: "M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z M4 6a2 2 0 100-4 2 2 0 000 4z" },
+  { label: "Telegram", href: "https://t.me/Abbaabiyyaa2",                           d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.7 8.02c-.12.56-.46.7-.94.43l-2.6-1.92-1.25 1.21c-.14.14-.26.26-.53.26l.19-2.67 4.84-4.37c.21-.19-.05-.29-.32-.1L7.39 14.4l-2.54-.79c-.55-.17-.56-.55.12-.82l9.91-3.82c.46-.17.86.11.76.83z" },
+  { label: "Facebook", href: "https://web.facebook.com/gemada.tamiru.77",           d: "M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" },
+  { label: "Twitter",  href: "https://twitter.com/GemedaTamiru",                    d: "M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" },
+];
 
-  return { toasts, addToast, removeToast };
-};
+const INFO = [
+  { label: "Email",    value: "gemedat471@gmail.com",  copy: true,  d: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22,6 12,13 2,6" },
+  { label: "Location", value: "Addis Ababa, Ethiopia", copy: false, d: "M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" },
+  { label: "Timezone", value: "EAT — UTC +3",          copy: false, d: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
+];
 
-// ==================== PREMIUM TOAST COMPONENT ====================
-const PremiumToast = ({
-  toast,
-  onClose,
-}: {
-  toast: ToastType;
-  onClose: () => void;
-}) => {
-  const [progress, setProgress] = useState(100);
+const I = ({ d, s = 14 }: { d: string; s?: number }) => (
+  <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d={d} />
+  </svg>
+);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev <= 0) {
-          clearInterval(timer);
-          return 0;
-        }
-        return (
-          prev -
-          (100 /
-            ((toast.duration || 4000) / 100)) *
-            0.1
-        );
-      });
-    }, 100);
+const SEND_D  = "M22 2L11 13 M22 2L15 22 9 13 2 9 22 2";
+const ARR_D   = "M7 17L17 7 M7 7h10v10";
+const X_D     = "M18 6L6 18 M6 6l12 12";
+const COPY_D  = "M8 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2 M8 4a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2h-4a2 2 0 01-2-2z";
+const CHECK_D = "M20 6L9 17 4 12";
+const WARN_D  = "M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z";
 
-    return () => clearInterval(timer);
-  }, [toast.duration]);
-
-  // Variant configurations
-  const variantConfig = {
-    success: {
-      icon: PartyPopper,
-      gradient:
-        "from-emerald-500 via-green-500 to-teal-500",
-      glow: "from-emerald-400/30 to-green-400/30",
-      border: "border-emerald-400/50",
-      title: "Success! 🎉",
-    },
-    error: {
-      icon: AlertCircle,
-      gradient:
-        "from-rose-500 via-red-500 to-pink-500",
-      glow: "from-rose-400/30 to-red-400/30",
-      border: "border-rose-400/50",
-      title: "Oops! Something went wrong",
-    },
-    info: {
-      icon: Bell,
-      gradient:
-        "from-blue-500 via-cyan-500 to-sky-500",
-      glow: "from-blue-400/30 to-cyan-400/30",
-      border: "border-blue-400/50",
-      title: "Heads up!",
-    },
-    warning: {
-      icon: AlertCircle,
-      gradient:
-        "from-amber-500 via-orange-500 to-yellow-500",
-      glow: "from-amber-400/30 to-orange-400/30",
-      border: "border-amber-400/50",
-      title: "Warning!",
-    },
-    celebrate: {
-      icon: Crown,
-      gradient:
-        "from-purple-500 via-pink-500 to-rose-500",
-      glow: "from-purple-400/30 to-pink-400/30",
-      border: "border-purple-400/50",
-      title: "Amazing! ✨",
-    },
-    coffee: {
-      icon: Coffee,
-      gradient:
-        "from-amber-700 via-amber-600 to-amber-500",
-      glow: "from-amber-600/30 to-amber-500/30",
-      border: "border-amber-500/50",
-      title: "Coffee Time! ☕",
-    },
-  };
-
-  const config = variantConfig[toast.variant];
-  const Icon = config.icon;
-
-  return (
-    <motion.div
-      layout
-      initial={{
-        opacity: 0,
-        y: 50,
-        scale: 0.3,
-        rotateX: -30,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        rotateX: 0,
-      }}
-      exit={{
-        opacity: 0,
-        y: -30,
-        scale: 0.5,
-        rotateX: 30,
-      }}
-      transition={{
-        type: "spring",
-        damping: 20,
-        stiffness: 200,
-        mass: 0.8,
-      }}
-      className="relative w-full max-w-md"
-    >
-      {/* Main Toast Container */}
-      <div
-        className={`relative overflow-hidden rounded-2xl backdrop-blur-xl shadow-2xl border ${config.border}`}
-        style={{
-          background: `linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85))`,
-        }}
-      >
-        {/* Animated Background Glow */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-          }}
-          className={`absolute inset-0 bg-gradient-to-r ${config.glow} blur-2xl`}
-        />
-
-        {/* Animated Gradient Border */}
-        <motion.div
-          animate={{
-            x: ["-100%", "100%"],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-30`}
-          style={{ transform: "skewX(-25deg)" }}
-        />
-
-        {/* Floating Particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className={`absolute w-1 h-1 rounded-full bg-gradient-to-r ${config.gradient}`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -20, 0],
-                x: [0, Math.random() * 10 - 5, 0],
-                opacity: [0, 1, 0],
-              }}
-              transition={{
-                duration: 2 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="relative p-5">
-          <div className="flex items-start gap-4">
-            {/* Icon Container with Animation */}
-            <motion.div
-              animate={{
-                rotate: [0, 10, -10, 0],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-              }}
-              className="flex-shrink-0"
-            >
-              <div
-                className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${config.gradient} flex items-center justify-center shadow-xl`}
-              >
-                <Icon className="w-7 h-7 text-white" />
-
-                {/* Ring Animation */}
-                <motion.div
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: [0.5, 0, 0.5],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                  className="absolute inset-0 rounded-2xl border-2 border-white/50"
-                />
-              </div>
-            </motion.div>
-
-            {/* Content */}
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <h3 className="font-bold text-gray-900 text-lg">
-                  {toast.title || config.title}
-                </h3>
-
-                {/* Time Indicator */}
-                <div className="flex items-center gap-1 text-xs text-gray-400">
-                  <Timer size={12} />
-                  <span>just now</span>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                {toast.message}
-              </p>
-
-              {/* Progress Bar with Gradient */}
-              <div className="relative h-2 bg-gray-200/50 rounded-full mt-3 overflow-hidden">
-                <motion.div
-                  initial={{ width: "100%" }}
-                  animate={{
-                    width: `${progress}%`,
-                  }}
-                  className={`absolute top-0 left-0 h-full bg-gradient-to-r ${config.gradient}`}
-                >
-                  {/* Shimmer Effect */}
-                  <motion.div
-                    animate={{
-                      x: ["-100%", "100%"],
-                    }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent"
-                  />
-                </motion.div>
-              </div>
-            </div>
-
-            {/* Close Button */}
-            <motion.button
-              whileHover={{
-                scale: 1.1,
-                rotate: 90,
-              }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onClose}
-              className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-            >
-              <X className="w-4 h-4 text-gray-500" />
-            </motion.button>
-          </div>
-
-          {/* Action Buttons (for specific variants) */}
-          {toast.variant === "celebrate" && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex gap-2 mt-3 pt-3 border-t border-gray-200"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-medium rounded-lg"
-              >
-                Share Achievement
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg"
-              >
-                View Details
-              </motion.button>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Decorative Corner Elements */}
-        <div className="absolute top-0 left-0 w-16 h-16">
-          <div
-            className={`absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 ${config.border} rounded-tl-2xl`}
-          />
-        </div>
-        <div className="absolute bottom-0 right-0 w-16 h-16">
-          <div
-            className={`absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 ${config.border} rounded-br-2xl`}
-          />
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// ==================== TOAST CONTAINER ====================
-const ToastContainer = ({
-  toasts,
-  removeToast,
-}: {
-  toasts: ToastType[];
-  removeToast: (id: string) => void;
-}) => {
-  return (
-    <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4 max-w-md w-full">
-      <AnimatePresence mode="popLayout">
-        {toasts.map((toast) => (
-          <PremiumToast
-            key={toast.id}
-            toast={toast}
-            onClose={() => removeToast(toast.id)}
-          />
-        ))}
-      </AnimatePresence>
-    </div>
-  );
-};
-
-// ==================== FLOATING ELEMENTS COMPONENT ====================
-const FloatingElements = () => {
-  return (
-    <div className="absolute inset-0 -z-10 overflow-hidden">
-      {[...Array(30)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            width: Math.random() * 6 + 2,
-            height: Math.random() * 6 + 2,
-            background: `rgba(${Math.random() * 100 + 100}, ${Math.random() * 100 + 100}, 255, ${Math.random() * 0.3})`,
-          }}
-          animate={{
-            y: [0, -30 - Math.random() * 50, 0],
-            x: [0, Math.random() * 30 - 15, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 5 + Math.random() * 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: Math.random() * 5,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-// ==================== MESSAGE SENT MODAL ====================
-const MessageSentModal = ({
-  isOpen,
-  onClose,
-  formData,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  formData: {
-    name: string;
-    email: string;
-    subject: string;
-    message: string;
-  };
-}) => {
-  const [confetti, setConfetti] = useState<
-    { id: number; x: number; y: number; color: string }[]
-  >([]);
-
-  useEffect(() => {
-    if (isOpen) {
-      // Generate confetti
-      const colors = [
-        "#3b82f6",
-        "#8b5cf6",
-        "#ec4899",
-        "#10b981",
-        "#f59e0b",
-        "#ef4444",
-      ];
-      const newConfetti = [];
-      for (let i = 0; i < 50; i++) {
-        newConfetti.push({
-          id: i,
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          color: colors[Math.floor(Math.random() * colors.length)],
-        });
-      }
-      setConfetti(newConfetti);
-    }
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl"
-        onClick={onClose}
-      >
-        {/* Confetti Animation */}
-        {confetti.map((piece) => (
-          <motion.div
-            key={piece.id}
-            initial={{
-              x: `${piece.x}vw`,
-              y: -20,
-              rotate: 0,
-              scale: 0,
-            }}
-            animate={{
-              y: "120vh",
-              rotate: 720,
-              scale: [0, 1, 0.8, 1, 0],
-            }}
-            transition={{
-              duration: 2 + Math.random() * 2,
-              delay: Math.random() * 0.5,
-              ease: "easeOut",
-            }}
-            className="absolute w-3 h-3 rounded-sm"
-            style={{
-              left: `${piece.x}%`,
-              backgroundColor: piece.color,
-              boxShadow: `0 0 10px ${piece.color}`,
-            }}
-          />
-        ))}
-
-        {/* Modal Content */}
-        <motion.div
-          initial={{ scale: 0.5, y: 100, rotateX: -30 }}
-          animate={{ scale: 1, y: 0, rotateX: 0 }}
-          exit={{ scale: 0.5, y: -100, rotateX: 30 }}
-          transition={{
-            type: "spring",
-            damping: 20,
-            stiffness: 200,
-          }}
-          className="relative w-full max-w-2xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Animated Background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur-2xl opacity-30 animate-pulse" />
-          
-          {/* Main Modal */}
-          <div className="relative bg-white/95 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-2xl border border-white/50 overflow-hidden">
-            {/* Floating Particles */}
-            <div className="absolute inset-0 overflow-hidden">
-              {[...Array(20)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-1 h-1 bg-blue-400 rounded-full"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                  animate={{
-                    y: [0, -30, 0],
-                    x: [0, Math.random() * 20 - 10, 0],
-                    opacity: [0, 1, 0],
-                  }}
-                  transition={{
-                    duration: 3 + Math.random() * 2,
-                    repeat: Infinity,
-                    delay: Math.random() * 2,
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Success Icon */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                type: "spring",
-                damping: 15,
-                delay: 0.2,
-              }}
-              className="relative mx-auto w-32 h-32 mb-8"
-            >
-              <motion.div
-                animate={{
-                  rotate: 360,
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 2, repeat: Infinity },
-                }}
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-              />
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-                className="absolute inset-2 rounded-full bg-white flex items-center justify-center"
-              >
-                <motion.div
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                  }}
-                >
-                  <PartyPopper className="w-16 h-16 text-purple-600" />
-                </motion.div>
-              </motion.div>
-
-              {/* Checkmark Animation */}
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.5, type: "spring" }}
-                className="absolute -bottom-2 -right-2 w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-xl"
-              >
-                <CheckCircle className="w-6 h-6 text-white" />
-              </motion.div>
-            </motion.div>
-
-            {/* Success Message */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-center mb-8"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Message Sent!
-                </span>
-              </h2>
-              <p className="text-gray-600 text-lg">
-                Your message has been delivered successfully
-              </p>
-            </motion.div>
-
-            {/* Message Details Card */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 mb-8 border border-gray-200"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Mail className="w-5 h-5 text-blue-600" />
-                </div>
-                <span className="text-gray-700 font-medium">{formData.email}</span>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-purple-100 rounded-lg mt-1">
-                    <MessageSquare className="w-4 h-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Subject</p>
-                    <p className="text-gray-800 font-medium">{formData.subject}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-pink-100 rounded-lg mt-1">
-                    <Send className="w-4 h-4 text-pink-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Message Preview</p>
-                    <p className="text-gray-800 line-clamp-2">{formData.message}</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Response Time Badge */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.5, type: "spring" }}
-              className="flex justify-center mb-8"
-            >
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-3 rounded-full shadow-lg">
-                <Timer className="w-5 h-5" />
-                <span className="font-medium">I'll respond within 24 hours</span>
-              </div>
-            </motion.div>
-
-            {/* Action Buttons */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="flex gap-4"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onClose}
-                className="flex-1 px-6 py-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300"
-              >
-                Close
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  window.open("https://t.me/Abbaabiyyaa2", "_blank");
-                }}
-                className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <MessageCircle size={18} />
-                Chat on Telegram
-              </motion.button>
-            </motion.div>
-
-            {/* Decorative Elements */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute -top-20 -left-20 w-40 h-40 border-4 border-blue-200 rounded-full opacity-20"
-            />
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-              className="absolute -bottom-20 -right-20 w-40 h-40 border-4 border-purple-200 rounded-full opacity-20"
-            />
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-};
-
-// ==================== MAIN CONTACT COMPONENT ====================
 export default function ContactComponent() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [copied, setCopied] = useState<
-    string | null
-  >(null);
-  const [isSending, setIsSending] =
-    useState(false);
-  const [focusedField, setFocusedField] =
-    useState<string | null>(null);
-  const [hoveredSocial, setHoveredSocial] =
-    useState<string | null>(null);
-  const [mousePosition, setMousePosition] =
-    useState({ x: 0, y: 0 });
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [open,    setOpen]    = useState(false);
+  const [sent,    setSent]    = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error,   setError]   = useState<string | null>(null);
+  const [copied,  setCopied]  = useState(false);
+  const [focused, setFocused] = useState<string | null>(null);
+  const [form,    setForm]    = useState({ name: "", email: "", subject: "", message: "" });
 
-  const { toasts, addToast, removeToast } =
-    useToast();
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, {
-    once: true,
-    amount: 0.3,
-  });
+  const change = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(p => ({ ...p, [e.target.name]: e.target.value }));
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (sectionRef.current) {
-        const rect =
-          sectionRef.current.getBoundingClientRect();
-        setMousePosition({
-          x:
-            ((e.clientX - rect.left) /
-              rect.width) *
-            100,
-          y:
-            ((e.clientY - rect.top) /
-              rect.height) *
-            100,
-        });
-      }
-    };
-
-    window.addEventListener(
-      "mousemove",
-      handleMouseMove
-    );
-    return () =>
-      window.removeEventListener(
-        "mousemove",
-        handleMouseMove
-      );
-  }, []);
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSending(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsSending(false);
-      setShowSuccessModal(true);
-      
-      // Add success toast
-      addToast({
-        variant: "success",
-        title: "Message Delivered! 🎉",
-        message:
-          "Your message has been sent! Check the modal for details.",
-        duration: 5000,
-      });
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    }, 2000);
+    setSending(true);
+    setError(null);
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        { from_name: form.name, from_email: form.email, subject: form.subject, message: form.message, to_email: "gemedat471@gmail.com", reply_to: form.email },
+        EMAILJS_PUBLIC_KEY
+      );
+      setSent(true);
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setError("Something went wrong. Please email me directly at gemedat471@gmail.com");
+    } finally {
+      setSending(false);
+    }
   };
 
-  const handleCopy = (
-    text: string,
-    label: string
-  ) => {
-    navigator.clipboard.writeText(text);
-    setCopied(label);
-
-    addToast({
-      variant: "info",
-      title: "Copied to Clipboard! 📋",
-      message: `${label} has been copied to your clipboard.`,
-      duration: 3000,
-    });
-
-    setTimeout(() => setCopied(null), 2000);
+  const closeModal = () => {
+    setOpen(false);
+    setTimeout(() => { setSent(false); setError(null); setForm({ name: "", email: "", subject: "", message: "" }); }, 300);
   };
 
-  const handleSocialClick = (social: string) => {
-    addToast({
-      variant: "info",
-      title: `Connecting on ${social} 🤝`,
-      message: `You'll be redirected to ${social} to connect with me.`,
-      duration: 3000,
-    });
+  const reset = () => { setSent(false); setError(null); setForm({ name: "", email: "", subject: "", message: "" }); };
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText("gemedat471@gmail.com").catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
-
-  // Demo function to show different toast variants
-  const showDemoToasts = () => {
-    addToast({
-      variant: "success",
-      title: "Success! 🎉",
-      message:
-        "Operation completed successfully!",
-      duration: 3000,
-    });
-
-    setTimeout(() => {
-      addToast({
-        variant: "info",
-        title: "New Message",
-        message:
-          "You have a new notification from your portfolio.",
-        duration: 3000,
-      });
-    }, 500);
-
-    setTimeout(() => {
-      addToast({
-        variant: "warning",
-        title: "Almost There!",
-        message:
-          "Please complete your profile to unlock all features.",
-        duration: 3000,
-      });
-    }, 1000);
-
-    setTimeout(() => {
-      addToast({
-        variant: "coffee",
-        title: "Coffee Break! ☕",
-        message:
-          "Time for a coffee break? You've earned it!",
-        duration: 3000,
-      });
-    }, 1500);
-  };
-
-  // Stats for the header
-  const stats = [
-    {
-      icon: Coffee,
-      label: "Coffee consumed",
-      value: "1000+",
-      color: "from-amber-500 to-orange-500",
-    },
-    {
-      icon: Smile,
-      label: "Happy clients",
-      value: "50+",
-      color: "from-green-500 to-emerald-500",
-    },
-    {
-      icon: Award,
-      label: "Projects done",
-      value: "30+",
-      color: "from-blue-500 to-indigo-500",
-    },
-    {
-      icon: Zap,
-      label: "Avg response",
-      value: "<2h",
-      color: "from-purple-500 to-pink-500",
-    },
-  ];
-
-  const socialLinks = [
-    {
-      icon: Github,
-      label: "GitHub",
-      username: "@Gemeda4927",
-      link: "https://github.com/Gemeda4927",
-      gradient: "from-gray-800 to-gray-900",
-      color: "#333",
-    },
-    {
-      icon: Linkedin,
-      label: "LinkedIn",
-      username: "Gemeda Tamiru",
-      link: "https://www.linkedin.com/in/gemeda-tamiru-8863b635a",
-      gradient: "from-blue-600 to-blue-700",
-      color: "#0077b5",
-    },
-    {
-      icon: MessageCircle,
-      label: "Telegram",
-      username: "@Abbaabiyyaa2",
-      link: "https://t.me/Abbaabiyyaa2",
-      gradient: "from-sky-500 to-blue-600",
-      color: "#0088cc",
-    },
-    {
-      icon: Facebook,
-      label: "Facebook",
-      username: "Gemada Tamiru",
-      link: "https://web.facebook.com/gemada.tamiru.77",
-      gradient: "from-blue-500 to-indigo-600",
-      color: "#1877f2",
-    },
-    {
-      icon: Twitter,
-      label: "Twitter",
-      username: "@GemedaTamiru",
-      link: "https://twitter.com/GemedaTamiru",
-      gradient: "from-sky-400 to-blue-500",
-      color: "#1da1f2",
-    },
-  ];
 
   return (
     <>
-      {/* Toast Container */}
-      <ToastContainer
-        toasts={toasts}
-        removeToast={removeToast}
-      />
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .ct *, .ct *::before, .ct *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        .ct { font-family: 'Inter', sans-serif; }
+        @keyframes ct-spin    { to { transform: rotate(360deg); } }
+        @keyframes ct-drop    { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+        @keyframes ct-fade    { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes ct-pulse   { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+        @keyframes ct-pop     { 0% { transform: scale(.8); opacity: 0; } 60% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes ct-bar     { from { width: 0; } to { width: 100%; } }
+        .ct-backdrop { animation: ct-fade .2s ease; }
+        .ct-modal    { animation: ct-drop .28s cubic-bezier(.22,1,.36,1); }
+        .ct-icon-pop { animation: ct-pop .4s cubic-bezier(.22,1,.36,1) both; }
+        .ct-social   { transition: background .15s, color .15s, transform .15s; }
+        .ct-social:hover { background: ${G} !important; color: #fff !important; transform: translateY(-2px); }
+        .ct-cta      { transition: background .15s, box-shadow .15s, transform .12s; }
+        .ct-cta:hover { background: ${GD} !important; box-shadow: 0 8px 28px rgba(34,197,94,.3) !important; transform: translateY(-1px); }
+        .ct-cta:active { transform: scale(.97); }
+        .ct-send:hover:not(:disabled) { background: ${GD} !important; }
+        .ct-close { transition: background .15s, color .15s; border-radius: 8px; }
+        .ct-close:hover { background: #f3f4f6 !important; color: #374151 !important; }
+        .ct-copy:hover { color: ${G} !important; }
+        .ct-field input, .ct-field textarea { width: 100%; padding: 9px 0; font-size: 13px; color: #111827; background: transparent; border: none; border-bottom: 1.5px solid #e5e7eb; outline: none; font-family: inherit; transition: border-color .18s; }
+        .ct-field input:focus, .ct-field textarea:focus { border-bottom-color: ${G}; }
+        .ct-field textarea { resize: none; line-height: 1.7; }
+        .ct-field input::placeholder, .ct-field textarea::placeholder { color: #d1d5db; }
+        .ct-progress { height: 3px; background: ${G}; border-radius: 2px; animation: ct-bar 1.4s ease forwards; }
+      `}</style>
 
-      {/* Success Modal */}
-      <MessageSentModal
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        formData={formData}
-      />
+      <section className="ct" id="contact" style={{ padding: "80px 24px", background: "#fff" }}>
+        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
 
-      {/* Main Section */}
-      <section
-        ref={sectionRef}
-        id="contact"
-        className="relative py-24 px-4 sm:px-6 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden"
-      >
-        {/* Dynamic Background */}
-        <div className="absolute inset-0 -z-10">
-          {/* Gradient that follows mouse */}
-          <motion.div
-            className="absolute inset-0 opacity-30"
-            style={{
-              background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(59,130,246,0.15) 0%, transparent 50%)`,
-            }}
-          />
-
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-
-          {/* Floating Particles */}
-          <FloatingElements />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative">
-          {/* ===== HEADER SECTION ===== */}
-          <div className="text-center mb-20">
-            {/* Animated Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0 }
-                  : {}
-              }
-              className="flex justify-center mb-8"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50 shadow-lg hover:shadow-xl transition-all"
-              >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                >
-                  <Sparkles className="w-5 h-5 text-blue-600" />
-                </motion.div>
-                <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  LET'S CREATE SOMETHING AMAZING
-                </span>
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                  className="w-2 h-2 rounded-full bg-green-500"
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* Main Title */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0 }
-                  : {}
-              }
-              transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl font-bold mb-8"
-            >
-              <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-                Get in touch
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                let's create magic
-              </span>
-            </motion.h2>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0 }
-                  : {}
-              }
-              transition={{ delay: 0.2 }}
-              className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
-            >
-              Have a project in mind? I'm always
-              excited to collaborate on innovative
-              ideas and bring them to life with
-              clean code and beautiful design.
-            </motion.p>
-
-            {/* Stats Grid */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0 }
-                  : {}
-              }
-              transition={{ delay: 0.3 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto mt-12"
-            >
-              {stats.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    whileHover={{
-                      y: -8,
-                      scale: 1.05,
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group relative bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
-                  >
-                    {/* Hover Effect */}
-                    <motion.div
-                      className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
-                    />
-
-                    <Icon
-                      className={`w-6 h-6 text-blue-600 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300`}
-                    />
-                    <div className="text-xl font-bold text-gray-900">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {stat.label}
-                    </div>
-
-                    {/* Sparkle on hover */}
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        scale: 0,
-                      }}
-                      whileHover={{
-                        opacity: 1,
-                        scale: 1,
-                      }}
-                      className="absolute -top-1 -right-1"
-                    >
-                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
+          {/* HEADER */}
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "3px", textTransform: "uppercase", color: G, marginBottom: 12 }}>Contact</p>
+            <h2 style={{ fontSize: 40, fontWeight: 700, color: "#111827", letterSpacing: "-1.5px", lineHeight: 1.1, margin: 0 }}>
+              Let's work{" "}
+              <span style={{ color: G, textDecoration: "underline", textDecorationColor: G, textUnderlineOffset: "5px" }}>together.</span>
+            </h2>
           </div>
 
-          {/* ===== MAIN CONTENT GRID ===== */}
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* ===== LEFT COLUMN - CONTACT FORM ===== */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={
-                isInView
-                  ? { opacity: 1, x: 0 }
-                  : {}
-              }
-              transition={{
-                duration: 0.6,
-                delay: 0.2,
-              }}
-            >
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-10 border border-gray-200/50 shadow-xl hover:shadow-2xl transition-all duration-500">
-                {/* Form Header with Demo Toast Button */}
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-4">
-                    <motion.div
-                      whileHover={{ rotate: 360 }}
-                      transition={{
-                        duration: 0.5,
-                      }}
-                      className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg"
-                    >
-                      <Send className="w-6 h-6 text-white" />
-                    </motion.div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900">
-                        Send a message
-                      </h3>
-                      <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                        <Zap className="w-4 h-4 text-yellow-500" />
-                        I'll respond within 24
-                        hours
-                      </p>
-                    </div>
-                  </div>
+          {/* PANEL */}
+          <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", borderRadius: 16, overflow: "hidden", border: "1px solid #e5e7eb", boxShadow: "0 2px 24px rgba(0,0,0,.06)" }}>
 
-                  {/* Demo Toast Button */}
-                  <motion.button
-                    whileHover={{
-                      scale: 1.05,
-                      rotate: 5,
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={showDemoToasts}
-                    className="group relative px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-medium rounded-lg shadow-lg overflow-hidden"
-                  >
-                    <span className="relative z-10 flex items-center gap-1">
-                      <Sparkle size={12} />
-                      Demo Toasts
-                    </span>
-                    <motion.div
-                      className="absolute inset-0 bg-white/30"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{
-                        duration: 0.5,
-                      }}
-                    />
-                  </motion.button>
+            {/* LEFT */}
+            <div style={{ background: "#f3f4f6", padding: "36px 28px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 32, borderRight: "1px solid #e5e7eb" }}>
+              <div>
+                <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "#6b7280", marginBottom: 16 }}>Contact info</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  {INFO.map(row => (
+                    <div key={row.label} style={{ display: "flex", alignItems: "center", gap: 11, padding: "11px 10px", borderRadius: 10, background: "rgba(255,255,255,.6)" }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 8, background: "#fff", border: "1px solid #e5e7eb", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: G }}>
+                        <I d={row.d} s={13} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "#9ca3af", marginBottom: 2 }}>{row.label}</p>
+                        <p style={{ fontSize: 12, fontWeight: 500, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.value}</p>
+                      </div>
+                      {row.copy && (
+                        <button className="ct-copy" onClick={copyEmail}
+                          style={{ background: "none", border: "none", cursor: "pointer", color: copied ? G : "#9ca3af", padding: 4, display: "flex", transition: "color .15s" }}>
+                          <I d={copied ? CHECK_D : COPY_D} s={12} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
-
-                {/* Form */}
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-6"
-                >
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Name Field */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700 block">
-                        Your name *
-                      </label>
-                      <motion.div
-                        whileTap={{ scale: 0.99 }}
-                        className="relative"
-                      >
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          onFocus={() =>
-                            setFocusedField(
-                              "name"
-                            )
-                          }
-                          onBlur={() =>
-                            setFocusedField(null)
-                          }
-                          required
-                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all outline-none"
-                          placeholder="John Doe"
-                        />
-                        {focusedField ===
-                          "name" && (
-                          <motion.div
-                            layoutId="focus"
-                            className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"
-                            initial={{ width: 0 }}
-                            animate={{
-                              width: "100%",
-                            }}
-                            transition={{
-                              duration: 0.3,
-                            }}
-                          />
-                        )}
-                      </motion.div>
-                    </div>
-
-                    {/* Email Field */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700 block">
-                        Email address *
-                      </label>
-                      <motion.div
-                        whileTap={{ scale: 0.99 }}
-                        className="relative"
-                      >
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          onFocus={() =>
-                            setFocusedField(
-                              "email"
-                            )
-                          }
-                          onBlur={() =>
-                            setFocusedField(null)
-                          }
-                          required
-                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all outline-none"
-                          placeholder="john@example.com"
-                        />
-                        {focusedField ===
-                          "email" && (
-                          <motion.div
-                            layoutId="focus-email"
-                            className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"
-                            initial={{ width: 0 }}
-                            animate={{
-                              width: "100%",
-                            }}
-                            transition={{
-                              duration: 0.3,
-                            }}
-                          />
-                        )}
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* Subject Field */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 block">
-                      Subject *
-                    </label>
-                    <motion.div
-                      whileTap={{ scale: 0.99 }}
-                      className="relative"
-                    >
-                      <input
-                        type="text"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        onFocus={() =>
-                          setFocusedField(
-                            "subject"
-                          )
-                        }
-                        onBlur={() =>
-                          setFocusedField(null)
-                        }
-                        required
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all outline-none"
-                        placeholder="What would you like to discuss?"
-                      />
-                      {focusedField ===
-                        "subject" && (
-                        <motion.div
-                          layoutId="focus-subject"
-                          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"
-                          initial={{ width: 0 }}
-                          animate={{
-                            width: "100%",
-                          }}
-                          transition={{
-                            duration: 0.3,
-                          }}
-                        />
-                      )}
-                    </motion.div>
-                  </div>
-
-                  {/* Message Field */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 block">
-                      Message *
-                    </label>
-                    <motion.div
-                      whileTap={{ scale: 0.99 }}
-                      className="relative"
-                    >
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        onFocus={() =>
-                          setFocusedField(
-                            "message"
-                          )
-                        }
-                        onBlur={() =>
-                          setFocusedField(null)
-                        }
-                        required
-                        rows={5}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all outline-none resize-none"
-                        placeholder="Tell me about your project, idea, or collaboration..."
-                      />
-                      {focusedField ===
-                        "message" && (
-                        <motion.div
-                          layoutId="focus-message"
-                          className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"
-                          initial={{ width: 0 }}
-                          animate={{
-                            width: "100%",
-                          }}
-                          transition={{
-                            duration: 0.3,
-                          }}
-                        />
-                      )}
-                    </motion.div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <motion.button
-                    type="submit"
-                    disabled={isSending}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="relative w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      {isSending ? (
-                        <>
-                          <motion.div
-                            animate={{
-                              rotate: 360,
-                            }}
-                            transition={{
-                              duration: 1,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }}
-                            className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                          />
-                          <span>
-                            Sending message...
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <Send
-                            size={18}
-                            className="group-hover:rotate-12 transition-transform"
-                          />
-                          <span>
-                            Send Message
-                          </span>
-                          <motion.span
-                            animate={{
-                              x: [0, 5, 0],
-                            }}
-                            transition={{
-                              duration: 1.5,
-                              repeat: Infinity,
-                            }}
-                            className="absolute right-4 opacity-0 group-hover:opacity-100"
-                          >
-                            ✨
-                          </motion.span>
-                        </>
-                      )}
-                    </span>
-
-                    {/* Animated Background */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: 0 }}
-                      transition={{
-                        duration: 0.3,
-                      }}
-                    />
-                  </motion.button>
-
-                  {/* Privacy Note */}
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                    className="text-xs text-center text-gray-400 mt-4"
-                  >
-                    Your information is safe and
-                    will never be shared. I'll
-                    respond within 24 hours.
-                  </motion.p>
-                </form>
               </div>
-            </motion.div>
 
-            {/* ===== RIGHT COLUMN - CONTACT INFO & SOCIAL ===== */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={
-                isInView
-                  ? { opacity: 1, x: 0 }
-                  : {}
-              }
-              transition={{
-                duration: 0.6,
-                delay: 0.3,
-              }}
-              className="space-y-6"
-            >
-              {/* Social Links Grid - Colorful Version */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  isInView
-                    ? { opacity: 1, y: 0 }
-                    : {}
-                }
-                transition={{ delay: 0.7 }}
-                className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-3xl p-8 shadow-2xl overflow-hidden relative border border-white/50"
-              >
-                {/* Animated Background Pattern */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.2)_0%,transparent_50%)]" />
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(168,85,247,0.2)_0%,transparent_50%)]" />
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 30,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="absolute -inset-1/2 bg-[conic-gradient(from_0deg,transparent_0deg,#3b82f6_10deg,#a855f7_20deg,transparent_30deg)] opacity-10"
-                  />
+              <div>
+                <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "#9ca3af", marginBottom: 10 }}>Find me on</p>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
+                  {SOCIALS.map(s => (
+                    <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" title={s.label} className="ct-social"
+                      style={{ width: 34, height: 34, borderRadius: 8, border: "1px solid #e5e7eb", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: "#6b7280", textDecoration: "none" }}>
+                      <I d={s.d} s={14} />
+                    </a>
+                  ))}
                 </div>
-
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <motion.div
-                      animate={{
-                        rotate: 360,
-                        scale: [1, 1.1, 1],
-                      }}
-                      transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                      className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center"
-                    >
-                      <Rocket className="w-5 h-5 text-white" />
-                    </motion.div>
-                    <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                      Connect With Me
-                    </h3>
+                <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "10px 13px", borderRadius: 10, background: "#fff", border: "1px solid #e5e7eb" }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: G, flexShrink: 0, animation: "ct-pulse 2s infinite" }} />
+                  <div>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: "#111827" }}>Available now</p>
+                    <p style={{ fontSize: 10, color: "#9ca3af" }}>Open to freelance & full-time</p>
                   </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {socialLinks.map(
-                      (social, index) => {
-                        const Icon = social.icon;
-                        const isHovered =
-                          hoveredSocial ===
-                          social.label;
-
-                        return (
-                          <motion.a
-                            key={social.label}
-                            href={social.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onHoverStart={() =>
-                              setHoveredSocial(
-                                social.label
-                              )
-                            }
-                            onHoverEnd={() =>
-                              setHoveredSocial(
-                                null
-                              )
-                            }
-                            onClick={() =>
-                              handleSocialClick(
-                                social.label
-                              )
-                            }
-                            whileHover={{
-                              y: -6,
-                              scale: 1.05,
-                            }}
-                            whileTap={{
-                              scale: 0.95,
-                            }}
-                            className="group relative p-4 rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
-                            style={{
-                              background: `linear-gradient(135deg, ${social.color}10, ${social.color}20)`,
-                            }}
-                          >
-                            {/* Hover Gradient Background */}
-                            <motion.div
-                              className={`absolute inset-0 bg-gradient-to-br ${social.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
-                            />
-
-                            {/* Glow Effect on Hover */}
-                            <motion.div
-                              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                              style={{
-                                background: `radial-gradient(circle at center, ${social.color}30 0%, transparent 70%)`,
-                              }}
-                            />
-
-                            <div className="relative z-10 flex flex-col items-center gap-2">
-                              <motion.div
-                                animate={
-                                  isHovered
-                                    ? {
-                                        rotate: 360,
-                                        scale: [
-                                          1, 1.2,
-                                          1,
-                                        ],
-                                      }
-                                    : {}
-                                }
-                                transition={{
-                                  duration: 0.5,
-                                }}
-                                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                                style={{
-                                  color:
-                                    social.color,
-                                }}
-                              >
-                                <Icon
-                                  size={22}
-                                  className="group-hover:scale-110 transition-transform"
-                                />
-                              </motion.div>
-                              <span className="text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
-                                {social.label}
-                              </span>
-                            </div>
-
-                            {/* Tooltip on hover */}
-                            <AnimatePresence>
-                              {isHovered && (
-                                <motion.div
-                                  initial={{
-                                    opacity: 0,
-                                    y: 10,
-                                    scale: 0.8,
-                                  }}
-                                  animate={{
-                                    opacity: 1,
-                                    y: 0,
-                                    scale: 1,
-                                  }}
-                                  exit={{
-                                    opacity: 0,
-                                    y: 10,
-                                    scale: 0.8,
-                                  }}
-                                  transition={{
-                                    type: "spring",
-                                    damping: 15,
-                                  }}
-                                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1.5 rounded-lg text-white text-xs font-medium whitespace-nowrap shadow-lg"
-                                  style={{
-                                    background:
-                                      social.color,
-                                  }}
-                                >
-                                  {
-                                    social.username
-                                  }
-                                  <div
-                                    className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 rotate-45"
-                                    style={{
-                                      background:
-                                        social.color,
-                                    }}
-                                  />
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-
-                            {/* Decorative corner accent */}
-                            <motion.div
-                              initial={{
-                                scale: 0,
-                              }}
-                              whileHover={{
-                                scale: 1,
-                              }}
-                              className="absolute top-0 right-0 w-6 h-6"
-                            >
-                              <div
-                                className="absolute top-0 right-0 w-3 h-3 rounded-bl-lg"
-                                style={{
-                                  background:
-                                    social.color,
-                                }}
-                              />
-                            </motion.div>
-                          </motion.a>
-                        );
-                      }
-                    )}
-                  </div>
-
-                  {/* Availability Status */}
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      y: 10,
-                    }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
-                    className="mt-6 pt-6 border-t border-gray-200 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <motion.div
-                          animate={{
-                            scale: [1, 1.2, 1],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                          }}
-                          className="w-2.5 h-2.5 rounded-full bg-green-500"
-                        />
-                        <motion.div
-                          animate={{
-                            scale: [1, 1.5, 1],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                          }}
-                          className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-green-500 opacity-50"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-sm font-medium text-gray-700">
-                          Available for freelance
-                        </span>
-                        <p className="text-xs text-gray-500">
-                          Let's build something
-                          amazing
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg text-white text-xs font-medium">
-                      <Globe size={12} />
-                      <span>Remote</span>
-                    </div>
-                  </motion.div>
                 </div>
-              </motion.div>
+              </div>
+            </div>
 
-              {/* Quote Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={
-                  isInView
-                    ? { opacity: 1, y: 0 }
-                    : {}
-                }
-                transition={{ delay: 0.8 }}
-                whileHover={{ scale: 1.02 }}
-                className="group relative bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl p-8 text-white shadow-2xl overflow-hidden"
-              >
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.3)_0%,transparent_50%)]" />
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 30,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="absolute -inset-1/2 bg-[conic-gradient(from_0deg,transparent_0deg,white_10deg,transparent_20deg)]"
-                  />
-                </div>
-
-                <div className="relative z-10">
-                  <motion.div
-                    animate={{
-                      scale: [1, 1.1, 1],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                    }}
-                  >
-                    <Heart
-                      className="w-8 h-8 text-pink-300 mb-4"
-                      fill="currentColor"
-                    />
-                  </motion.div>
-
-                  <p className="text-lg font-light leading-relaxed">
-                    "Every great project starts
-                    with a conversation. Let's
-                    make yours next."
-                  </p>
-
-                  <div className="flex items-center gap-3 mt-6">
-                    <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">
-                      <span className="text-sm font-bold">
-                        GT
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">
-                        Gemeda Tamiru
-                      </p>
-                      <p className="text-xs text-white/60">
-                        Full Stack Developer
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Decorative Elements */}
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="absolute -bottom-10 -right-10 w-20 h-20 border-2 border-white/10 rounded-full"
-                  />
-                  <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{
-                      duration: 15,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="absolute -top-10 -left-10 w-16 h-16 border-2 border-white/10 rounded-full"
-                  />
-                </div>
-              </motion.div>
-            </motion.div>
+            {/* RIGHT */}
+            <div style={{ background: "#fff", padding: "60px 48px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20, textAlign: "center" }}>
+              <div style={{ width: 60, height: 60, borderRadius: "50%", background: GL, border: "1.5px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "center", color: G }}>
+                <I d={SEND_D} s={24} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: 24, fontWeight: 700, color: "#111827", letterSpacing: "-0.6px", marginBottom: 8 }}>Have a project in mind?</h3>
+                <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.7, maxWidth: 280, margin: "0 auto" }}>
+                  Drop me a message and let's build something great together. I usually respond within 24 hours.
+                </p>
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+                {["Fast reply", "24h response", "Open to collab"].map(label => (
+                  <span key={label} style={{ padding: "5px 12px", borderRadius: 6, background: "#f9fafb", border: "1px solid #e5e7eb", fontSize: 11, color: "#6b7280", fontWeight: 500 }}>{label}</span>
+                ))}
+              </div>
+              <button className="ct-cta" onClick={() => setOpen(true)}
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "13px 32px", borderRadius: 12, background: G, color: "#fff", fontSize: 13, fontWeight: 700, border: "none", cursor: "pointer", boxShadow: "0 4px 16px rgba(34,197,94,.25)" }}>
+                <I d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22,6 12,13 2,6" s={15} />
+                Contact me
+                <I d={ARR_D} s={13} />
+              </button>
+              <p style={{ fontSize: 11, color: "#d1d5db" }}>Private & secure · No spam</p>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* MODAL */}
+      {open && (
+        <div className="ct ct-backdrop"
+          onClick={e => { if (e.currentTarget === e.target) closeModal(); }}
+          style={{ position: "fixed", inset: 0, background: "rgba(17,24,39,.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 20 }}>
+
+          <div className="ct-modal"
+            style={{ background: "#fff", borderRadius: 20, border: "1px solid #e5e7eb", width: "100%", maxWidth: 480, position: "relative", boxShadow: "0 24px 80px rgba(0,0,0,.14)", overflow: "hidden" }}>
+
+            {/* Loading bar — only while sending */}
+            {sending && (
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "#f0fdf4" }}>
+                <div className="ct-progress" />
+              </div>
+            )}
+
+            {/* Header bar */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 22px 16px", borderBottom: "1px solid #f3f4f6" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 9, background: GL, border: "1px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "center", color: G, flexShrink: 0 }}>
+                  <I d={sent ? CHECK_D : error ? WARN_D : SEND_D} s={14} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", lineHeight: 1.2 }}>
+                    {sent ? "Message sent!" : error ? "Something went wrong" : "Send a message"}
+                  </p>
+                  <p style={{ fontSize: 11, color: "#9ca3af", marginTop: 2 }}>
+                    {sent ? "I'll get back to you within 24h" : error ? "See below for details" : "Goes directly to gemedat471@gmail.com"}
+                  </p>
+                </div>
+              </div>
+              <button className="ct-close" onClick={closeModal}
+                style={{ width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #e5e7eb", background: "#fff", cursor: "pointer", color: "#9ca3af" }}>
+                <I d={X_D} s={13} />
+              </button>
+            </div>
+
+            <div style={{ padding: "24px 22px 22px" }}>
+
+              {/* ── SUCCESS ── */}
+              {sent && (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "16px 0 8px", textAlign: "center" }}>
+                  <div className="ct-icon-pop" style={{ width: 64, height: 64, borderRadius: "50%", background: GL, border: "2px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "center", color: G }}>
+                    <I d={CHECK_D} s={28} />
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: "#111827", marginBottom: 6 }}>Landed in my inbox</p>
+                    <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.65, maxWidth: 260, margin: "0 auto" }}>
+                      Expect a reply within 24 hours. Thanks for reaching out!
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                    <button onClick={reset}
+                      style={{ fontSize: 12, fontWeight: 600, color: GD, background: GL, border: "1px solid #bbf7d0", borderRadius: 8, padding: "9px 20px", cursor: "pointer" }}>
+                      Send another
+                    </button>
+                    <button onClick={closeModal}
+                      style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 8, padding: "9px 20px", cursor: "pointer" }}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ── ERROR ── */}
+              {error && !sent && (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "16px 0 8px", textAlign: "center" }}>
+                  <div className="ct-icon-pop" style={{ width: 64, height: 64, borderRadius: "50%", background: "#fef2f2", border: "2px solid #fecaca", display: "flex", alignItems: "center", justifyContent: "center", color: "#ef4444" }}>
+                    <I d={WARN_D} s={26} />
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: "#111827", marginBottom: 6 }}>Couldn't send</p>
+                    <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.65, maxWidth: 280, margin: "0 auto" }}>
+                      {error}
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                    <button onClick={() => setError(null)}
+                      style={{ fontSize: 12, fontWeight: 600, color: "#fff", background: "#ef4444", border: "none", borderRadius: 8, padding: "9px 20px", cursor: "pointer" }}>
+                      Try again
+                    </button>
+                    <button onClick={closeModal}
+                      style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 8, padding: "9px 20px", cursor: "pointer" }}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ── FORM ── */}
+              {!sent && !error && (
+                <form onSubmit={submit}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 18 }}>
+                    {[
+                      { id: "name",  label: "Full name", type: "text",  ph: "John Doe"         },
+                      { id: "email", label: "Email",     type: "email", ph: "john@example.com" },
+                    ].map(f => (
+                      <div className="ct-field" key={f.id}>
+                        <label style={{ display: "block", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: focused === f.id ? G : "#9ca3af", marginBottom: 6, transition: "color .15s" }}>{f.label}</label>
+                        <input type={f.type} name={f.id} value={(form as any)[f.id]} onChange={change} required placeholder={f.ph}
+                          onFocus={() => setFocused(f.id)} onBlur={() => setFocused(null)} />
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="ct-field" style={{ marginBottom: 18 }}>
+                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: focused === "subject" ? G : "#9ca3af", marginBottom: 6, transition: "color .15s" }}>Subject</label>
+                    <input type="text" name="subject" value={form.subject} onChange={change} required placeholder="What's this about?"
+                      onFocus={() => setFocused("subject")} onBlur={() => setFocused(null)} />
+                  </div>
+
+                  <div className="ct-field" style={{ marginBottom: 22 }}>
+                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: focused === "message" ? G : "#9ca3af", marginBottom: 6, transition: "color .15s" }}>Message</label>
+                    <textarea name="message" value={form.message} onChange={change} required rows={4} placeholder="Tell me about your project or idea…"
+                      onFocus={() => setFocused("message")} onBlur={() => setFocused(null)} />
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <p style={{ fontSize: 10, color: "#d1d5db" }}>Private & secure</p>
+                    <button type="submit" disabled={sending} className="ct-send"
+                      style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 24px", borderRadius: 10, background: sending ? "#86efac" : G, color: "#fff", fontSize: 12, fontWeight: 700, border: "none", cursor: sending ? "not-allowed" : "pointer", transition: "background .15s" }}>
+                      {sending ? (
+                        <>
+                          <span style={{ width: 13, height: 13, border: "2px solid rgba(255,255,255,.35)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "ct-spin .7s linear infinite" }} />
+                          Sending…
+                        </>
+                      ) : (
+                        <>Send message <I d={ARR_D} s={13} /></>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
