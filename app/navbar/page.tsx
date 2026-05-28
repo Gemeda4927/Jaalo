@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { personalInfo, socialLinks } from '@/lib/data'
 import { useState, useEffect } from 'react'
 import {
-  Menu, X, Github, Codepen, Mail,
+  Menu, X, Github, Mail,
   Download, Check,
 } from 'lucide-react'
 
@@ -19,17 +19,16 @@ const navItems = [
 ]
 
 const socialIcons = [
-  { icon: Github,  href: () => socialLinks.github,             label: 'GitHub'  },
-  { icon: Codepen, href: () => socialLinks.codepen ?? '#',     label: 'CodePen' },
-  { icon: Mail,    href: () => `mailto:${personalInfo.email}`, label: 'Email'   },
+  { icon: Github, href: () => socialLinks.github,             label: 'GitHub' },
+  { icon: Mail,   href: () => `mailto:${personalInfo.email}`, label: 'Email'  },
 ]
 
 export default function Navbar() {
   const pathname = usePathname()
-  const [isOpen,    setIsOpen]    = useState(false)
-  const [mounted,   setMounted]   = useState(false)
-  const [done,      setDone]      = useState(false)
-  const [loading,   setLoading]   = useState(false)
+  const [isOpen,  setIsOpen]  = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [done,    setDone]    = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -58,7 +57,6 @@ export default function Navbar() {
 
   const ResumeIcon = done ? Check : Download
 
-  /* ─── shared styles ─────────────────────────────────── */
   const iconLinkStyle: React.CSSProperties = {
     fontSize: 20,
     color: '#9ca3af',
@@ -70,7 +68,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── DESKTOP NAV ──────────────────────────────────── */}
+      {/* ── DESKTOP NAV ── */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
         background: '#fff',
@@ -182,17 +180,15 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* ── MOBILE DRAWER ────────────────────────────────── */}
+      {/* ── MOBILE DRAWER ── */}
       {isOpen && (
         <>
-          {/* Overlay */}
           <div onClick={() => setIsOpen(false)} style={{
             position: 'fixed', inset: 0,
             background: 'rgba(0,0,0,0.18)',
             zIndex: 40,
           }} />
 
-          {/* Drawer */}
           <div style={{
             position: 'fixed', top: 0, right: 0, bottom: 0,
             width: 260, background: '#fff', zIndex: 50,
