@@ -29,8 +29,6 @@ export default function Hero() {
     return () => clearInterval(id);
   }, []);
 
-
-
   return (
     <section
       className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-20 pb-16 md:pt-24 md:pb-20"
@@ -162,7 +160,6 @@ export default function Hero() {
           {/* ══════════ RIGHT ══════════ */}
           <div className="flex flex-col gap-6">
 
-            {/* ══════════ MOBILE FIRST — Creative 3D Person on Ladder ══════════ */}
             <div
               className="rounded-2xl overflow-hidden relative"
               style={{
@@ -194,18 +191,12 @@ export default function Hero() {
                   >
                     {/* ── Phone (tilted 3D) ── */}
                     <g transform="translate(86,22) rotate(-7)">
-                      {/* Body */}
                       <rect x="0" y="0" width="88" height="176" rx="18" fill="#1e293b" stroke="#334155" strokeWidth="1.5"/>
-                      {/* Screen */}
                       <rect x="5" y="16" width="78" height="148" rx="12" fill="#0a0f1e"/>
-                      {/* Notch */}
                       <rect x="27" y="7" width="34" height="6" rx="3" fill="#0a0f1e"/>
-                      {/* Screen glow header */}
                       <rect x="5" y="16" width="78" height="36" rx="12" fill="#22c55e" fillOpacity="0.08"/>
-                      {/* App bar */}
                       <rect x="11" y="20" width="46" height="5" rx="2.5" fill="#22c55e" fillOpacity="0.75"/>
                       <rect x="11" y="29" width="32" height="3" rx="1.5" fill="#334155"/>
-                      {/* Cards */}
                       {[
                         { y: 38, accent: "#22c55e", w1: 28, w2: 42 },
                         { y: 60, accent: "#3b82f6", w1: 20, w2: 46 },
@@ -217,7 +208,6 @@ export default function Hero() {
                           <rect x="15" y={card.y + 10} width={card.w2} height="3" rx="1.5" fill="#475569"/>
                         </g>
                       ))}
-                      {/* Stat pills */}
                       {[
                         { x: 11, color: "#22c55e" },
                         { x: 34, color: "#3b82f6" },
@@ -229,23 +219,17 @@ export default function Hero() {
                           <rect x={s.x + 4} y="114" width="9" height="2" rx="1" fill="#475569"/>
                         </g>
                       ))}
-                      {/* Bottom nav */}
                       <rect x="11" y="127" width="66" height="18" rx="6" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
                       {[16, 37, 57].map((x, i) => (
                         <rect key={i} x={x} y="132" width="12" height="8" rx="2.5" fill={i === 0 ? "#22c55e" : "#334155"} fillOpacity={i === 0 ? 0.35 : 0.5}/>
                       ))}
-                      {/* Home indicator */}
                       <rect x="30" y="153" width="28" height="2.5" rx="2" fill="#334155"/>
-                      {/* Side shine */}
                       <rect x="85" y="0" width="3" height="176" rx="2" fill="white" fillOpacity="0.025"/>
                     </g>
 
                     {/* ── Ladder ── */}
-                    {/* Left rail */}
                     <line x1="22" y1="284" x2="74" y2="56" stroke="#2d3f5e" strokeWidth="4" strokeLinecap="round"/>
-                    {/* Right rail */}
                     <line x1="62" y1="284" x2="106" y2="82" stroke="#2d3f5e" strokeWidth="4" strokeLinecap="round"/>
-                    {/* Rungs */}
                     {[
                       { y: 262, x1: 25, x2: 65 },
                       { y: 234, x1: 30, x2: 70 },
@@ -258,9 +242,7 @@ export default function Hero() {
                       <line key={i} x1={r.x1} y1={r.y} x2={r.x2} y2={r.y} stroke="#3d5278" strokeWidth="2.5" strokeLinecap="round"/>
                     ))}
 
-                    {/* ── Person standing on rung at y≈122 ── */}
-
-                    {/* Ground shadow */}
+                    {/* ── Person ── */}
                     <ellipse cx="44" cy="285" rx="22" ry="4.5" fill="#000" fillOpacity="0.4"/>
 
                     {/* Back leg */}
@@ -273,22 +255,15 @@ export default function Hero() {
 
                     {/* Torso */}
                     <rect x="72" y="142" width="24" height="43" rx="9" fill="#22c55e"/>
-                    {/* Shirt highlight */}
                     <rect x="74" y="145" width="9" height="18" rx="4.5" fill="white" fillOpacity="0.09"/>
-                    {/* Collar */}
                     <rect x="77" y="139" width="14" height="7" rx="3.5" fill="#16a34a"/>
 
-                    {/* Right arm — reaching up to paint/build the phone */}
+                    {/* Right arm — reaching up */}
                     <path d="M 96 150 Q 116 132 122 112" stroke="#fbbf24" strokeWidth="6.5" strokeLinecap="round" fill="none"/>
                     {/* Right hand */}
                     <circle cx="124" cy="109" r="5.5" fill="#fbbf24"/>
-                    {/* Paintbrush / stylus */}
-                    <line x1="124" y1="104" x2="132" y2="90" stroke="#92400e" strokeWidth="2.5" strokeLinecap="round"/>
-                    <ellipse cx="132.5" cy="88.5" rx="3.5" ry="2.2" fill="#22c55e" transform="rotate(-32 132.5 88.5)"/>
-                    {/* Brush tip glow */}
-                    <circle cx="134" cy="87" r="3" fill="#22c55e" fillOpacity="0.35"/>
 
-                    {/* Left arm — balancing outward */}
+                    {/* Left arm */}
                     <path d="M 72 150 Q 55 144 46 136" stroke="#fbbf24" strokeWidth="6.5" strokeLinecap="round" fill="none"/>
                     <circle cx="44" cy="134" r="5" fill="#fbbf24"/>
 
@@ -302,12 +277,11 @@ export default function Hero() {
                     {/* Eyes */}
                     <circle cx="78.5" cy="121" r="2.2" fill="#1f2937"/>
                     <circle cx="89.5" cy="121" r="2.2" fill="#1f2937"/>
-                    {/* Eye shine */}
                     <circle cx="79.3" cy="120.2" r="0.9" fill="white"/>
                     <circle cx="90.3" cy="120.2" r="0.9" fill="white"/>
                     {/* Smile */}
                     <path d="M 78 128 Q 84 133 90 128" stroke="#1f2937" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-                    {/* Eyebrows — focused */}
+                    {/* Eyebrows */}
                     <path d="M 75 116 Q 78.5 113.5 82 115.5" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
                     <path d="M 86 115.5 Q 89.5 113.5 93 116" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
 
@@ -315,11 +289,9 @@ export default function Hero() {
                     <ellipse cx="84" cy="111" rx="16" ry="7" fill="#facc15"/>
                     <rect x="69" y="105" width="30" height="9" rx="4.5" fill="#eab308"/>
                     <rect x="70" y="108" width="28" height="5" rx="2.5" fill="#facc15"/>
-                    {/* Hat brim shadow */}
                     <rect x="67" y="113" width="34" height="2" rx="1" fill="#ca8a04" fillOpacity="0.4"/>
 
-                    {/* ── Arrow callout pointing up-right toward phone ── */}
-                    {/* Curved arrow path */}
+                    {/* Arrow callout */}
                     <path
                       d="M 14 80 Q 28 52 56 40"
                       stroke="#22c55e"
@@ -328,20 +300,16 @@ export default function Hero() {
                       strokeDasharray="5 3"
                       fill="none"
                     />
-                    {/* Arrowhead */}
                     <polygon points="56,40 46,38 50,48" fill="#22c55e"/>
 
                     {/* Callout bubble */}
                     <rect x="0" y="84" width="82" height="38" rx="10" fill="#0d2218" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
-                    {/* Bubble pointer */}
                     <polygon points="24,84 32,76 40,84" fill="#0d2218"/>
                     <line x1="24" y1="84" x2="32" y2="76" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
                     <line x1="32" y1="76" x2="40" y2="84" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
-                    {/* Callout text line 1 */}
                     <text x="41" y="99" textAnchor="middle" fontSize="7.5" fill="#22c55e" fontFamily="'SF Mono',monospace" fontWeight="700" letterSpacing="0.5">
                       Gemeda builds
                     </text>
-                    {/* Callout text line 2 */}
                     <text x="41" y="111" textAnchor="middle" fontSize="7" fill="#86efac" fontFamily="'SF Mono',monospace">
                       smart apps ✦
                     </text>
@@ -432,7 +400,7 @@ export default function Hero() {
                     ))}
                   </div>
 
-                  {/* "Can build" badge */}
+                  {/* Badge */}
                   <div
                     style={{
                       marginTop: 4,
@@ -453,7 +421,6 @@ export default function Hero() {
                 </div>
               </div>
             </div>
-            {/* ══════════ END MOBILE FIRST ══════════ */}
 
           </div>
         </div>

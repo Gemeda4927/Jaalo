@@ -82,11 +82,11 @@ export const experience = [
   },
   {
     company: "Jimma Institute of Technology",
-    role: "Teaching Assistant - C++ Programming",
+    role: "Teaching Fellow Students - C++ Programming",
     period: "2023 - Present",
     location: "Jimma, Ethiopia",
     description: [
-      "Mentored 200+ first-year engineering students in C++ programming fundamentals",
+      "Mentored 200+ pre - engineering students in C++ programming fundamentals",
       "Conducted weekly lab sessions and assisted in course material development",
       "Created interactive worksheets and coding exercises",
       "Provided one-on-one tutoring and debugging assistance"
@@ -95,7 +95,7 @@ export const experience = [
     achievements: [
       "Improved student pass rates by 25%",
       "Developed comprehensive C++ worksheet platform",
-      "Recognized for exceptional teaching assistant performance"
+      "Recognized for exceptional Teaching fellow studnets performance"
     ]
   }
 ]
@@ -110,7 +110,7 @@ export const education = [
     gpa: "3.6/4.0",
     achievements: [
       "Active participant in CBT projects",
-      "Teaching Assistant for C++ course",
+      "Teaching fellow studnets for C++ course",
       "Member of Software Engineering Student Association"
     ]
   }
@@ -281,7 +281,7 @@ export const achievements = [
     status: "In Progress"
   },
   {
-    title: "C++ Teaching Assistant Excellence",
+    title: "C++ Teaching fellow studnets Excellence",
     description: "Mentored 200+ students and developed interactive learning materials",
     date: "2023 - Present",
     issuer: "Jimma Institute of Technology",
@@ -328,7 +328,7 @@ export const testimonials = [
   {
     name: "Dr. Abebe",
     role: "C++ Course Instructor",
-    quote: "As a teaching assistant, Gemeda showed remarkable patience and teaching ability, helping hundreds of students master programming fundamentals.",
+    quote: "As a Teaching fellow studnets, Gemeda showed remarkable patience and teaching ability, helping hundreds of students master programming fundamentals.",
     company: "Jimma Institute of Technology"
   },
   {
@@ -368,7 +368,7 @@ export const careerHighlights = [
   {
     year: "2023-2025",
     title: "Teaching Excellence",
-    description: "Mentored 200+ students as C++ Teaching Assistant"
+    description: "Mentored 200+ students as C++ Teaching fellow studnets"
   }
 ]
 
