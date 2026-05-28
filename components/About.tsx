@@ -20,7 +20,6 @@ import {
   Quote,
   Globe,
   BookOpen,
-  MessageCircle,
   TrendingUp,
   Medal,
   Crown,
@@ -64,10 +63,9 @@ const css = `
   background: #22c55e; display: inline-block; flex-shrink: 0;
 }
 
-/* ── Headline ── */
 .ab-headline {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 44px;
+  font-size: clamp(30px, 5vw, 44px);
   font-weight: 600;
   line-height: 1.1;
   color: #111827;
@@ -95,8 +93,23 @@ const css = `
   display: flex; align-items: center; justify-content: center;
 }
 
+/* Tab nav — scrollable on mobile */
+.ab-tab-row {
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1.5px solid #f0f0f0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.ab-tab-row::-webkit-scrollbar { display: none; }
+
 .ab-tab {
   flex: 1;
+  min-width: 90px;
   padding: 8px 10px;
   border-radius: 10px;
   border: none;
@@ -207,16 +220,9 @@ const css = `
   border-radius: 16px;
   background: #f9fafb;
   border: 1.5px solid #f0f0f0;
+  transition: border-color .18s;
 }
-
-.ab-testi-dot-btn {
-  border: none;
-  cursor: pointer;
-  border-radius: 3px;
-  height: 4px;
-  padding: 0;
-  transition: all .25s ease;
-}
+.ab-testi-wrap:hover { border-color: #bbf7d0; }
 
 .ab-company-link {
   color: inherit;
@@ -226,6 +232,70 @@ const css = `
   transition: border-color .15s, color .15s;
 }
 .ab-company-link:hover { color: #16a34a; border-bottom-color: #22c55e; }
+
+/* ── Responsive 2-col → 1-col ── */
+.ab-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .ab-main-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .ab-headline { font-size: 30px; }
+  .ab-sub { font-size: 12.5px; }
+}
+
+/* Info grid — 2-col on mobile, 4-col on desktop */
+.ab-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-width: 860px;
+  margin: 0 auto 48px;
+}
+@media (max-width: 768px) {
+  .ab-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 32px;
+  }
+}
+
+/* Testimonials grid */
+.ab-testi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .ab-testi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Section padding */
+.ab-section-pad {
+  padding: 72px 24px;
+}
+@media (max-width: 768px) {
+  .ab-section-pad {
+    padding: 48px 16px;
+  }
+}
+
+/* Experience timeline — left padding safe on mobile */
+.ab-timeline {
+  position: relative;
+  padding-left: 28px;
+  border-left: 2px solid #bbf7d0;
+}
+
+/* Touch tap target sizing */
+.ab-ach-btn { min-height: 44px; }
+.ab-tab { min-height: 40px; }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(6px); }
@@ -267,8 +337,8 @@ export default function AboutComponent() {
 
       <section
         id="about"
-        className="ab"
-        style={{ padding: "72px 24px", position: "relative", overflow: "hidden" }}
+        className="ab ab-section-pad"
+        style={{ position: "relative", overflow: "hidden" }}
       >
         {/* dot grid bg */}
         <div style={{
@@ -292,30 +362,22 @@ export default function AboutComponent() {
         <div style={{ position: "relative", zIndex: 1, maxWidth: 1080, margin: "0 auto" }}>
 
           {/* ════════════ HEADER ════════════ */}
-          <div style={{ textAlign: "center", marginBottom: 44 }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
               <span className="ab-eyebrow">
                 <span className="ab-eyebrow-dot" />
                 About Me
               </span>
             </div>
-
             <h2 className="ab-headline" style={{ marginBottom: 14 }}>
               About <em>Gemeda</em>
             </h2>
-
             <div className="ab-divider" style={{ marginBottom: 14 }} />
             <p className="ab-sub">{personalInfo.bio}</p>
           </div>
 
-          {/* ════════════ INFO ROW ════════════ */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(196px, 1fr))",
-            gap: 8,
-            maxWidth: 860,
-            margin: "0 auto 48px",
-          }}>
+          {/* ════════════ INFO GRID ════════════ */}
+          <div className="ab-info-grid">
             {infoItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -323,11 +385,11 @@ export default function AboutComponent() {
                   <span className="ab-info-icon">
                     <Icon size={13} style={{ color: "#16a34a" }} />
                   </span>
-                  <div style={{ ...col, gap: 3 }}>
+                  <div style={{ ...col, gap: 3, minWidth: 0 }}>
                     <p style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, letterSpacing: "1.5px", textTransform: "uppercase", color: "#9ca3af" }}>
                       {item.label}
                     </p>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>
+                    <p style={{ fontSize: 11.5, fontWeight: 600, color: "#374151", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {item.value}
                     </p>
                   </div>
@@ -336,17 +398,14 @@ export default function AboutComponent() {
             })}
           </div>
 
-          {/* ════════════ 2-COL GRID ════════════ */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
+          {/* ════════════ MAIN 2-COL GRID ════════════ */}
+          <div className="ab-main-grid">
 
             {/* ── LEFT ── */}
             <div style={{ ...col, gap: 20 }}>
 
               {/* Tab nav */}
-              <div style={{
-                display: "flex", gap: 4, padding: 5,
-                borderRadius: 14, background: "#f9fafb", border: "1.5px solid #f0f0f0",
-              }}>
+              <div className="ab-tab-row">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   return (
@@ -362,14 +421,14 @@ export default function AboutComponent() {
                 })}
               </div>
 
-              {/* Tab content — auto height, no fixed min-height */}
+              {/* Tab content */}
               <div className="fade-up" key={activeTab}>
 
                 {/* ── BACKGROUND ── */}
                 {activeTab === "background" && (
                   <div style={{ ...col, gap: 16 }}>
                     <p style={{ fontSize: 12.5, lineHeight: 1.75, color: "#374151" }}>
-                      I'm a dedicated Full-Stack and Mobilen App Developer with a journey that started
+                      I'm a dedicated Full-Stack and Mobile App Developer with a journey that started
                       in C++ programming and evolved into mastering modern web and mobile
                       technologies. Currently pursuing Software Engineering at Jimma Institute
                       of Technology (expected 2026).
@@ -386,7 +445,7 @@ export default function AboutComponent() {
                       {" "}(React Native), I bridge beautiful user experiences with powerful backend systems.
                     </div>
                     <p style={{ fontSize: 12.5, lineHeight: 1.75, color: "#374151" }}>
-                      Beyond coding, I'm a Teaching fellow students C++ programming, having
+                      Beyond coding, I teach fellow students C++ programming, having
                       mentored 200+ students and developed interactive learning platforms.
                     </p>
                     <div className="ab-cert">
@@ -394,7 +453,7 @@ export default function AboutComponent() {
                         <Medal size={15} style={{ color: "#d97706" }} />
                       </div>
                       <div style={{ ...col, gap: 6 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
                           <p style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>
                             Eagle Lion Systems Certification
                           </p>
@@ -407,7 +466,7 @@ export default function AboutComponent() {
                           href="https://credsverse.com/credentials/f758a319-970e-4979-85c8-9404c5b8afe3"
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{ fontSize: 11, fontWeight: 600, color: "#16a34a", display: "inline-flex", alignItems: "center", gap: 4 }}
+                          style={{ fontSize: 11, fontWeight: 600, color: "#16a34a", display: "inline-flex", alignItems: "center", gap: 4, minHeight: 36, alignSelf: "flex-start" }}
                         >
                           View Credential <ExternalLink size={10} />
                         </a>
@@ -420,7 +479,7 @@ export default function AboutComponent() {
                 {activeTab === "journey" && (
                   <div style={{ ...col, gap: 24 }}>
                     {/* Timeline */}
-                    <div style={{ position: "relative", paddingLeft: 28, borderLeft: "2px solid #bbf7d0" }}>
+                    <div className="ab-timeline">
                       <div style={{ ...col, gap: 24 }}>
                         {[
                           {
@@ -486,7 +545,11 @@ export default function AboutComponent() {
                                       href={achievement.link}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      style={{ fontSize: 11, fontWeight: 600, color: "#16a34a", display: "inline-flex", alignItems: "center", gap: 4, marginTop: 4 }}
+                                      style={{
+                                        fontSize: 11, fontWeight: 600, color: "#16a34a",
+                                        display: "inline-flex", alignItems: "center", gap: 4,
+                                        marginTop: 4, minHeight: 36,
+                                      }}
                                       onClick={(e) => e.stopPropagation()}
                                     >
                                       View Credential <ExternalLink size={9} />
@@ -538,7 +601,7 @@ export default function AboutComponent() {
                 <Briefcase size={16} style={{ color: "#22c55e" }} />
                 <h3 style={{
                   fontFamily: "'Cormorant Garamond',serif",
-                  fontSize: 26,
+                  fontSize: "clamp(22px, 3vw, 26px)",
                   fontWeight: 600,
                   color: "#111827",
                 }}>
@@ -546,7 +609,7 @@ export default function AboutComponent() {
                 </h3>
               </div>
 
-              <div style={{ position: "relative", paddingLeft: 28, borderLeft: "2px solid #bbf7d0" }}>
+              <div className="ab-timeline">
                 <div style={{ ...col, gap: 32 }}>
                   {experience.map((exp, index) => (
                     <div key={index} style={{ position: "relative" }}>
@@ -562,7 +625,6 @@ export default function AboutComponent() {
                       <div style={{ ...col, gap: 3 }}>
                         <p style={{ fontSize: 13, fontWeight: 700, color: "#111827" }}>{exp.role}</p>
                         <p style={{ fontSize: 11, color: "#9ca3af", fontWeight: 500 }}>
-                          {/* Link company names */}
                           {exp.company?.toLowerCase().includes("eagle lion") ? (
                             <a href="https://www.eaglelionsystems.com/" target="_blank" rel="noopener noreferrer" className="ab-company-link" style={{ color: "#9ca3af" }}>
                               {exp.company}
@@ -582,8 +644,8 @@ export default function AboutComponent() {
                           <div style={{ ...col, gap: 7 }}>
                             {exp.description.map((item, i) => (
                               <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 7, fontSize: 11.5, color: "#6b7280" }}>
-                                <CheckCheck size={11} style={{ color: "#22c55e", flexShrink: 0, marginTop: 1 }} />
-                                {item}
+                                <CheckCheck size={11} style={{ color: "#22c55e", flexShrink: 0, marginTop: 2 }} />
+                                <span style={{ lineHeight: 1.6 }}>{item}</span>
                               </div>
                             ))}
                           </div>
@@ -602,11 +664,18 @@ export default function AboutComponent() {
 
                       {exp.certificate && (
                         <div style={{
-                          display: "flex", alignItems: "center", justifyContent: "space-between",
-                          padding: "9px 12px", borderRadius: 10, marginTop: 10,
-                          background: "#fffbeb", border: "1px solid #fde68a",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          flexWrap: "wrap",
+                          gap: 8,
+                          padding: "9px 12px",
+                          borderRadius: 10,
+                          marginTop: 10,
+                          background: "#fffbeb",
+                          border: "1px solid #fde68a",
                         }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
                             <Medal size={12} style={{ color: "#d97706" }} />
                             <span style={{ fontSize: 11, fontWeight: 600, color: "#374151" }}>
                               {exp.certificateName || "Internship Certificate"}
@@ -619,7 +688,11 @@ export default function AboutComponent() {
                             href={exp.certificate}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ fontSize: 11, fontWeight: 600, color: "#16a34a", display: "inline-flex", alignItems: "center", gap: 4 }}
+                            style={{
+                              fontSize: 11, fontWeight: 600, color: "#16a34a",
+                              display: "inline-flex", alignItems: "center", gap: 4,
+                              minHeight: 36, padding: "0 2px",
+                            }}
                           >
                             Verify <ExternalLink size={9} />
                           </a>
@@ -631,7 +704,11 @@ export default function AboutComponent() {
                           href={exp.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{ fontSize: 11, color: "#6b7280", display: "inline-flex", alignItems: "center", gap: 5, marginTop: 8 }}
+                          style={{
+                            fontSize: 11, color: "#6b7280",
+                            display: "inline-flex", alignItems: "center", gap: 5,
+                            marginTop: 8, minHeight: 36,
+                          }}
                         >
                           <Github size={11} />
                           View on GitHub
@@ -648,7 +725,6 @@ export default function AboutComponent() {
           {testimonials && testimonials.length > 0 && (
             <div style={{ marginTop: 56 }}>
 
-              {/* Section header */}
               <div style={{ textAlign: "center", marginBottom: 28 }}>
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
                   <span className="ab-eyebrow">
@@ -656,26 +732,19 @@ export default function AboutComponent() {
                     Testimonials
                   </span>
                 </div>
-                <h2 className="ab-headline" style={{ fontSize: 32, marginBottom: 10 }}>
+                <h2 className="ab-headline" style={{ fontSize: "clamp(26px, 4vw, 32px)", marginBottom: 10 }}>
                   What people <em>say</em>
                 </h2>
                 <div className="ab-divider" />
               </div>
 
-              {/* Cards grid */}
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                gap: 16,
-              }}>
+              <div className="ab-testi-grid">
                 {testimonials.map((t, i) => (
                   <div
                     key={i}
                     className="ab-testi-wrap"
                     style={{
-                      padding: "18px 20px",
                       cursor: "pointer",
-                      transition: "border-color .18s",
                       borderColor: activeTestimonial === i ? "#bbf7d0" : undefined,
                     }}
                     onClick={() => setActiveTestimonial(i)}
@@ -684,7 +753,7 @@ export default function AboutComponent() {
                     <p style={{ fontSize: 12, fontStyle: "italic", color: "#6b7280", lineHeight: 1.7, marginBottom: 14 }}>
                       {t.quote}
                     </p>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
                       <div style={{ ...col, gap: 2 }}>
                         <p style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>{t.name}</p>
                         <p style={{ fontSize: 10.5, color: "#9ca3af" }}>{t.role}</p>

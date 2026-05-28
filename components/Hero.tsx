@@ -1,12 +1,6 @@
 "use client";
 import { personalInfo, socialLinks } from "@/lib/data";
-import {
-  Github,
-  Linkedin,
-  Mail,
-  ArrowRight,
-  Code,
-} from "lucide-react";
+import { Github, Linkedin, Mail, ArrowRight, Code } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Hero() {
@@ -34,6 +28,41 @@ export default function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-20 pb-16 md:pt-24 md:pb-20"
       style={{ background: "#ffffff" }}
     >
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes roleFade {
+          0%,100% { opacity: 0; transform: translateY(6px); }
+          15%,85% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes floatSteam {
+          0%,100% { transform: translateY(0) scaleX(1); opacity: 0.55; }
+          50%      { transform: translateY(-7px) scaleX(1.15); opacity: 0.9; }
+        }
+        @keyframes glowPulse {
+          0%,100% { opacity: 0.18; }
+          50%      { opacity: 0.32; }
+        }
+        @keyframes blinkDot {
+          0%,100% { opacity: 1; }
+          50%      { opacity: 0.3; }
+        }
+        .hero-left > * { animation: fadeUp 0.55s ease both; }
+        .hero-left > *:nth-child(1) { animation-delay: 0.05s; }
+        .hero-left > *:nth-child(2) { animation-delay: 0.13s; }
+        .hero-left > *:nth-child(3) { animation-delay: 0.21s; }
+        .hero-left > *:nth-child(4) { animation-delay: 0.29s; }
+        .hero-left > *:nth-child(5) { animation-delay: 0.37s; }
+        .role-badge { animation: roleFade 2.5s ease both; }
+        .steam-1 { animation: floatSteam 2.1s ease-in-out infinite; }
+        .steam-2 { animation: floatSteam 2.1s ease-in-out infinite 0.35s; }
+        .steam-3 { animation: floatSteam 2.1s ease-in-out infinite 0.7s; }
+        .cup-glow { animation: glowPulse 2.6s ease-in-out infinite; }
+        .live-dot { animation: blinkDot 1.6s ease-in-out infinite; }
+      `}</style>
+
       {/* Subtle grid */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -41,17 +70,17 @@ export default function Hero() {
           backgroundImage:
             "linear-gradient(#f3f4f6 1px, transparent 1px), linear-gradient(90deg, #f3f4f6 1px, transparent 1px)",
           backgroundSize: "40px 40px",
-          opacity: 0.7,
+          opacity: 0.65,
         }}
       />
-      {/* Glow top-left */}
+
+      {/* Soft ambient glows */}
       <div
-        className="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)" }}
+        className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 70%)" }}
       />
-      {/* Glow bottom-right */}
       <div
-        className="absolute -bottom-32 -right-32 w-[380px] h-[380px] rounded-full pointer-events-none"
+        className="absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full pointer-events-none"
         style={{ background: "radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)" }}
       />
 
@@ -59,9 +88,7 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-10 items-center">
 
           {/* ══════════ LEFT ══════════ */}
-          <div className="flex flex-col gap-7">
-
-            {/* Name & Role */}
+          <div className="hero-left flex flex-col gap-7">
             <div className="flex flex-col gap-3">
               <p className="text-sm font-medium" style={{ color: "#9ca3af" }}>
                 Hello, I'm
@@ -73,7 +100,8 @@ export default function Hero() {
                 Gemeda Tamiru
               </h1>
               <div
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium w-fit"
+                key={currentRole}
+                className="role-badge inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium w-fit"
                 style={{ background: "#f0fdf4", color: "#16a34a" }}
               >
                 <span
@@ -84,7 +112,6 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Description */}
             <p className="text-[14px] leading-relaxed" style={{ color: "#6b7280" }}>
               I craft{" "}
               <span className="font-semibold" style={{ color: "#22c55e" }}>
@@ -94,7 +121,6 @@ export default function Hero() {
               expertise delivering clean code and innovative solutions.
             </p>
 
-            {/* CTAs */}
             <div className="flex flex-row gap-3">
               <a
                 href="/projects"
@@ -102,7 +128,7 @@ export default function Hero() {
                 style={{
                   background: "#22c55e",
                   color: "#ffffff",
-                  boxShadow: "0 4px 16px rgba(34,197,94,0.30)",
+                  boxShadow: "0 4px 16px rgba(34,197,94,0.28)",
                 }}
               >
                 <Code size={14} />
@@ -123,7 +149,6 @@ export default function Hero() {
               </a>
             </div>
 
-            {/* Socials */}
             <div className="flex flex-col gap-3">
               <p
                 className="text-[11px] font-semibold uppercase tracking-widest"
@@ -157,272 +182,464 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ══════════ RIGHT ══════════ */}
-          <div className="flex flex-col gap-6">
+          {/* ══════════ RIGHT — PANEL ══════════ */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 
+            {/* Top label row */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div
+                  className="live-dot"
+                  style={{
+                    width: 8, height: 8, borderRadius: "50%",
+                    background: "#22c55e",
+                    boxShadow: "0 0 0 3px rgba(34,197,94,0.18)",
+                  }}
+                />
+                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#22c55e" }}>
+                  Mobile First Development
+                </span>
+              </div>
+              <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 10px", borderRadius: 20, background: "#f0fdf4", color: "#16a34a", border: "1px solid #bbf7d0" }}>
+                Live
+              </span>
+            </div>
+
+            {/* Main card */}
             <div
-              className="rounded-2xl overflow-hidden relative"
               style={{
-                background: "#0a0f1e",
-                border: "1px solid #1e293b",
-                boxShadow: "0 4px 32px rgba(0,0,0,0.28)",
-                minHeight: 220,
+                background: "#ffffff",
+                border: "1.5px solid #e5e7eb",
+                borderRadius: 20,
+                overflow: "hidden",
+                boxShadow: "0 8px 40px rgba(0,0,0,0.06), 0 2px 8px rgba(34,197,94,0.05)",
               }}
             >
-              {/* Subtle star field background */}
+              {/* Card header */}
               <div
-                className="absolute inset-0 pointer-events-none"
                 style={{
-                  backgroundImage:
-                    "radial-gradient(circle, rgba(34,197,94,0.09) 0%, transparent 65%), radial-gradient(circle at 80% 20%, rgba(59,130,246,0.06) 0%, transparent 50%)",
+                  background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+                  borderBottom: "1px solid #bbf7d0",
+                  padding: "14px 20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
-              />
+              >
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "#14532d", margin: 0, letterSpacing: "-0.01em" }}>
+                    Beautiful Mobile Apps
+                  </p>
+                  <p style={{ fontSize: 11.5, color: "#16a34a", margin: "2px 0 0", fontWeight: 500 }}>
+                    Flutter · React Native · Firebase
+                  </p>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid #d1fae5", borderRadius: 8, padding: "4px 8px" }}>
+                  <span style={{ fontSize: 12 }}>📱</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#16a34a" }}>x2 Platforms</span>
+                </div>
+              </div>
 
-              <div className="flex items-stretch relative z-10">
+              {/* Body */}
+              <div style={{ display: "flex", alignItems: "stretch" }}>
 
-                {/* SVG Illustration */}
-                <div className="flex-shrink-0" style={{ padding: "16px 0 0 16px" }}>
-                  <svg
-                    viewBox="0 0 210 290"
-                    width="210"
-                    height="290"
-                    xmlns="http://www.w3.org/2000/svg"
-                    style={{ display: "block" }}
-                  >
-                    {/* ── Phone (tilted 3D) ── */}
-                    <g transform="translate(86,22) rotate(-7)">
-                      <rect x="0" y="0" width="88" height="176" rx="18" fill="#1e293b" stroke="#334155" strokeWidth="1.5"/>
-                      <rect x="5" y="16" width="78" height="148" rx="12" fill="#0a0f1e"/>
-                      <rect x="27" y="7" width="34" height="6" rx="3" fill="#0a0f1e"/>
-                      <rect x="5" y="16" width="78" height="36" rx="12" fill="#22c55e" fillOpacity="0.08"/>
-                      <rect x="11" y="20" width="46" height="5" rx="2.5" fill="#22c55e" fillOpacity="0.75"/>
-                      <rect x="11" y="29" width="32" height="3" rx="1.5" fill="#334155"/>
+                {/* ── SVG Illustration column ── */}
+                <div
+                  style={{
+                    flexShrink: 0,
+                    padding: "20px 4px 20px 14px",
+                    background: "linear-gradient(180deg, #fafffe 0%, #f0fdf4 100%)",
+                    borderRight: "1px solid #e5e7eb",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* Person holding glowing coffee, looking up at phone */}
+                  <svg viewBox="0 0 210 310" width="188" height="278" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", overflow: "visible" }}>
+
+                    {/* ── Phone (tilted, floating above) ── */}
+                    <g transform="translate(104,6) rotate(-6)">
+                      {/* Phone shell */}
+                      <rect x="0" y="0" width="90" height="178" rx="18" fill="#0f172a" stroke="#1e3a5f" strokeWidth="1.8"/>
+                      {/* Side button */}
+                      <rect x="-2" y="42" width="2.5" height="12" rx="1.2" fill="#1e293b"/>
+                      <rect x="-2" y="58" width="2.5" height="20" rx="1.2" fill="#1e293b"/>
+                      {/* Screen */}
+                      <rect x="5" y="14" width="80" height="152" rx="13" fill="#060d1a"/>
+                      {/* Dynamic island */}
+                      <rect x="28" y="18" width="34" height="7" rx="3.5" fill="#0f172a"/>
+
+                      {/* ── Status bar ── */}
+                      <text x="10" y="30" fontSize="5" fill="#94a3b8" fontFamily="monospace" fontWeight="600">9:41</text>
+                      <rect x="68" y="26" width="10" height="4" rx="2" fill="#334155"/>
+                      <rect x="68" y="26" width="7" height="4" rx="2" fill="#22c55e" fillOpacity="0.8"/>
+                      <rect x="60" y="26.5" width="6" height="3" rx="1" fill="#475569"/>
+
+                      {/* ── Hero banner card ── */}
+                      <rect x="8" y="36" width="74" height="34" rx="8" fill="#0d2a14" stroke="#14532d" strokeWidth="0.6"/>
+                      {/* Banner glow stripe */}
+                      <rect x="8" y="36" width="74" height="10" rx="8" fill="#22c55e" fillOpacity="0.15"/>
+                      <rect x="8" y="42" width="74" height="4" fill="#22c55e" fillOpacity="0.08"/>
+                      {/* Avatar circle */}
+                      <circle cx="21" cy="57" r="8" fill="#14532d" stroke="#22c55e" strokeWidth="0.7" strokeOpacity="0.5"/>
+                      <text x="21" y="60" textAnchor="middle" fontSize="6.5" fill="#4ade80" fontWeight="700">GT</text>
+                      {/* Name + role */}
+                      <text x="33" y="54" fontSize="6" fill="#f0fdf4" fontWeight="700" fontFamily="sans-serif">Gemeda T.</text>
+                      <text x="33" y="62" fontSize="5" fill="#4ade80" fontFamily="sans-serif">Full-Stack Dev</text>
+                      {/* Online dot */}
+                      <circle cx="27" cy="49" r="2.2" fill="#22c55e" stroke="#0d2a14" strokeWidth="0.8"/>
+                      {/* Verified badge */}
+                      <circle cx="72" cy="57" r="5" fill="#22c55e" fillOpacity="0.18" stroke="#22c55e" strokeOpacity="0.4" strokeWidth="0.6"/>
+                      <path d="M 69.5 57 L 71.3 58.8 L 74.5 55.2" stroke="#22c55e" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+
+                      {/* ── Section label ── */}
+                      <text x="10" y="82" fontSize="5" fill="#64748b" fontWeight="700" letterSpacing="0.06em" fontFamily="sans-serif">ACTIVE PROJECTS</text>
+
+                      {/* ── Project card 1 ── */}
+                      <rect x="8" y="85" width="74" height="22" rx="6" fill="#111827" stroke="#1e293b" strokeWidth="0.7"/>
+                      {/* Color tag */}
+                      <rect x="8" y="85" width="4" height="22" rx="6" fill="#8b5cf6"/>
+                      <rect x="8" y="89" width="4" height="14" fill="#8b5cf6"/>
+                      <text x="17" y="93" fontSize="5.5" fill="#e2e8f0" fontWeight="700" fontFamily="sans-serif">ShopFlow App</text>
+                      <text x="17" y="100" fontSize="4.5" fill="#64748b" fontFamily="sans-serif">Flutter · Firebase</text>
+                      {/* Progress */}
+                      <rect x="17" y="103" width="44" height="2.5" rx="1.2" fill="#1e293b"/>
+                      <rect x="17" y="103" width="32" height="2.5" rx="1.2" fill="#8b5cf6" fillOpacity="0.8"/>
+                      <text x="63" y="106" fontSize="4" fill="#8b5cf6" fontWeight="700" fontFamily="monospace">72%</text>
+
+                      {/* ── Project card 2 ── */}
+                      <rect x="8" y="110" width="74" height="22" rx="6" fill="#111827" stroke="#1e293b" strokeWidth="0.7"/>
+                      <rect x="8" y="110" width="4" height="22" rx="6" fill="#22c55e"/>
+                      <rect x="8" y="114" width="4" height="14" fill="#22c55e"/>
+                      <text x="17" y="118" fontSize="5.5" fill="#e2e8f0" fontWeight="700" fontFamily="sans-serif">HealthTrack</text>
+                      <text x="17" y="125" fontSize="4.5" fill="#64748b" fontFamily="sans-serif">React Native · Node</text>
+                      <rect x="17" y="128" width="44" height="2.5" rx="1.2" fill="#1e293b"/>
+                      <rect x="17" y="128" width="40" height="2.5" rx="1.2" fill="#22c55e" fillOpacity="0.8"/>
+                      <text x="63" y="131" fontSize="4" fill="#22c55e" fontWeight="700" fontFamily="monospace">90%</text>
+
+                      {/* ── Mini chart area ── */}
+                      <rect x="8" y="135" width="74" height="22" rx="6" fill="#0a0f1e" stroke="#1e293b" strokeWidth="0.7"/>
+                      <text x="12" y="142" fontSize="4.5" fill="#64748b" fontWeight="700" letterSpacing="0.05em" fontFamily="sans-serif">COMMITS THIS WEEK</text>
+                      {/* Bar chart bars */}
                       {[
-                        { y: 38, accent: "#22c55e", w1: 28, w2: 42 },
-                        { y: 60, accent: "#3b82f6", w1: 20, w2: 46 },
-                        { y: 82, accent: "#a855f7", w1: 34, w2: 36 },
-                      ].map((card, idx) => (
-                        <g key={idx}>
-                          <rect x="11" y={card.y} width="66" height="18" rx="6" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
-                          <rect x="15" y={card.y + 4} width={card.w1} height="3.5" rx="1.5" fill={card.accent} fillOpacity="0.85"/>
-                          <rect x="15" y={card.y + 10} width={card.w2} height="3" rx="1.5" fill="#475569"/>
-                        </g>
+                        { x: 12, h: 6, c: "#334155"  },
+                        { x: 19, h: 10, c: "#22c55e"  },
+                        { x: 26, h: 7,  c: "#334155"  },
+                        { x: 33, h: 13, c: "#22c55e"  },
+                        { x: 40, h: 8,  c: "#334155"  },
+                        { x: 47, h: 15, c: "#22c55e"  },
+                        { x: 54, h: 11, c: "#4ade80"  },
+                        { x: 61, h: 9,  c: "#334155"  },
+                        { x: 68, h: 14, c: "#22c55e"  },
+                      ].map((b, i) => (
+                        <rect key={i} x={b.x} y={153 - b.h} width="5" height={b.h} rx="1.5" fill={b.c} fillOpacity="0.9"/>
                       ))}
-                      {[
-                        { x: 11, color: "#22c55e" },
-                        { x: 34, color: "#3b82f6" },
-                        { x: 57, color: "#a855f7" },
-                      ].map((s, i) => (
-                        <g key={i}>
-                          <rect x={s.x} y="105" width="20" height="16" rx="5" fill={s.color} fillOpacity="0.12" stroke={s.color} strokeOpacity="0.28" strokeWidth="0.8"/>
-                          <rect x={s.x + 4} y="109" width="12" height="3" rx="1.5" fill={s.color} fillOpacity="0.6"/>
-                          <rect x={s.x + 4} y="114" width="9" height="2" rx="1" fill="#475569"/>
-                        </g>
-                      ))}
-                      <rect x="11" y="127" width="66" height="18" rx="6" fill="#1e293b" stroke="#334155" strokeWidth="0.8"/>
-                      {[16, 37, 57].map((x, i) => (
-                        <rect key={i} x={x} y="132" width="12" height="8" rx="2.5" fill={i === 0 ? "#22c55e" : "#334155"} fillOpacity={i === 0 ? 0.35 : 0.5}/>
-                      ))}
-                      <rect x="30" y="153" width="28" height="2.5" rx="2" fill="#334155"/>
-                      <rect x="85" y="0" width="3" height="176" rx="2" fill="white" fillOpacity="0.025"/>
+
+                      {/* ── Tab bar ── */}
+                      <rect x="5" y="158" width="80" height="8" fill="#060d1a"/>
+                      <line x1="5" y1="158" x2="85" y2="158" stroke="#1e293b" strokeWidth="0.5"/>
+                      {/* Tab icons (simplified shapes) */}
+                      <rect x="13" y="161" width="8" height="3" rx="1.5" fill="#22c55e" fillOpacity="0.9"/>
+                      <circle cx="38" cy="162.5" r="2.5" fill="#1e293b" stroke="#334155" strokeWidth="0.6"/>
+                      <circle cx="52" cy="162.5" r="2.5" fill="#1e293b" stroke="#334155" strokeWidth="0.6"/>
+                      <rect x="65" y="160.5" width="8" height="4" rx="2" fill="#1e293b" stroke="#334155" strokeWidth="0.6"/>
+                      <circle cx="17" cy="167" r="1" fill="#22c55e"/>
+
+                      {/* Shine overlay */}
+                      <rect x="87" y="0" width="3" height="178" rx="2" fill="white" fillOpacity="0.02"/>
                     </g>
 
-                    {/* ── Ladder ── */}
-                    <line x1="22" y1="284" x2="74" y2="56" stroke="#2d3f5e" strokeWidth="4" strokeLinecap="round"/>
-                    <line x1="62" y1="284" x2="106" y2="82" stroke="#2d3f5e" strokeWidth="4" strokeLinecap="round"/>
-                    {[
-                      { y: 262, x1: 25, x2: 65 },
-                      { y: 234, x1: 30, x2: 70 },
-                      { y: 206, x1: 36, x2: 76 },
-                      { y: 178, x1: 42, x2: 84 },
-                      { y: 150, x1: 49, x2: 91 },
-                      { y: 122, x1: 55, x2: 97 },
-                      { y: 96,  x1: 61, x2: 103 },
-                    ].map((r, i) => (
-                      <line key={i} x1={r.x1} y1={r.y} x2={r.x2} y2={r.y} stroke="#3d5278" strokeWidth="2.5" strokeLinecap="round"/>
-                    ))}
-
-                    {/* ── Person ── */}
-                    <ellipse cx="44" cy="285" rx="22" ry="4.5" fill="#000" fillOpacity="0.4"/>
-
+                    {/* ── Person: body ── */}
                     {/* Back leg */}
-                    <path d="M 78 182 Q 70 165 62 150" stroke="#1d4ed8" strokeWidth="7.5" strokeLinecap="round" fill="none"/>
-                    <ellipse cx="61" cy="149" rx="7" ry="4" fill="#1e3a8a" transform="rotate(-20 61 149)"/>
-
+                    <path d="M 76 232 Q 68 252 62 275" stroke="#16a34a" strokeWidth="8" strokeLinecap="round" fill="none"/>
+                    <ellipse cx="61" cy="277" rx="8" ry="4.5" fill="#15803d" transform="rotate(-10 61 277)"/>
                     {/* Front leg */}
-                    <path d="M 86 182 Q 82 170 80 158" stroke="#1d4ed8" strokeWidth="7.5" strokeLinecap="round" fill="none"/>
-                    <ellipse cx="79" cy="157" rx="7" ry="4" fill="#1e3a8a" transform="rotate(-25 79 157)"/>
+                    <path d="M 86 232 Q 84 255 82 275" stroke="#16a34a" strokeWidth="8" strokeLinecap="round" fill="none"/>
+                    <ellipse cx="81.5" cy="277" rx="8" ry="4.5" fill="#15803d" transform="rotate(-5 81.5 277)"/>
+
+                    {/* Ground shadow */}
+                    <ellipse cx="74" cy="282" rx="28" ry="5" fill="#d1fae5" fillOpacity="0.6"/>
 
                     {/* Torso */}
-                    <rect x="72" y="142" width="24" height="43" rx="9" fill="#22c55e"/>
-                    <rect x="74" y="145" width="9" height="18" rx="4.5" fill="white" fillOpacity="0.09"/>
-                    <rect x="77" y="139" width="14" height="7" rx="3.5" fill="#16a34a"/>
+                    <rect x="62" y="188" width="30" height="46" rx="11" fill="#22c55e"/>
+                    {/* Shirt highlight */}
+                    <rect x="64" y="191" width="11" height="22" rx="5" fill="white" fillOpacity="0.1"/>
 
-                    {/* Right arm — reaching up */}
-                    <path d="M 96 150 Q 116 132 122 112" stroke="#fbbf24" strokeWidth="6.5" strokeLinecap="round" fill="none"/>
+                    {/* ── RIGHT arm — raised, pointing up toward phone ── */}
+                    <path d="M 92 198 Q 108 178 118 158" stroke="#fbbf24" strokeWidth="7" strokeLinecap="round" fill="none"/>
                     {/* Right hand */}
-                    <circle cx="124" cy="109" r="5.5" fill="#fbbf24"/>
+                    <circle cx="120" cy="155" r="6" fill="#fbbf24"/>
+                    {/* Extended index finger */}
+                    <rect x="118" y="141" width="4" height="12" rx="2" fill="#fbbf24"/>
 
-                    {/* Left arm */}
-                    <path d="M 72 150 Q 55 144 46 136" stroke="#fbbf24" strokeWidth="6.5" strokeLinecap="round" fill="none"/>
-                    <circle cx="44" cy="134" r="5" fill="#fbbf24"/>
+                    {/* ── LEFT arm — bent, holding coffee cup ── */}
+                    <path d="M 62 200 Q 44 210 34 222" stroke="#fbbf24" strokeWidth="7" strokeLinecap="round" fill="none"/>
+                    {/* Left hand */}
+                    <circle cx="32" cy="224" r="6" fill="#fbbf24"/>
 
-                    {/* Neck */}
-                    <rect x="78" y="132" width="12" height="11" rx="6" fill="#fbbf24"/>
-
-                    {/* Head */}
-                    <ellipse cx="84" cy="122" rx="14" ry="13" fill="#fbbf24"/>
-                    {/* Hair */}
-                    <path d="M 70 120 Q 72 104 84 102 Q 96 102 98 116 Q 96 108 84 108 Q 74 108 70 120Z" fill="#1f2937"/>
-                    {/* Eyes */}
-                    <circle cx="78.5" cy="121" r="2.2" fill="#1f2937"/>
-                    <circle cx="89.5" cy="121" r="2.2" fill="#1f2937"/>
-                    <circle cx="79.3" cy="120.2" r="0.9" fill="white"/>
-                    <circle cx="90.3" cy="120.2" r="0.9" fill="white"/>
-                    {/* Smile */}
-                    <path d="M 78 128 Q 84 133 90 128" stroke="#1f2937" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-                    {/* Eyebrows */}
-                    <path d="M 75 116 Q 78.5 113.5 82 115.5" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
-                    <path d="M 86 115.5 Q 89.5 113.5 93 116" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
-
-                    {/* Hard hat */}
-                    <ellipse cx="84" cy="111" rx="16" ry="7" fill="#facc15"/>
-                    <rect x="69" y="105" width="30" height="9" rx="4.5" fill="#eab308"/>
-                    <rect x="70" y="108" width="28" height="5" rx="2.5" fill="#facc15"/>
-                    <rect x="67" y="113" width="34" height="2" rx="1" fill="#ca8a04" fillOpacity="0.4"/>
-
-                    {/* Arrow callout */}
-                    <path
-                      d="M 14 80 Q 28 52 56 40"
-                      stroke="#22c55e"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeDasharray="5 3"
-                      fill="none"
+                    {/* ── Coffee cup (held in left hand) ── */}
+                    {/* Glow behind cup */}
+                    <ellipse
+                      className="cup-glow"
+                      cx="22" cy="238" rx="16" ry="14"
+                      fill="rgba(251,191,36,0.22)"
                     />
-                    <polygon points="56,40 46,38 50,48" fill="#22c55e"/>
+                    {/* Cup body */}
+                    <path d="M 12 228 L 14 258 Q 14 262 18 262 L 28 262 Q 32 262 32 258 L 34 228 Z" fill="#fffbeb" stroke="#fde68a" strokeWidth="1"/>
+                    {/* Cup gradient wash */}
+                    <path d="M 12 228 L 13 244 Q 22 249 34 244 L 34 228 Z" fill="#fef9c3" fillOpacity="0.5"/>
+                    {/* Cup rim */}
+                    <rect x="11" y="225" width="24" height="5" rx="2.5" fill="#fde68a"/>
+                    {/* Handle */}
+                    <path d="M 32 236 Q 40 236 40 244 Q 40 252 32 252" stroke="#fde68a" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+                    {/* Logo on cup */}
+                    <circle cx="22" cy="246" r="5" fill="#fef08a" fillOpacity="0.7"/>
+                    <text x="22" y="249" textAnchor="middle" fontSize="5.5" fill="#92400e" fontWeight="700">GT</text>
+                    {/* Coffee liquid surface */}
+                    <ellipse cx="22" cy="230" rx="9" ry="2.5" fill="#78350f" fillOpacity="0.7"/>
+                    {/* Steam wisps */}
+                    <path className="steam-1" d="M 17 225 Q 15 219 17 214 Q 19 209 17 204" stroke="#d97706" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.6"/>
+                    <path className="steam-2" d="M 22 223 Q 20 217 22 212 Q 24 207 22 202" stroke="#d97706" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.55"/>
+                    <path className="steam-3" d="M 27 225 Q 25 219 27 214 Q 29 209 27 204" stroke="#d97706" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.5"/>
+                    {/* Warm glow under cup */}
+                    <ellipse cx="22" cy="263" rx="11" ry="3" fill="#fef9c3" fillOpacity="0.5"/>
 
-                    {/* Callout bubble */}
-                    <rect x="0" y="84" width="82" height="38" rx="10" fill="#0d2218" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
-                    <polygon points="24,84 32,76 40,84" fill="#0d2218"/>
-                    <line x1="24" y1="84" x2="32" y2="76" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
-                    <line x1="32" y1="76" x2="40" y2="84" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.7"/>
-                    <text x="41" y="99" textAnchor="middle" fontSize="7.5" fill="#22c55e" fontFamily="'SF Mono',monospace" fontWeight="700" letterSpacing="0.5">
-                      Gemeda builds
-                    </text>
-                    <text x="41" y="111" textAnchor="middle" fontSize="7" fill="#86efac" fontFamily="'SF Mono',monospace">
-                      smart apps ✦
-                    </text>
+                    {/* ── Neck + Head ── */}
+                    <rect x="72" y="177" width="12" height="12" rx="5" fill="#fbbf24"/>
+                    {/* Head — tilted up slightly */}
+                    <ellipse cx="80" cy="164" rx="16" ry="15" fill="#fbbf24"/>
+                    {/* Hair */}
+                    <path d="M 64 161 Q 65 144 80 142 Q 95 142 96 158 Q 93 148 80 148 Q 67 148 64 161Z" fill="#1f2937"/>
+                    {/* Eyes — looking up */}
+                    <ellipse cx="74" cy="160" rx="2.5" ry="2" fill="#1f2937"/>
+                    <ellipse cx="86" cy="160" rx="2.5" ry="2" fill="#1f2937"/>
+                    <circle cx="74.8" cy="159.2" r="1" fill="white"/>
+                    <circle cx="86.8" cy="159.2" r="1" fill="white"/>
+                    {/* Raised eyebrows (looking up) */}
+                    <path d="M 71 155 Q 74.5 152.5 78 154.5" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+                    <path d="M 82 154.5 Q 85.5 152.5 89 155" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+                    {/* Smile */}
+                    <path d="M 74 168 Q 80 173 86 168" stroke="#1f2937" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+
+                    {/* ── Hard hat ── */}
+                    <ellipse cx="80" cy="151" rx="17" ry="7.5" fill="#facc15"/>
+                    <rect x="64" y="145" width="32" height="9" rx="5" fill="#eab308"/>
+                    <rect x="65" y="148" width="30" height="5" rx="2.5" fill="#facc15"/>
+                    <rect x="62" y="153" width="36" height="2" rx="1" fill="#ca8a04" fillOpacity="0.4"/>
+
+                    {/* Callout bubble from phone toward head */}
+                    <path d="M 106 68 Q 96 90 90 118" stroke="#22c55e" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="4.5 3" fill="none"/>
+                    <polygon points="90,118 82,110 96,108" fill="#22c55e"/>
+
+                    {/* Chat bubble */}
+                    <rect x="0" y="30" width="92" height="38" rx="10" fill="#f0fdf4" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.5"/>
+                    <polygon points="20,68 30,60 40,68" fill="#f0fdf4"/>
+                    <line x1="20" y1="68" x2="30" y2="60" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.5"/>
+                    <line x1="30" y1="60" x2="40" y2="68" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.5"/>
+                    <text x="46" y="46" textAnchor="middle" fontSize="7.5" fill="#16a34a" fontFamily="'SF Mono',monospace" fontWeight="700">Gemeda builds</text>
+                    <text x="46" y="58" textAnchor="middle" fontSize="7" fill="#22c55e" fontFamily="'SF Mono',monospace">smart apps</text>
+
+                    {/* Progress arc badge */}
+                    <g transform="translate(166,46)">
+                      <circle cx="0" cy="0" r="12" fill="#f0fdf4" stroke="#bbf7d0" strokeWidth="1.2"/>
+                      <path d="M 0 -12 A 12 12 0 0 1 10.4 6" stroke="#22c55e" strokeWidth="2.4" fill="none" strokeLinecap="round"/>
+                      <text x="0" y="4" textAnchor="middle" fontSize="6" fill="#16a34a" fontFamily="monospace" fontWeight="700">76%</text>
+                    </g>
 
                     {/* Floating code symbols */}
-                    <text x="8"   y="52"  fontSize="9.5" fill="#22c55e" fillOpacity="0.55" fontFamily="monospace">{"</>"}</text>
-                    <text x="158" y="68"  fontSize="9"   fill="#3b82f6" fillOpacity="0.5"  fontFamily="monospace">{"{ }"}</text>
-                    <text x="4"   y="168" fontSize="9"   fill="#a855f7" fillOpacity="0.5"  fontFamily="monospace">{"fn()"}</text>
-                    <text x="160" y="120" fontSize="9"   fill="#22c55e" fillOpacity="0.5"  fontFamily="monospace">{"tsx"}</text>
-                    <text x="155" y="152" fontSize="9"   fill="#fbbf24" fillOpacity="0.45" fontFamily="monospace">{"⚡"}</text>
+                    <text x="0"   y="20"  fontSize="9"   fill="#22c55e" fillOpacity="0.3" fontFamily="monospace">{"</>"}</text>
+                    <text x="162" y="86"  fontSize="8.5" fill="#16a34a" fillOpacity="0.28" fontFamily="monospace">{"{ }"}</text>
+                    <text x="0"   y="188" fontSize="8.5" fill="#22c55e" fillOpacity="0.28" fontFamily="monospace">{"fn()"}</text>
+                    <text x="163" y="130" fontSize="8.5" fill="#15803d" fillOpacity="0.28" fontFamily="monospace">{"tsx"}</text>
 
-                    {/* Sparkle stars */}
-                    <g fill="#22c55e" fillOpacity="0.45">
-                      <polygon points="170,44 172,38 174,44 168,40 176,40"/>
-                      <polygon points="6,228 7.5,224 9,228 5,226 11,226" transform="scale(0.8)"/>
-                    </g>
-                    <circle cx="164" cy="180" r="1.5" fill="#3b82f6" fillOpacity="0.5"/>
-                    <circle cx="7"   cy="195" r="1.5" fill="#22c55e" fillOpacity="0.4"/>
+                    {/* Stars / sparkles */}
+                    <polygon points="173,38 175,32 177,38 171,35 179,35" fill="#22c55e" fillOpacity="0.3"/>
+                    <circle cx="168" cy="178" r="1.5" fill="#22c55e" fillOpacity="0.28"/>
+                    <circle cx="4"   cy="210" r="1.5" fill="#22c55e" fillOpacity="0.22"/>
                   </svg>
                 </div>
 
-                {/* Right side text content */}
+                {/* ── Right content column ── */}
                 <div
-                  className="flex flex-col gap-3 relative z-10"
-                  style={{ padding: "28px 18px 24px 6px", justifyContent: "center" }}
+                  style={{
+                    flex: 1,
+                    padding: "18px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 14,
+                    minWidth: 0,
+                  }}
                 >
+
+                  {/* Capabilities */}
                   <div>
-                    <p
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 700,
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase",
-                        color: "#22c55e",
-                        margin: "0 0 6px",
-                      }}
-                    >
-                      Mobile First
+                    <p style={{ fontSize: 9.5, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 7px" }}>
+                      Capabilities
                     </p>
-                    <p
-                      style={{
-                        fontSize: 13.5,
-                        fontWeight: 600,
-                        color: "#f1f5f9",
-                        lineHeight: 1.45,
-                        margin: 0,
-                      }}
-                    >
-                      Beautiful apps built with Flutter &amp; React Native
-                    </p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                      {[
+                        { label: "Cross-platform iOS & Android", check: true  },
+                        { label: "60fps buttery animations",      check: true  },
+                        { label: "Offline-ready local DB",        check: true  },
+                        { label: "Push notifications",            check: true  },
+                        { label: "Biometric authentication",      check: true  },
+                        { label: "Real-time Firestore sync",      check: true  },
+                        { label: "App Store & Play Store ready",  check: true  },
+                        { label: "REST & GraphQL integration",    check: true  },
+                        { label: "CI/CD with GitHub Actions",     check: true  },
+                        { label: "Unit & widget testing",         check: true  },
+                      ].map((f) => (
+                        <div key={f.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          {/* Tick icon */}
+                          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ flexShrink: 0 }}>
+                            <circle cx="6.5" cy="6.5" r="6" fill="#f0fdf4" stroke="#bbf7d0" strokeWidth="0.8"/>
+                            <path d="M 3.8 6.5 L 5.6 8.3 L 9.2 4.7" stroke="#22c55e" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                          </svg>
+                          <span style={{ fontSize: 10.5, color: "#374151", lineHeight: 1.4 }}>{f.label}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Tech pills */}
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {["Flutter", "Dart", "React Native", "Firebase"].map((t) => (
-                      <span
-                        key={t}
+                  {/* Workflow */}
+                  <div>
+                    <p style={{ fontSize: 9.5, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 6px" }}>
+                      Workflow
+                    </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 3, flexWrap: "wrap" }}>
+                      {["Design", "Develop", "Test", "Deploy"].map((step, i, arr) => (
+                        <div key={step} style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                          <span
+                            style={{
+                              fontSize: 9.5,
+                              fontWeight: 600,
+                              padding: "3px 8px",
+                              borderRadius: 20,
+                              background: i === arr.length - 1 ? "#22c55e" : "#f9fafb",
+                              color: i === arr.length - 1 ? "#fff" : "#6b7280",
+                              border: i === arr.length - 1 ? "none" : "1px solid #e5e7eb",
+                            }}
+                          >
+                            {step}
+                          </span>
+                          {i < arr.length - 1 && (
+                            <span style={{ fontSize: 10, color: "#d1d5db" }}>→</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Code snippet */}
+                  <div
+                    style={{
+                      background: "#0f172a",
+                      border: "1px solid #1e293b",
+                      borderRadius: 10,
+                      padding: "9px 12px",
+                      fontFamily: "'SF Mono', ui-monospace, monospace",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5f57", display: "inline-block" }}/>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ffbd2e", display: "inline-block" }}/>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#28c940", display: "inline-block" }}/>
+                    </div>
+                    <p style={{ fontSize: 9, margin: 0, lineHeight: 1.6 }}>
+                      <span style={{ color: "#f97316" }}>Widget</span>{" "}
+                      <span style={{ color: "#e2e8f0" }}>build</span>
+                      <span style={{ color: "#64748b" }}>(</span>
+                      <span style={{ color: "#7dd3fc" }}>BuildContext</span>{" "}
+                      <span style={{ color: "#e2e8f0" }}>ctx</span>
+                      <span style={{ color: "#64748b" }}>) {"{"}</span>
+                    </p>
+                    <p style={{ fontSize: 9, margin: 0, lineHeight: 1.6, paddingLeft: 12 }}>
+                      <span style={{ color: "#22c55e" }}>return</span>{" "}
+                      <span style={{ color: "#fbbf24" }}>GestureDetector</span>
+                      <span style={{ color: "#64748b" }}>(...);</span>
+                    </p>
+                    <p style={{ fontSize: 9, margin: 0, lineHeight: 1.6, color: "#64748b" }}>{"}"}</p>
+                  </div>
+
+                  {/* App store badges */}
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {[
+                      {
+                        label: "App Store",
+                        icon: (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="#f1f5f9">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                          </svg>
+                        ),
+                      },
+                      {
+                        label: "Play Store",
+                        icon: (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="#22c55e">
+                            <path d="M3.18 23.76c.3.17.64.22.99.13l12.4-7.17-2.78-2.78-10.61 9.82zm16.35-10.43c.43-.25.7-.7.7-1.33s-.27-1.08-.68-1.33L17.6 9.5 14.56 12.5l3.04 3c.3-.18 1.61-.95 1.93-1.17zM2.83.29C2.5.06 2.1-.04 1.71.11L14.29 12.5 3.18.17c-.12.03-.24.08-.35.12zM3.18.24L14.29 11.5l2.78-2.77L4.17.11c-.35-.09-.69-.04-.99.13z"/>
+                          </svg>
+                        ),
+                      },
+                    ].map((b) => (
+                      <div
+                        key={b.label}
                         style={{
-                          fontSize: 10,
-                          fontWeight: 600,
-                          padding: "3px 9px",
-                          borderRadius: 6,
-                          background: "#1e293b",
-                          color: "#94a3b8",
-                          border: "1px solid #334155",
+                          flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+                          gap: 5, background: "#111827", borderRadius: 8,
+                          padding: "5px 10px", border: "1px solid #1e293b",
                         }}
                       >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Feature list */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                    {["Cross-platform", "60fps animations", "Offline-ready"].map((f) => (
-                      <div key={f} style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                        <div
-                          style={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: "50%",
-                            background: "#22c55e",
-                            flexShrink: 0,
-                          }}
-                        />
-                        <span style={{ fontSize: 11.5, color: "#64748b" }}>{f}</span>
+                        {b.icon}
+                        <span style={{ fontSize: 9, color: "#f1f5f9", fontWeight: 600 }}>{b.label}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Badge */}
+                  {/* Open to work badge */}
                   <div
                     style={{
-                      marginTop: 4,
-                      display: "inline-flex",
+                      display: "flex",
                       alignItems: "center",
-                      gap: 6,
-                      background: "#0d2218",
-                      border: "1px solid #22c55e44",
-                      borderRadius: 8,
-                      padding: "5px 10px",
-                      width: "fit-content",
+                      justifyContent: "space-between",
+                      background: "#f0fdf4",
+                      border: "1px solid #bbf7d0",
+                      borderRadius: 10,
+                      padding: "8px 12px",
                     }}
                   >
-                    <span style={{ fontSize: 11, color: "#22c55e", fontWeight: 700 }}>
-                      ✦ Gemeda can build this for you
-                    </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span
+                        className="live-dot"
+                        style={{
+                          width: 7, height: 7, borderRadius: "50%",
+                          background: "#22c55e",
+                          boxShadow: "0 0 0 3px rgba(34,197,94,0.2)",
+                          flexShrink: 0, display: "inline-block",
+                        }}
+                      />
+                      <span style={{ fontSize: 10, color: "#16a34a", fontWeight: 700 }}>
+                        Open to new projects
+                      </span>
+                    </div>
+                    {/* Tick verify icon */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <circle cx="7" cy="7" r="6.5" fill="#22c55e"/>
+                        <path d="M 4 7 L 6.2 9.2 L 10 5.4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                      </svg>
+                      <span style={{ fontSize: 10, color: "#22c55e", fontWeight: 600 }}>
+                        Verified
+                      </span>
+                    </div>
                   </div>
+
                 </div>
               </div>
             </div>
-
           </div>
+          {/* ══════════ END RIGHT ══════════ */}
+
         </div>
       </div>
     </section>
