@@ -1,23 +1,26 @@
 export const personalInfo = {
   name: "Gemeda Tamiru Golo",
-  title: "Full-Stack Developer | Mobile & Web Engineer | Flutter Specialist",
+  title: "Software Engineer | Full-Stack Developer | Flutter Specialist",
   email: "gemeda.tamiru@example.com",
   location: "Addis Ababa, Ethiopia",
-  bio: "Passionate Full-Stack and Mobile Developer specializing in React, Next.js, Flutter, and scalable enterprise applications. Currently pursuing Software Engineering at Jimma Institute of Technology, expected to graduate in 2026. Certified intern at Eagle Lion Systems, contributor to Debo Engineering mobile solutions, and advanced Flutter trainee at YAI Software Technologies.",
+  bio: "Software Engineer specializing in React, Next.js, Flutter, and scalable enterprise applications. Graduated with a BSc in Software Engineering from Jimma Institute of Technology (Jimma University) in June 2026. Certified intern at Eagle Lion Systems, contributor to Debo Engineering mobile solutions, and advanced Flutter trainee at YAI Software Technologies.",
   resumeUrl: "/resume.pdf",
   profileImage: "/images/profile.jpg",
   graduationYear: "2026",
-  university: "Jimma Institute of Technology"
+  graduationDate: "June 25, 2026",
+  graduationStatus: "Graduated",
+  university: "Jimma University - Jimma Institute of Technology",
+  degree: "BSc in Software Engineering"
 }
 
 export const skills = {
   frontend: ["React", "Next.js", "Flutter", "React Native"],
-  backend: ["Node.js", "Express","PHP"],
-  databases: ["MongoDB","MySQL", "Firebase"],
-  tools: ["Git", "Figma", "VS Code", "Postman","Swagger"],
+  backend: ["Node.js", "Express", "PHP"],
+  databases: ["MongoDB", "MySQL", "Firebase"],
+  tools: ["Git", "Figma", "VS Code", "Postman", "Swagger"],
   languages: ["JavaScript", "TypeScript", "Dart", "Python", "Java", "C++", "PHP"],
   mobile: ["Flutter", "React Native", "Android (Java)"],
-  architecture: ["Clean Architecture","MVC"],
+  architecture: ["Clean Architecture", "MVC"],
   flutterAdvanced: ["Advanced Flutter Architecture", "State Management (BLoC/Provider)", "Custom Widgets", "Performance Optimization", "Flutter Testing", "CI/CD for Flutter", "Flutter Modular Development"]
 }
 
@@ -66,27 +69,26 @@ export const experience = [
   },
   {
     company: "Jimma Institute of Technology",
-    role: "Software Engineering Student (Expected 2026)",
-    period: "2022 - Present",
+    role: "BSc Software Engineering Program",
+    period: "2022 - 2026",
     location: "Jimma, Ethiopia",
     description: [
-      "Pursuing Bachelor of Science in Software Engineering with focus on full-stack and mobile development",
-      "Completed CBT (Community Based Training) projects including E-Edir digital platform",
-      "Maintained high academic standing while working on industry projects"
+      "Completed the four-year Software Engineering program at Jimma Institute of Technology",
+      "Recognized by faculty for strong analytical and problem-solving skills and exceptional understanding of core software engineering concepts",
+      "Demonstrated proficiency in C++, Java, Python, and web development technologies"
     ],
     achievements: [
-      "Developed multiple production-ready applications",
-      "Collaborated with peers on team projects",
-      "Selected for competitive internship opportunities"
+      "Graduated June 25, 2026",
+      "Received a formal letter of recommendation from the Software Engineering Program Coordinator"
     ]
   },
   {
     company: "Jimma Institute of Technology",
-    role: "Teaching Fellow Students - C++ Programming",
-    period: "2023 - Present",
+    role: "Teaching Fellow - C++ Programming",
+    period: "2023 - 2025",
     location: "Jimma, Ethiopia",
     description: [
-      "Mentored 200+ pre - engineering students in C++ programming fundamentals",
+      "Mentored 200+ pre-engineering students in C++ programming fundamentals",
       "Conducted weekly lab sessions and assisted in course material development",
       "Created interactive worksheets and coding exercises",
       "Provided one-on-one tutoring and debugging assistance"
@@ -94,24 +96,83 @@ export const experience = [
     technologies: ["C++", "Problem Solving", "Algorithms", "Data Structures"],
     achievements: [
       "Improved student pass rates by 25%",
-      "Developed comprehensive C++ worksheet platform",
-      "Recognized for exceptional Teaching fellow studnets performance"
+      "Developed a comprehensive C++ worksheet platform",
+      "Recognized for exceptional teaching fellow performance"
     ]
   }
 ]
 
 export const education = [
   {
-    institution: "Jimma Institute of Technology",
+    institution: "Jimma University - Jimma Institute of Technology",
     degree: "Bachelor of Science in Software Engineering",
     period: "2022 - 2026",
     location: "Jimma, Ethiopia",
-    description: "Expected graduation in 2026. Coursework includes Data Structures, Algorithms, Web Development, Mobile Development, Database Systems, and Software Architecture.",
-    gpa: "3.6/4.0",
+    description: "Graduated June 25, 2026 from the Faculty of Computing and Informatics. A four-year program covering the full software engineering lifecycle — from low-level programming and data structures through system design, mobile/web development, and applied AI.",
+    status: "Graduated",
+    focusAreas: [
+      "Full-Stack Web Development",
+      "Mobile Application Development",
+      "Software Architecture & Design Patterns",
+      "Database Systems"
+    ],
+    yearBreakdown: [
+      {
+        year: "Year 1 (2022 - 2023)",
+        title: "Programming & Computing Foundations",
+        courses: [
+          "Introduction to Computer Science",
+          "C++ Programming",
+          "Discrete Mathematics",
+          "Digital Logic Design",
+          "Computer Organization & Architecture"
+        ]
+      },
+      {
+        year: "Year 2 (2023 - 2024)",
+        title: "Core Software Engineering",
+        courses: [
+          "Data Structures & Algorithms",
+          "Object-Oriented Programming (Java)",
+          "Database Management Systems",
+          "Operating Systems",
+          "Software Requirements Engineering"
+        ]
+      },
+      {
+        year: "Year 3 (2024 - 2025)",
+        title: "Systems, Networks & Applied Development",
+        courses: [
+          "Software Architecture & Design",
+          "Web Development",
+          "Mobile Application Development",
+          "Computer Networks (incl. Cisco Networking Academy tracks)",
+          "Software Testing & Quality Assurance"
+        ]
+      },
+      {
+        year: "Year 4 (2025 - 2026)",
+        title: "Advanced Topics & Capstone",
+        courses: [
+          "Artificial Intelligence",
+          "Machine Learning",
+          "Distributed Systems",
+          "Software Project Management",
+          "Senior Capstone Project"
+        ]
+      }
+    ],
+    capstoneProject: {
+      title: "E-Edir Platform",
+      description: "Full-stack Next.js application digitizing the traditional Ethiopian communal fund (Edir) system, built as part of Community Based Training (CBT), with secure authentication, payment integration, and role-based management."
+    },
     achievements: [
-      "Active participant in CBT projects",
-      "Teaching fellow studnets for C++ course",
-      "Member of Software Engineering Student Association"
+      "Active participant in CBT (Community Based Training) projects, including the E-Edir digital platform",
+      "Teaching Fellow for the C++ course, mentoring 200+ students",
+      "Member of the Software Engineering Association",
+      "Completed Cisco Networking Academy tracks in networking, cybersecurity, and IoT security",
+      "Completed Deep Learning coursework through the AI Center at Jimma University",
+      "Received a letter of recommendation from the Software Engineering Program Coordinator"
     ]
   }
 ]
@@ -155,6 +216,22 @@ export const training = [
 ]
 
 export const certificates = [
+  {
+    name: "BSc in Software Engineering - Jimma University",
+    issuer: "Jimma University, Office of the Registrar",
+    date: "2026-06-25",
+    description: "Officially conferred degree upon graduation from the Software Engineering program, Faculty of Computing and Informatics.",
+    status: "Graduated",
+    image: "/images/certificates/jimma-university-graduation-certificate.jpg"
+  },
+  {
+    name: "Letter of Recommendation - Software Engineering Program Coordinator",
+    issuer: "Jimma Institute of Technology, Department of Software Engineering",
+    date: "2026-06-26",
+    issuedBy: "Alemisa Endebu (MSc), Software Engineering Program Coordinator",
+    description: "Formal recommendation highlighting strong analytical and problem-solving skills, proficiency in C++, Java, Python, and web development, and excellent communication and collaboration skills.",
+    image: "/images/certificates/recommendation-letter-jimma.jpg"
+  },
   {
     name: "Internship Completion - Eagle Lion Systems",
     issuer: "Eagle Lion Systems",
@@ -250,6 +327,23 @@ export const featuredProjects = [
 
 export const achievements = [
   {
+    title: "BSc in Software Engineering - Jimma University",
+    description: "Graduated from the Software Engineering program at Jimma Institute of Technology.",
+    date: "2026-06-25",
+    issuer: "Jimma University",
+    type: "Academic Achievement",
+    status: "Graduated",
+    image: "/images/achievements/jimma-university-graduation-certificate.jpg"
+  },
+  {
+    title: "Letter of Recommendation - Software Engineering Program Coordinator",
+    description: "Received a formal letter of recommendation praising strong analytical and problem-solving skills, technical proficiency, and communication and collaboration abilities.",
+    date: "2026-06-26",
+    issuer: "Alemisa Endebu (MSc), Jimma Institute of Technology",
+    type: "Academic Achievement",
+    image: "/images/achievements/recommendation-letter-jimma.jpg"
+  },
+  {
     title: "Eagle Lion Systems Internship Certificate",
     description: "Recognized for strong commitment, valuable technical skills, and excellent communication during mobile development internship",
     credentialId: "f758a319-970e-4979-85c8-9404c5b8afe3",
@@ -281,14 +375,14 @@ export const achievements = [
     status: "In Progress"
   },
   {
-    title: "C++ Teaching fellow studnets Excellence",
+    title: "C++ Teaching Fellow Excellence",
     description: "Mentored 200+ students and developed interactive learning materials",
-    date: "2023 - Present",
+    date: "2023 - 2025",
     issuer: "Jimma Institute of Technology",
     type: "Academic Achievement",
     highlights: [
       "25% improvement in student pass rates",
-      "Created C++ worksheet platform"
+      "Created a C++ worksheet platform"
     ]
   }
 ]
@@ -312,13 +406,19 @@ export const contactInfo = {
     "Full-Stack Developer",
     "Frontend Developer",
     "Flutter Specialist",
-    "Software Engineering Intern"
+    "Software Engineer"
   ],
   workPreference: "Remote / Hybrid / On-site",
   noticePeriod: "Immediate"
 }
 
 export const testimonials = [
+  {
+    name: "Alemisa Endebu, MSc",
+    role: "Software Engineering Program Coordinator",
+    quote: "Gemeda consistently impressed with strong analytical and problem-solving skills and an exceptional understanding of core software engineering courses, showing a real talent for applying complex concepts to real-world development challenges.",
+    company: "Jimma Institute of Technology"
+  },
   {
     name: "Mr. Henok",
     role: "Mentor, Eagle Lion Systems",
@@ -328,7 +428,7 @@ export const testimonials = [
   {
     name: "Dr. Abebe",
     role: "C++ Course Instructor",
-    quote: "As a Teaching fellow studnets, Gemeda showed remarkable patience and teaching ability, helping hundreds of students master programming fundamentals.",
+    quote: "As a Teaching Fellow, Gemeda showed remarkable patience and teaching ability, helping hundreds of students master programming fundamentals.",
     company: "Jimma Institute of Technology"
   },
   {
@@ -344,12 +444,22 @@ export const stats = {
   internshipHours: 520,
   studentsMentored: 200,
   technologiesMastered: 18,
-  certificatesEarned: 3,
+  certificatesEarned: 5,
   activeProjects: 3,
   trainingCompleted: 1
 }
 
 export const careerHighlights = [
+  {
+    year: "2026",
+    title: "Graduated with BSc in Software Engineering",
+    description: "Graduated from Jimma University on June 25, 2026"
+  },
+  {
+    year: "2026",
+    title: "Received Letter of Recommendation",
+    description: "Recommended by the Software Engineering Program Coordinator for outstanding academic performance, technical skills, and collaboration abilities"
+  },
   {
     year: "2025",
     title: "Advanced Flutter Training - YAI Software Technologies",
@@ -368,7 +478,7 @@ export const careerHighlights = [
   {
     year: "2023-2025",
     title: "Teaching Excellence",
-    description: "Mentored 200+ students as C++ Teaching fellow studnets"
+    description: "Mentored 200+ students as a C++ Teaching Fellow"
   }
 ]
 

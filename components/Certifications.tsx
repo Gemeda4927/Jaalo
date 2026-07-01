@@ -1,10 +1,30 @@
-
 'use client';
 import { ExternalLink, CheckCircle } from 'lucide-react'
 
 const CERT_URL = "https://docs.google.com/document/d/1ZEYJ1rtzDDZ5za3y3AkDlfe9UFlqrm2FwkJwZVVntXc/edit?usp=sharing"
 
 const categories = [
+  {
+    label: "Academic",
+    accent: "#0d9488",
+    light: "#f0fdfa",
+    border: "#99f6e4",
+    dot: "#0f766e",
+    certs: [
+      {
+        title: "BSc Software Engineering",
+        description: "Bachelor's degree conferred upon graduation from the Software Engineering program",
+        issuer: "Jimma University",
+        year: "2026",
+      },
+      {
+        title: "Letter of Recommendation",
+        description: "Formal recommendation for academic excellence, technical skills & collaboration",
+        issuer: "Jimma Institute of Technology",
+        year: "2026",
+      },
+    ],
+  },
   {
     label: "Mobile Development",
     accent: "#22c55e",
@@ -90,7 +110,7 @@ const categories = [
       {
         title: "Internship Certificate",
         description: "Professional software engineering in a production environment",
-        issuer: "Egelion System Technologies",
+        issuer: "Eagle Lion Systems",
         year: "2025",
       },
     ],

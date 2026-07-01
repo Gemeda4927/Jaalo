@@ -4,6 +4,7 @@ import Projects from '@/components/Projects'
 import Skills from '@/components/Skills'
 import Certifications from '@/components/Certifications'  // Add this
 import Contact from '@/components/Contact'
+import GoogledToday from '@/components/Googledtoday'
 
 export default function Home() {
   return (
@@ -12,7 +13,8 @@ export default function Home() {
       <About />
       <Projects />
       <Skills />
-      <Certifications />  
+      <Certifications />
+      <GoogledToday/> 
       <Contact />
     </div>
   )

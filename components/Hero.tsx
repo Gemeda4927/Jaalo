@@ -1,17 +1,16 @@
 "use client";
 import { personalInfo, socialLinks } from "@/lib/data";
-import { Github, Linkedin, Mail, ArrowRight, Code } from "lucide-react";
+import { Github, Linkedin, Mail, ArrowRight, Code, GraduationCap } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Hero() {
   const [currentRole, setCurrentRole] = useState(0);
 
   const roles = [
+    "Software Engineer",
     "Full-Stack Developer",
+    "Flutter Specialist",
     "Mobile App Developer",
-    "UI/UX Enthusiast",
-    "Open Source Contributor",
-    "Tech Innovator",
     "Problem Solver",
   ];
 
@@ -61,6 +60,75 @@ export default function Hero() {
         .steam-3 { animation: floatSteam 2.1s ease-in-out infinite 0.7s; }
         .cup-glow { animation: glowPulse 2.6s ease-in-out infinite; }
         .live-dot { animation: blinkDot 1.6s ease-in-out infinite; }
+
+        /* ── Responsive: hero action buttons ── */
+        .hero-actions {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+        @media (max-width: 420px) {
+          .hero-actions {
+            flex-direction: column;
+          }
+          .hero-actions > a {
+            width: 100%;
+          }
+        }
+
+        /* ── Responsive: panel card body (illustration + content) ── */
+        .hero-card-body {
+          display: flex;
+          align-items: stretch;
+        }
+        @media (max-width: 680px) {
+          .hero-card-body {
+            flex-direction: column;
+          }
+        }
+
+        .hero-illustration {
+          flex-shrink: 0;
+          padding: 20px 4px 20px 14px;
+          background: linear-gradient(180deg, #fafffe 0%, #f0fdf4 100%);
+          border-right: 1px solid #e5e7eb;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        @media (max-width: 680px) {
+          .hero-illustration {
+            border-right: none;
+            border-bottom: 1px solid #e5e7eb;
+            width: 100%;
+            padding: 18px;
+          }
+        }
+
+        .hero-illustration svg {
+          width: 100%;
+          max-width: 188px;
+          height: auto;
+          display: block;
+        }
+
+        .hero-content-col {
+          flex: 1;
+          min-width: 0;
+          padding: 18px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        /* ── Responsive: degree badge wraps cleanly ── */
+        .hero-degree-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
       `}</style>
 
       {/* Subtle grid */}
@@ -99,16 +167,25 @@ export default function Hero() {
               >
                 Gemeda Tamiru
               </h1>
-              <div
-                key={currentRole}
-                className="role-badge inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium w-fit"
-                style={{ background: "#f0fdf4", color: "#16a34a" }}
-              >
+              <div className="flex flex-wrap items-center gap-2">
+                <div
+                  key={currentRole}
+                  className="role-badge inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium w-fit"
+                  style={{ background: "#f0fdf4", color: "#16a34a" }}
+                >
+                  <span
+                    className="w-1 h-4 rounded-sm inline-block"
+                    style={{ background: "#22c55e" }}
+                  />
+                  {roles[currentRole]}
+                </div>
                 <span
-                  className="w-1 h-4 rounded-sm inline-block"
-                  style={{ background: "#22c55e" }}
-                />
-                {roles[currentRole]}
+                  className="hero-degree-badge text-xs font-medium px-3 py-1.5 rounded-md w-fit"
+                  style={{ background: "#f9fafb", color: "#6b7280", border: "1px solid #e5e7eb" }}
+                >
+                  <GraduationCap size={13} style={{ color: "#9ca3af" }} />
+                  BSc Software Engineering · Jimma University
+                </span>
               </div>
             </div>
 
@@ -117,11 +194,12 @@ export default function Hero() {
               <span className="font-semibold" style={{ color: "#22c55e" }}>
                 digital experiences
               </span>{" "}
-              that blend beautiful design with powerful functionality. Full-stack
-              expertise delivering clean code and innovative solutions.
+              that blend beautiful design with powerful functionality. Recently graduated
+              with a BSc in Software Engineering, I bring full-stack expertise across React,
+              Next.js, Flutter, and React Native — delivering clean code and innovative solutions.
             </p>
 
-            <div className="flex flex-row gap-3">
+            <div className="hero-actions">
               <a
                 href="/projects"
                 className="flex items-center justify-center gap-2 text-[13px] font-semibold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:-translate-y-0.5"
@@ -156,7 +234,7 @@ export default function Hero() {
               >
                 Connect with me
               </p>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {[
                   { icon: Github,   href: socialLinks.github,            label: "GitHub"   },
                   { icon: Linkedin, href: socialLinks.linkedin,           label: "LinkedIn" },
@@ -183,10 +261,10 @@ export default function Hero() {
           </div>
 
           {/* ══════════ RIGHT — PANEL ══════════ */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
 
             {/* Top label row */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div
                   className="live-dot"
@@ -224,6 +302,8 @@ export default function Hero() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: 8,
                 }}
               >
                 <div>
@@ -241,20 +321,10 @@ export default function Hero() {
               </div>
 
               {/* Body */}
-              <div style={{ display: "flex", alignItems: "stretch" }}>
+              <div className="hero-card-body">
 
                 {/* ── SVG Illustration column ── */}
-                <div
-                  style={{
-                    flexShrink: 0,
-                    padding: "20px 4px 20px 14px",
-                    background: "linear-gradient(180deg, #fafffe 0%, #f0fdf4 100%)",
-                    borderRight: "1px solid #e5e7eb",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                <div className="hero-illustration">
                   {/* Person holding glowing coffee, looking up at phone */}
                   <svg viewBox="0 0 210 310" width="188" height="278" xmlns="http://www.w3.org/2000/svg" style={{ display: "block", overflow: "visible" }}>
 
@@ -286,7 +356,7 @@ export default function Hero() {
                       <text x="21" y="60" textAnchor="middle" fontSize="6.5" fill="#4ade80" fontWeight="700">GT</text>
                       {/* Name + role */}
                       <text x="33" y="54" fontSize="6" fill="#f0fdf4" fontWeight="700" fontFamily="sans-serif">Gemeda T.</text>
-                      <text x="33" y="62" fontSize="5" fill="#4ade80" fontFamily="sans-serif">Full-Stack Dev</text>
+                      <text x="33" y="62" fontSize="5" fill="#4ade80" fontFamily="sans-serif">Software Engineer</text>
                       {/* Online dot */}
                       <circle cx="27" cy="49" r="2.2" fill="#22c55e" stroke="#0d2a14" strokeWidth="0.8"/>
                       {/* Verified badge */}
@@ -461,16 +531,7 @@ export default function Hero() {
                 </div>
 
                 {/* ── Right content column ── */}
-                <div
-                  style={{
-                    flex: 1,
-                    padding: "18px 16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 14,
-                    minWidth: 0,
-                  }}
-                >
+                <div className="hero-content-col">
 
                   {/* Capabilities */}
                   <div>
@@ -539,6 +600,7 @@ export default function Hero() {
                       borderRadius: 10,
                       padding: "9px 12px",
                       fontFamily: "'SF Mono', ui-monospace, monospace",
+                      overflowX: "auto",
                     }}
                   >
                     <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
@@ -546,7 +608,7 @@ export default function Hero() {
                       <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ffbd2e", display: "inline-block" }}/>
                       <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#28c940", display: "inline-block" }}/>
                     </div>
-                    <p style={{ fontSize: 9, margin: 0, lineHeight: 1.6 }}>
+                    <p style={{ fontSize: 9, margin: 0, lineHeight: 1.6, whiteSpace: "nowrap" }}>
                       <span style={{ color: "#f97316" }}>Widget</span>{" "}
                       <span style={{ color: "#e2e8f0" }}>build</span>
                       <span style={{ color: "#64748b" }}>(</span>
@@ -554,7 +616,7 @@ export default function Hero() {
                       <span style={{ color: "#e2e8f0" }}>ctx</span>
                       <span style={{ color: "#64748b" }}>) {"{"}</span>
                     </p>
-                    <p style={{ fontSize: 9, margin: 0, lineHeight: 1.6, paddingLeft: 12 }}>
+                    <p style={{ fontSize: 9, margin: 0, lineHeight: 1.6, paddingLeft: 12, whiteSpace: "nowrap" }}>
                       <span style={{ color: "#22c55e" }}>return</span>{" "}
                       <span style={{ color: "#fbbf24" }}>GestureDetector</span>
                       <span style={{ color: "#64748b" }}>(...);</span>
@@ -563,7 +625,7 @@ export default function Hero() {
                   </div>
 
                   {/* App store badges */}
-                  <div style={{ display: "flex", gap: 6 }}>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     {[
                       {
                         label: "App Store",
@@ -585,7 +647,7 @@ export default function Hero() {
                       <div
                         key={b.label}
                         style={{
-                          flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+                          flex: "1 1 100px", display: "flex", alignItems: "center", justifyContent: "center",
                           gap: 5, background: "#111827", borderRadius: 8,
                           padding: "5px 10px", border: "1px solid #1e293b",
                         }}
@@ -602,6 +664,8 @@ export default function Hero() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      flexWrap: "wrap",
+                      gap: 8,
                       background: "#f0fdf4",
                       border: "1px solid #bbf7d0",
                       borderRadius: 10,

@@ -323,10 +323,10 @@ export default function AboutComponent() {
   ];
 
   const infoItems = [
-    { icon: MapPin,        label: "Location",  value: personalInfo.location                  },
-    { icon: GraduationCap, label: "Education", value: "Jimma Institute of Technology (2026)" },
-    { icon: Briefcase,     label: "Status",    value: "Open to Opportunities"                },
-    { icon: Globe,         label: "Languages", value: "English, Amharic, Afan Oromo"         },
+    { icon: MapPin,        label: "Location",  value: personalInfo.location                          },
+    { icon: GraduationCap, label: "Education", value: "BSc Software Engineering, Jimma University"    },
+    { icon: Briefcase,     label: "Status",    value: "Open to Opportunities"                         },
+    { icon: Globe,         label: "Languages", value: "English, Amharic, Afan Oromo"                  },
   ];
 
   const col: React.CSSProperties = { display: "flex", flexDirection: "column" };
@@ -428,10 +428,10 @@ export default function AboutComponent() {
                 {activeTab === "background" && (
                   <div style={{ ...col, gap: 16 }}>
                     <p style={{ fontSize: 12.5, lineHeight: 1.75, color: "#374151" }}>
-                      I'm a dedicated Full-Stack and Mobile App Developer with a journey that started
-                      in C++ programming and evolved into mastering modern web and mobile
-                      technologies. Currently pursuing Software Engineering at Jimma Institute
-                      of Technology (expected 2026).
+                      I'm a Software Engineer whose journey started in C++ programming and
+                      evolved into building modern web and mobile products. I hold a BSc in
+                      Software Engineering from Jimma Institute of Technology (Jimma University),
+                      graduating in June 2026.
                     </p>
                     <div className="ab-highlight">
                       With hands-on experience at{" "}
@@ -483,20 +483,26 @@ export default function AboutComponent() {
                       <div style={{ ...col, gap: 24 }}>
                         {[
                           {
+                            year: "2026",
+                            title: "Graduated - BSc Software Engineering",
+                            company: "Jimma University",
+                            points: ["Degree Conferred", "Letter of Recommendation Received"],
+                          },
+                          {
                             year: "2025 - Present",
                             title: "Dual Mobile Development",
                             company: "Eagle Lion Systems & Debo Engineering",
                             points: ["Flutter Development", "React Native", "Enterprise Apps"],
                           },
                           {
-                            year: "2023 - Present",
-                            title: "Teaching Fellow Students",
+                            year: "2023 - 2025",
+                            title: "Teaching Fellow",
                             company: "Jimma Institute of Technology",
                             points: ["200+ Students Mentored", "C++ Programming", "Lab Sessions"],
                           },
                           {
                             year: "2022 - 2026",
-                            title: "Software Engineering Student",
+                            title: "Software Engineering",
                             company: "Jimma Institute of Technology",
                             points: ["Full-Stack Focus", "Mobile Development"],
                           },
