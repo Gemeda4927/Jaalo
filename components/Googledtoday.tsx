@@ -123,6 +123,7 @@ function pickSearches(): SearchItem[] {
 }
 
 // ===== COFFEE CUP COMPONENT =====
+
 function CoffeeCup3D() {
   const ref = useRef<HTMLCanvasElement>(null);
   const raf = useRef<number | null>(null);
@@ -132,10 +133,13 @@ function CoffeeCup3D() {
     if (!cv) return;
     
     const ctx = cv.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) return; // Early return if ctx is null
     
-    cv.width = 260; cv.height = 260;
-    const W = cv.width, H = cv.height, cx = W / 2;
+    cv.width = 260;
+    cv.height = 260;
+    const W = cv.width;
+    const H = cv.height;
+    const cx = W / 2;
 
     const steam = [
       { ox: -22, phase: 0.0, freq: 0.013, amp: 7 },
@@ -145,24 +149,184 @@ function CoffeeCup3D() {
 
     function frame(ms: number) {
       const t = ms / 1000;
-      ctx.clearRect(0, 0, W, H);
+      // TypeScript knows ctx exists because we're in the useEffect scope
+      // but we need to use the non-null assertion operator
+      ctx!.clearRect(0, 0, W, H);
       const baseY = H * 0.72;
-      const bob   = Math.sin(t * 0.55) * 3;
+      const bob = Math.sin(t * 0.55) * 3;
 
-      // ... rest of the drawing code (keep as is) ...
-      
-      // Just a simplified version for brevity - keep your original drawing code here
+      // Coffee cup base shadow
       for (let r = 80; r > 12; r -= 6) {
         const a = (80 - r) / 80;
-        ctx.beginPath();
-        ctx.arc(cx, baseY + bob, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,130,20,${a * 0.07})`;
-        ctx.fill();
+        ctx!.beginPath();
+        ctx!.arc(cx, baseY + bob, r, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(200,130,20,${a * 0.07})`;
+        ctx!.fill();
       }
 
-      // ... keep all your original drawing code ...
-      // (I'm keeping it short for the example, but you should keep your full implementation)
+      // Shadow on surface
+      ctx!.beginPath();
+      ctx!.ellipse(cx + 3, baseY + bob + 9, 46, 7, 0, 0, Math.PI * 2);
+      ctx!.fillStyle = "rgba(0,0,0,0.15)";
+      ctx!.fill();
+
+      const saY = baseY + bob;
       
+      // Cup rim
+      ctx!.beginPath();
+      ctx!.ellipse(cx, saY, 48, 10, 0, 0, Math.PI * 2);
+      const sg = ctx!.createLinearGradient(cx - 48, 0, cx + 48, 0);
+      sg.addColorStop(0, "#7a5010");
+      sg.addColorStop(0.35, "#d4b888");
+      sg.addColorStop(0.65, "#c8a060");
+      sg.addColorStop(1, "#6a3a08");
+      ctx!.fillStyle = sg;
+      ctx!.fill();
+      ctx!.strokeStyle = "#6a3a08";
+      ctx!.lineWidth = 1.5;
+      ctx!.stroke();
+      
+      // Rim highlight
+      ctx!.beginPath();
+      ctx!.ellipse(cx - 6, saY - 2, 30, 4, 0, 0, Math.PI);
+      ctx!.strokeStyle = "rgba(255,255,255,0.3)";
+      ctx!.lineWidth = 1;
+      ctx!.stroke();
+
+      const cupTop = H * 0.48 + bob;
+      const cupBot = saY - 2;
+      const TW = 30;
+      const BW = 40;
+
+      // Handle left side
+      ctx!.beginPath();
+      ctx!.moveTo(cx - TW, cupTop);
+      ctx!.lineTo(cx - TW - 11, cupTop + 7);
+      ctx!.lineTo(cx - BW - 11, cupBot + 5);
+      ctx!.lineTo(cx - BW, cupBot);
+      ctx!.closePath();
+      ctx!.fillStyle = "#3a1800";
+      ctx!.fill();
+      ctx!.strokeStyle = "#2a1000";
+      ctx!.lineWidth = 1;
+      ctx!.stroke();
+
+      // Handle bottom
+      ctx!.beginPath();
+      ctx!.moveTo(cx - BW, cupBot);
+      ctx!.lineTo(cx - BW - 11, cupBot + 5);
+      ctx!.lineTo(cx + BW - 11, cupBot + 5);
+      ctx!.lineTo(cx + BW, cupBot);
+      ctx!.closePath();
+      ctx!.fillStyle = "#2a1000";
+      ctx!.fill();
+
+      // Cup body
+      ctx!.beginPath();
+      ctx!.moveTo(cx - TW, cupTop);
+      ctx!.lineTo(cx + TW, cupTop);
+      ctx!.lineTo(cx + BW, cupBot);
+      ctx!.lineTo(cx - BW, cupBot);
+      ctx!.closePath();
+      const fg = ctx!.createLinearGradient(cx - BW, 0, cx + BW, 0);
+      fg.addColorStop(0, "#8a5820");
+      fg.addColorStop(0.22, "#e8d4a8");
+      fg.addColorStop(0.55, "#d8c090");
+      fg.addColorStop(0.82, "#b88840");
+      fg.addColorStop(1, "#6a3808");
+      ctx!.fillStyle = fg;
+      ctx!.fill();
+      ctx!.strokeStyle = "#6a3808";
+      ctx!.lineWidth = 1.5;
+      ctx!.stroke();
+
+      // Body highlight
+      ctx!.beginPath();
+      ctx!.moveTo(cx + TW * 0.3, cupTop);
+      ctx!.lineTo(cx + BW * 0.3, cupBot);
+      ctx!.strokeStyle = "rgba(255,255,255,0.1)";
+      ctx!.lineWidth = 2;
+      ctx!.stroke();
+
+      // Coffee surface
+      ctx!.beginPath();
+      ctx!.ellipse(cx, cupTop, TW, 7, 0, 0, Math.PI * 2);
+      ctx!.fillStyle = "#1e0802";
+      ctx!.fill();
+      ctx!.strokeStyle = "#7a5010";
+      ctx!.lineWidth = 1.5;
+      ctx!.stroke();
+
+      // Crema swirl
+      const sw = t * 0.35;
+      for (let i = 0; i < 3; i++) {
+        const a = sw + i * 2.1;
+        const rx = Math.cos(a) * 9;
+        const ry = Math.sin(a) * 2.5;
+        ctx!.beginPath();
+        ctx!.ellipse(cx + rx, cupTop + ry, 7 + i * 1.5, 2, a * 0.5, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(140,70,10,${0.25 - i * 0.06})`;
+        ctx!.fill();
+      }
+      
+      // Crema highlight
+      ctx!.beginPath();
+      ctx!.ellipse(cx - 7, cupTop - 1, 9, 2, -0.5, 0, Math.PI * 2);
+      ctx!.fillStyle = "rgba(255,255,255,0.12)";
+      ctx!.fill();
+
+      // Handle right side
+      const hx = cx + BW;
+      const hy1 = cupTop + 16 + bob;
+      const hy2 = cupBot - 16 + bob;
+      ctx!.beginPath();
+      ctx!.moveTo(hx, hy1);
+      ctx!.bezierCurveTo(hx + 30, hy1, hx + 30, hy2, hx, hy2);
+      ctx!.strokeStyle = "#a06828";
+      ctx!.lineWidth = 5.5;
+      ctx!.lineCap = "round";
+      ctx!.stroke();
+      ctx!.beginPath();
+      ctx!.moveTo(hx, hy1 + 2);
+      ctx!.bezierCurveTo(hx + 18, hy1 + 2, hx + 18, hy2 - 2, hx, hy2 - 2);
+      ctx!.strokeStyle = "rgba(220,180,100,0.3)";
+      ctx!.lineWidth = 2;
+      ctx!.stroke();
+
+      // Text labels
+      ctx!.save();
+      ctx!.font = "700 7.5px 'Courier New', monospace";
+      ctx!.fillStyle = "rgba(50,25,0,0.55)";
+      ctx!.textAlign = "center";
+      const midY = (cupTop + cupBot) / 2 + bob;
+      ctx!.fillText("GEMEDA", cx - 2, midY);
+      ctx!.font = "500 6px 'Courier New', monospace";
+      ctx!.fillStyle = "rgba(50,25,0,0.38)";
+      ctx!.fillText("ESPRESSO", cx - 2, midY + 11);
+      ctx!.restore();
+
+      // Steam
+      steam.forEach(s => {
+        for (let i = 0; i < 7; i++) {
+          const cycle = (t * s.freq * 50 + s.phase + i * 0.55) % 1;
+          const sx = cx + s.ox + Math.sin(cycle * Math.PI * 2.5 + s.phase) * s.amp;
+          const sy = cupTop - 10 - cycle * 50;
+          const alpha = cycle < 0.2 ? (cycle / 0.2) * 0.5 : (1 - cycle) * 0.5;
+          const r = 4 + cycle * 12;
+          ctx!.beginPath();
+          ctx!.arc(sx, sy, r, 0, Math.PI * 2);
+          ctx!.fillStyle = `rgba(210,190,165,${alpha})`;
+          ctx!.fill();
+        }
+      });
+
+      // Bottom glow
+      ctx!.beginPath();
+      ctx!.ellipse(cx, saY + 8, 38, 5, 0, 0, Math.PI * 2);
+      ctx!.strokeStyle = "rgba(220,140,20,0.18)";
+      ctx!.lineWidth = 4;
+      ctx!.stroke();
+
       raf.current = requestAnimationFrame(frame);
     }
 
@@ -174,6 +338,7 @@ function CoffeeCup3D() {
 
   return <canvas ref={ref} style={{ display: "block", margin: "0 auto" }} />;
 }
+
 
 // ===== CHESS GAME COMPONENT =====
 type Piece = string | null;
