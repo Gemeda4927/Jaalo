@@ -1,30 +1,16 @@
 'use client';
-import { ExternalLink, CheckCircle } from 'lucide-react'
+import { ExternalLink, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
-const CERT_URL = "https://docs.google.com/document/d/1ZEYJ1rtzDDZ5za3y3AkDlfe9UFlqrm2FwkJwZVVntXc/edit?usp=sharing"
+// ── Helper: generate slug ──
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
 
 const categories = [
-  {
-    label: "Academic",
-    accent: "#0d9488",
-    light: "#f0fdfa",
-    border: "#99f6e4",
-    dot: "#0f766e",
-    certs: [
-      {
-        title: "BSc Software Engineering",
-        description: "Bachelor's degree conferred upon graduation from the Software Engineering program",
-        issuer: "Jimma University",
-        year: "2026",
-      },
-      {
-        title: "Letter of Recommendation",
-        description: "Formal recommendation for academic excellence, technical skills & collaboration",
-        issuer: "Jimma Institute of Technology",
-        year: "2026",
-      },
-    ],
-  },
   {
     label: "Mobile Development",
     accent: "#22c55e",
@@ -110,12 +96,12 @@ const categories = [
       {
         title: "Internship Certificate",
         description: "Professional software engineering in a production environment",
-        issuer: "Eagle Lion Systems",
+        issuer: "Egelion System Technologies",
         year: "2025",
       },
     ],
   },
-]
+];
 
 export default function Certifications() {
   return (
@@ -214,104 +200,106 @@ export default function Certifications() {
                   gap: 12,
                 }}
               >
-                {cat.certs.map((cert, i) => (
-                  <a
-                    key={i}
-                    href={CERT_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <div
-                      style={{
-                        background: "#fafafa",
-                        border: `1px solid #f1f5f9`,
-                        borderTop: `2.5px solid ${cat.accent}`,
-                        borderRadius: "0 0 12px 12px",
-                        padding: "16px 16px 13px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 8,
-                        height: "100%",
-                        transition: "background 0.15s, box-shadow 0.15s",
-                      }}
-                      onMouseEnter={e => {
-                        const el = e.currentTarget as HTMLDivElement
-                        el.style.background = cat.light
-                        el.style.boxShadow = `0 4px 20px rgba(0,0,0,0.06)`
-                      }}
-                      onMouseLeave={e => {
-                        const el = e.currentTarget as HTMLDivElement
-                        el.style.background = "#fafafa"
-                        el.style.boxShadow = "none"
-                      }}
+                {cat.certs.map((cert, i) => {
+                  const slug = generateSlug(cert.title);
+                  return (
+                    <Link
+                      key={i}
+                      href={`/certificate/${slug}`}
+                      style={{ textDecoration: "none" }}
                     >
-                      {/* Title row */}
-                      <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-                        <CheckCircle
-                          size={14}
-                          strokeWidth={2.5}
-                          style={{ color: cat.accent, flexShrink: 0, marginTop: 2 }}
-                        />
-                        <span
-                          style={{
-                            fontSize: 13.5,
-                            fontWeight: 700,
-                            color: "#0f172a",
-                            lineHeight: 1.35,
-                          }}
-                        >
-                          {cert.title}
-                        </span>
-                      </div>
-
-                      {/* Description */}
-                      <p
-                        style={{
-                          fontSize: 12,
-                          color: "#64748b",
-                          margin: 0,
-                          lineHeight: 1.6,
-                          flex: 1,
-                        }}
-                      >
-                        {cert.description}
-                      </p>
-
-                      {/* Footer */}
                       <div
                         style={{
+                          background: "#fafafa",
+                          border: `1px solid #f1f5f9`,
+                          borderTop: `2.5px solid ${cat.accent}`,
+                          borderRadius: "0 0 12px 12px",
+                          padding: "16px 16px 13px",
                           display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          paddingTop: 10,
-                          borderTop: "1px solid #f1f5f9",
-                          marginTop: 2,
+                          flexDirection: "column",
+                          gap: 8,
+                          height: "100%",
+                          transition: "background 0.15s, box-shadow 0.15s",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={e => {
+                          const el = e.currentTarget as HTMLDivElement
+                          el.style.background = cat.light
+                          el.style.boxShadow = `0 4px 20px rgba(0,0,0,0.06)`
+                        }}
+                        onMouseLeave={e => {
+                          const el = e.currentTarget as HTMLDivElement
+                          el.style.background = "#fafafa"
+                          el.style.boxShadow = "none"
                         }}
                       >
-                        <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>
-                          {cert.issuer}
-                        </span>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        {/* Title row */}
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                          <CheckCircle
+                            size={14}
+                            strokeWidth={2.5}
+                            style={{ color: cat.accent, flexShrink: 0, marginTop: 2 }}
+                          />
                           <span
                             style={{
-                              fontSize: 10.5,
+                              fontSize: 13.5,
                               fontWeight: 700,
-                              color: cat.dot,
-                              background: cat.light,
-                              border: `1px solid ${cat.border}`,
-                              borderRadius: 5,
-                              padding: "1px 7px",
+                              color: "#0f172a",
+                              lineHeight: 1.35,
                             }}
                           >
-                            {cert.year}
+                            {cert.title}
                           </span>
-                          <ExternalLink size={11} strokeWidth={2.5} style={{ color: cat.dot }} />
+                        </div>
+
+                        {/* Description */}
+                        <p
+                          style={{
+                            fontSize: 12,
+                            color: "#64748b",
+                            margin: 0,
+                            lineHeight: 1.6,
+                            flex: 1,
+                          }}
+                        >
+                          {cert.description}
+                        </p>
+
+                        {/* Footer */}
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            paddingTop: 10,
+                            borderTop: "1px solid #f1f5f9",
+                            marginTop: 2,
+                          }}
+                        >
+                          <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>
+                            {cert.issuer}
+                          </span>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span
+                              style={{
+                                fontSize: 10.5,
+                                fontWeight: 700,
+                                color: cat.dot,
+                                background: cat.light,
+                                border: `1px solid ${cat.border}`,
+                                borderRadius: 5,
+                                padding: "1px 7px",
+                              }}
+                            >
+                              {cert.year}
+                            </span>
+                            <ExternalLink size={11} strokeWidth={2.5} style={{ color: cat.dot }} />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </a>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -319,10 +307,8 @@ export default function Certifications() {
 
         {/* ── View All ── */}
         <div style={{ display: "flex", justifyContent: "center", marginTop: 52 }}>
-          <a
-            href={CERT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/certificates"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -341,10 +327,10 @@ export default function Certifications() {
             <CheckCircle size={14} strokeWidth={2.5} />
             View All Certificates
             <ExternalLink size={12} strokeWidth={2.5} />
-          </a>
+          </Link>
         </div>
 
       </div>
     </section>
-  )
+  );
 }
