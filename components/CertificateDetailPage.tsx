@@ -4,16 +4,15 @@ import { useState, useEffect } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
-  CheckCircle,
+  CheckCircle2,
   Calendar,
-  Building,
+  Building2,
   Award,
-  FileText,
+  Fingerprint,
   Download,
-  Eye,
-  X,
   ZoomIn,
   Share2,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -75,337 +74,482 @@ export default function CertificateDetailPage({
     <div
       style={{
         minHeight: '100vh',
-        background: '#fafafa',
-        padding: '28px 20px',
+        background: '#F5F8F4',
+        padding: '32px 20px 64px',
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       }}
     >
       <style>{`
-        @keyframes certFadeIn {
-          from { opacity: 0; transform: translateY(6px); }
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+
+        :root {
+          --ink: #0F1D15;
+          --ink-soft: #52655A;
+          --muted: #93A69A;
+          --accent: #16A34A;
+          --accent-deep: #0B5C2E;
+          --accent-light: #E7F7EC;
+          --foil: #A9822F;
+          --foil-light: #F5EDD8;
+          --border: #E2E9DE;
+          --card: #FFFFFF;
+        }
+
+        @keyframes certRise {
+          from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes certLightboxIn {
           from { opacity: 0; transform: scale(0.97); }
           to { opacity: 1; transform: scale(1); }
         }
-        .cert-card-anim { animation: certFadeIn 0.35s ease both; }
+        @keyframes sealSpin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-140%) rotate(20deg); }
+          100% { transform: translateX(140%) rotate(20deg); }
+        }
+        .cert-card-anim { animation: certRise 0.5s cubic-bezier(.2,.8,.2,1) both; }
         .cert-lightbox-anim { animation: certLightboxIn 0.2s ease both; }
+
         .cert-grid {
           display: grid;
-          grid-template-columns: 300px 1fr;
-          gap: 24px;
+          grid-template-columns: 280px 1fr;
+          gap: 32px;
         }
         @media (max-width: 720px) {
           .cert-grid { grid-template-columns: 1fr; }
         }
+
+        .pill-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 7px;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          border-radius: 999px;
+          padding: 10px 17px;
+          cursor: pointer;
+          border: none;
+          transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+        .pill-btn:active { transform: scale(0.97); }
+        .pill-btn:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+
+        .pill-primary {
+          color: #ffffff;
+          background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+          box-shadow: 0 8px 18px rgba(11, 92, 46, 0.28);
+        }
+        .pill-primary:hover {
+          box-shadow: 0 10px 22px rgba(11, 92, 46, 0.36);
+          transform: translateY(-1px);
+        }
+
+        .pill-secondary {
+          color: var(--ink);
+          background: #ffffff;
+          border: 1.5px solid var(--border);
+        }
+        .pill-secondary:hover {
+          border-color: var(--accent);
+          color: var(--accent-deep);
+          transform: translateY(-1px);
+        }
+
+        .seal-ring { animation: sealSpin 16s linear infinite; }
+
+        .seal-wrap { position: relative; overflow: hidden; border-radius: 50%; }
+        .seal-wrap::after {
+          content: '';
+          position: absolute;
+          top: -60%;
+          left: -20%;
+          width: 40%;
+          height: 220%;
+          background: rgba(255,255,255,0.55);
+          filter: blur(2px);
+          opacity: 0;
+        }
+        .cert-card-anim:hover .seal-wrap::after {
+          animation: shimmer 1.1s ease forwards;
+          opacity: 1;
+        }
+
+        .ledger-row {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          padding: 9px 0;
+          border-bottom: 1px dashed var(--border);
+        }
+        .ledger-row:last-child { border-bottom: none; }
+        .ledger-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 10px;
+          font-weight: 600;
+          color: var(--ink-soft);
+          white-space: nowrap;
+        }
+        .ledger-fill {
+          flex: 1;
+          border-bottom: 1px dotted var(--muted);
+          margin-bottom: 3px;
+          opacity: 0.6;
+        }
+        .ledger-value {
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--ink);
+          white-space: nowrap;
+        }
+
+        .frame-corner {
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          border: 2px solid var(--foil);
+          opacity: 0.75;
+        }
+
+        .step-dot { transition: width 0.25s ease, background 0.25s ease, opacity 0.25s ease; }
       `}</style>
 
-      <div style={{ maxWidth: 860, margin: '0 auto' }}>
-        {/* ── Back Button + position ── */}
+      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        {/* ── Header: back pill + step dots ── */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: 18,
+            gap: 14,
+            marginBottom: 24,
             flexWrap: 'wrap',
-            gap: 8,
           }}
         >
-          <Link
-            href="/#certifications"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: 12,
-              fontWeight: 600,
-              color: '#64748b',
-              textDecoration: 'none',
-              padding: '6px 0',
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#0f172a')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#64748b')}
-          >
-            <ArrowLeft size={13} strokeWidth={2.5} />
-            Back to Certifications
+          <Link href="/#certifications" style={{ textDecoration: 'none' }}>
+            <span
+              className="pill-secondary pill-btn"
+              style={{ padding: '7px 14px 7px 10px', fontSize: 10.5 }}
+            >
+              <ArrowLeft size={12} strokeWidth={2.5} />
+              Certifications
+            </span>
           </Link>
 
-          {position.index >= 0 && (
-            <span
-              style={{
-                fontSize: 10.5,
-                fontWeight: 600,
-                color: '#a1a9b8',
-                letterSpacing: '0.03em',
-              }}
-            >
-              {position.index + 1} of {position.total}
-            </span>
+          {position.index >= 0 && position.total > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              {Array.from({ length: position.total }).map((_, i) => (
+                <span
+                  key={i}
+                  className="step-dot"
+                  style={{
+                    height: 5,
+                    width: i === position.index ? 18 : 5,
+                    borderRadius: 999,
+                    background: i === position.index ? certificate.accent : 'var(--border)',
+                    opacity: i === position.index ? 1 : 0.9,
+                  }}
+                />
+              ))}
+              <span
+                style={{
+                  marginLeft: 6,
+                  fontSize: 9.5,
+                  fontWeight: 700,
+                  color: 'var(--muted)',
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >
+                {String(position.index + 1).padStart(2, '0')} / {String(position.total).padStart(2, '0')}
+              </span>
+            </div>
           )}
         </div>
 
-        {/* ── Certificate Card ── */}
+        {/* ── Certificate Plaque ── */}
         <div
           className="cert-card-anim"
           style={{
-            background: '#ffffff',
-            borderRadius: 16,
-            border: `1px solid ${certificate.border}`,
-            boxShadow: '0 8px 28px rgba(15,23,42,0.06)',
+            background: 'var(--card)',
+            borderRadius: 24,
+            border: '1px solid var(--border)',
+            boxShadow: '0 18px 48px rgba(15,29,21,0.07)',
             overflow: 'hidden',
+            position: 'relative',
           }}
         >
-          {/* Header */}
           <div
             style={{
-              background: certificate.light,
-              padding: '16px 22px',
-              borderBottom: `1px solid ${certificate.border}`,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 11,
-              flexWrap: 'wrap',
+              height: 4,
+              width: '100%',
+              background: `linear-gradient(90deg, ${certificate.accent}, var(--accent-deep))`,
             }}
-          >
+          />
+
+          {/* Masthead */}
+          <div style={{ padding: '26px 28px 6px' }}>
             <div
               style={{
-                width: 30,
-                height: 30,
-                borderRadius: '50%',
-                background: certificate.accent,
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: `0 3px 10px ${certificate.accent}45`,
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: 14,
+                flexWrap: 'wrap',
               }}
             >
-              <CheckCircle size={15} strokeWidth={2.5} style={{ color: '#ffffff' }} />
-            </div>
-            <div style={{ flex: 1, minWidth: 160 }}>
+              <div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    fontSize: 9.5,
+                    fontWeight: 700,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    color: 'var(--accent-deep)',
+                    marginBottom: 8,
+                  }}
+                >
+                  <span style={{ width: 14, height: 1.5, background: 'var(--accent)', display: 'inline-block' }} />
+                  {certificate.category}
+                </div>
+                <h1
+                  style={{
+                    fontFamily: "'Fraunces', Georgia, serif",
+                    fontOpticalSizing: 'auto',
+                    fontSize: 24,
+                    fontWeight: 600,
+                    margin: 0,
+                    lineHeight: 1.22,
+                    letterSpacing: '-0.01em',
+                    maxWidth: 540,
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundImage: `linear-gradient(100deg, ${certificate.accent}, var(--accent-deep) 65%)`,
+                      WebkitBackgroundClip: 'text',
+                      backgroundClip: 'text',
+                      color: 'transparent',
+                    }}
+                  >
+                    {certificate.title}
+                  </span>
+                </h1>
+              </div>
+
               <div
                 style={{
-                  fontSize: 9,
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: certificate.dot,
-                  marginBottom: 2,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 5,
+                  background: 'var(--foil-light)',
+                  border: '1px solid #E9DBB2',
+                  borderRadius: 999,
+                  padding: '5px 12px',
+                  flexShrink: 0,
                 }}
               >
-                {certificate.category}
+                <CheckCircle2 size={11} strokeWidth={2.5} style={{ color: 'var(--foil)' }} />
+                <span style={{ fontSize: 9.5, fontWeight: 700, color: '#8A6B22' }}>Verified credential</span>
               </div>
-              <h1
-                style={{
-                  fontSize: 17,
-                  fontWeight: 800,
-                  color: '#0f172a',
-                  margin: 0,
-                  lineHeight: 1.25,
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                {certificate.title}
-              </h1>
-            </div>
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 5,
-                background: '#ffffff',
-                border: `1px solid ${certificate.border}`,
-                borderRadius: 99,
-                padding: '4px 10px',
-              }}
-            >
-              <CheckCircle size={11} strokeWidth={2.5} style={{ color: certificate.accent }} />
-              <span style={{ fontSize: 10, fontWeight: 700, color: certificate.dot }}>Verified</span>
             </div>
           </div>
 
-          {/* ── Body: two-column layout ── */}
-          <div style={{ padding: '20px 22px' }} className="cert-grid">
-            {/* ── LEFT: image + actions ── */}
+          {/* Body: two-column */}
+          <div style={{ padding: '20px 28px 28px' }} className="cert-grid">
+            {/* LEFT: framed image + seal + actions */}
             <div>
               {certificate.imageUrl && (
-                <button
-                  onClick={() => setLightboxOpen(true)}
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    border: `1px solid ${certificate.border}`,
-                    borderRadius: 10,
-                    overflow: 'hidden',
-                    background: '#fafafa',
-                    position: 'relative',
-                    padding: 0,
-                    cursor: 'zoom-in',
-                    transition: 'box-shadow 0.2s',
-                    marginBottom: 12,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = `0 6px 18px ${certificate.accent}25`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                  aria-label="Expand certificate image"
-                >
-                  <Image
-                    src={certificate.imageUrl}
-                    alt={`${certificate.title} Certificate`}
-                    width={300}
-                    height={210}
-                    style={{ width: '100%', height: 'auto', maxHeight: 200, objectFit: 'cover', display: 'block' }}
-                    priority
-                  />
+                <div style={{ position: 'relative', marginBottom: 16 }}>
+                  <button
+                    onClick={() => setLightboxOpen(true)}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      border: '1px solid var(--border)',
+                      borderRadius: 14,
+                      overflow: 'hidden',
+                      background: '#F5F8F4',
+                      position: 'relative',
+                      padding: 0,
+                      cursor: 'zoom-in',
+                      transition: 'box-shadow 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = `0 12px 26px ${certificate.accent}22`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                    aria-label="Expand certificate image"
+                  >
+                    <Image
+                      src={certificate.imageUrl}
+                      alt={`${certificate.title} Certificate`}
+                      width={300}
+                      height={210}
+                      style={{ width: '100%', height: 'auto', maxHeight: 200, objectFit: 'cover', display: 'block' }}
+                      priority
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 8,
+                        right: 8,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        background: 'rgba(15,29,21,0.72)',
+                        backdropFilter: 'blur(6px)',
+                        color: '#fff',
+                        fontSize: 9,
+                        fontWeight: 600,
+                        padding: '4px 8px',
+                        borderRadius: 999,
+                      }}
+                    >
+                      <ZoomIn size={10} strokeWidth={2.5} />
+                      Expand
+                    </div>
+
+                    {/* Ornamental corners — diploma frame cue */}
+                    <span className="frame-corner" style={{ top: 6, left: 6, borderRight: 'none', borderBottom: 'none' }} />
+                    <span className="frame-corner" style={{ top: 6, right: 6, borderLeft: 'none', borderBottom: 'none' }} />
+                    <span className="frame-corner" style={{ bottom: 6, left: 6, borderRight: 'none', borderTop: 'none' }} />
+                    <span className="frame-corner" style={{ bottom: 6, right: 6, borderLeft: 'none', borderTop: 'none' }} />
+                  </button>
+
+                  {/* Foil seal — signature element */}
                   <div
                     style={{
                       position: 'absolute',
-                      bottom: 8,
-                      right: 8,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 4,
-                      background: 'rgba(15,23,42,0.72)',
-                      backdropFilter: 'blur(6px)',
-                      color: '#fff',
-                      fontSize: 9,
-                      fontWeight: 600,
-                      padding: '4px 8px',
-                      borderRadius: 99,
+                      bottom: -16,
+                      right: -12,
+                      width: 54,
+                      height: 54,
+                      transform: 'rotate(-6deg)',
                     }}
                   >
-                    <ZoomIn size={10} strokeWidth={2.5} />
-                    Expand
+                    <svg className="seal-ring" viewBox="0 0 54 54" style={{ position: 'absolute', inset: 0 }}>
+                      <circle
+                        cx="27"
+                        cy="27"
+                        r="25"
+                        fill="none"
+                        stroke="var(--foil)"
+                        strokeWidth="1.4"
+                        strokeDasharray="2.5 4"
+                        opacity="0.65"
+                      />
+                    </svg>
+                    <div
+                      className="seal-wrap"
+                      style={{
+                        position: 'absolute',
+                        inset: 5,
+                        background: 'linear-gradient(150deg, #E8CE86, var(--foil) 70%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 8px 16px rgba(15,29,21,0.22), inset 0 1px 1px rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      <CheckCircle2 size={18} strokeWidth={2.5} style={{ color: '#ffffff' }} />
+                    </div>
                   </div>
-                </button>
+                </div>
               )}
 
-              {/* Actions stacked under image */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                <button
-                  onClick={() => window.print()}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 6,
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: '#ffffff',
-                    background: certificate.accent,
-                    border: 'none',
-                    borderRadius: 8,
-                    padding: '8px 14px',
-                    cursor: 'pointer',
-                    boxShadow: `0 3px 10px ${certificate.accent}35`,
-                  }}
-                >
-                  <Download size={12} strokeWidth={2.5} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 20 }}>
+                <button className="pill-btn pill-primary" onClick={() => window.print()}>
+                  <Download size={13} strokeWidth={2.5} />
                   Download PDF
                 </button>
-
                 <button
+                  className="pill-btn pill-secondary"
                   onClick={handleShare}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 6,
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: '#0f172a',
-                    background: copied ? certificate.light : '#f1f5f9',
-                    border: `1px solid ${copied ? certificate.border : '#e2e8f0'}`,
-                    borderRadius: 8,
-                    padding: '8px 14px',
-                    cursor: 'pointer',
-                    transition: 'background 0.15s',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!copied) e.currentTarget.style.background = '#e2e8f0';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!copied) e.currentTarget.style.background = '#f1f5f9';
-                  }}
+                  style={
+                    copied
+                      ? { background: 'var(--accent-light)', borderColor: '#D6F0DE', color: 'var(--accent-deep)' }
+                      : undefined
+                  }
                 >
-                  <Share2 size={12} strokeWidth={2.5} />
+                  <Share2 size={13} strokeWidth={2.5} />
                   {copied ? 'Link copied!' : 'Share'}
                 </button>
               </div>
             </div>
 
-            {/* ── RIGHT: description + details ── */}
+            {/* RIGHT: description + ledger details */}
             <div>
-              <p style={{ fontSize: 12.5, color: '#334155', lineHeight: 1.6, margin: '0 0 16px' }}>
+              <p style={{ fontSize: 11.5, color: 'var(--ink-soft)', lineHeight: 1.75, margin: '0 0 18px' }}>
                 {certificate.description}
               </p>
 
               <div
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                  gap: 8,
-                  marginBottom: 16,
+                  background: '#FBFCFA',
+                  border: '1px solid var(--border)',
+                  borderRadius: 14,
+                  padding: '6px 16px',
+                  marginBottom: 18,
                 }}
               >
-                <div style={{ background: '#f8fafc', borderRadius: 8, padding: '10px 12px', border: '1px solid #f1f5f9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 3 }}>
-                    <Building size={11} style={{ color: certificate.accent }} />
-                    <span style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      Issuer
-                    </span>
-                  </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#0f172a' }}>{certificate.issuer}</span>
+                <div className="ledger-row">
+                  <span className="ledger-label">
+                    <Building2 size={11} strokeWidth={2.5} style={{ color: 'var(--accent)' }} />
+                    Issuer
+                  </span>
+                  <span className="ledger-fill" />
+                  <span className="ledger-value">{certificate.issuer}</span>
                 </div>
-
-                <div style={{ background: '#f8fafc', borderRadius: 8, padding: '10px 12px', border: '1px solid #f1f5f9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 3 }}>
-                    <Calendar size={11} style={{ color: certificate.accent }} />
-                    <span style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      Year
-                    </span>
-                  </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#0f172a' }}>{certificate.year}</span>
+                <div className="ledger-row">
+                  <span className="ledger-label">
+                    <Calendar size={11} strokeWidth={2.5} style={{ color: 'var(--accent)' }} />
+                    Year
+                  </span>
+                  <span className="ledger-fill" />
+                  <span className="ledger-value">{certificate.year}</span>
                 </div>
-
-                <div style={{ background: '#f8fafc', borderRadius: 8, padding: '10px 12px', border: '1px solid #f1f5f9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 3 }}>
-                    <FileText size={11} style={{ color: certificate.accent }} />
-                    <span style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      Certificate ID
-                    </span>
-                  </div>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: '#0f172a', fontFamily: 'monospace' }}>{slug}</span>
+                <div className="ledger-row">
+                  <span className="ledger-label">
+                    <Fingerprint size={11} strokeWidth={2.5} style={{ color: 'var(--accent)' }} />
+                    Credential ID
+                  </span>
+                  <span className="ledger-fill" />
+                  <span className="ledger-value" style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 500 }}>
+                    {slug}
+                  </span>
                 </div>
               </div>
 
-              <button
-                onClick={() => (window.location.href = '/#certifications')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: '#64748b',
-                  background: 'transparent',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
-                  transition: 'color 0.15s',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#0f172a')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#64748b')}
-              >
-                <Award size={12} strokeWidth={2.5} />
-                View all certificates
-              </button>
+              <Link href="/#certifications" style={{ textDecoration: 'none' }}>
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 5,
+                    fontSize: 10.5,
+                    fontWeight: 700,
+                    color: 'var(--ink-soft)',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-deep)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--ink-soft)')}
+                >
+                  <Award size={12} strokeWidth={2.5} />
+                  View all certificates
+                </span>
+              </Link>
             </div>
           </div>
         </div>
@@ -416,8 +560,8 @@ export default function CertificateDetailPage({
             style={{
               display: 'grid',
               gridTemplateColumns: prev && next ? '1fr 1fr' : '1fr',
-              gap: 10,
-              marginTop: 16,
+              gap: 12,
+              marginTop: 18,
             }}
           >
             {prev && (
@@ -425,29 +569,42 @@ export default function CertificateDetailPage({
                 <div
                   style={{
                     background: '#ffffff',
-                    border: '1px solid #f1f5f9',
-                    borderRadius: 10,
-                    padding: '10px 14px',
+                    border: '1px solid var(--border)',
+                    borderRadius: 16,
+                    padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 8,
-                    transition: 'border-color 0.15s, background 0.15s',
+                    gap: 10,
+                    transition: 'border-color 0.15s, box-shadow 0.15s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = prev.border;
-                    e.currentTarget.style.background = prev.light;
+                    e.currentTarget.style.borderColor = prev.accent;
+                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(15,29,21,0.06)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#f1f5f9';
-                    e.currentTarget.style.background = '#ffffff';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  <ArrowLeft size={13} strokeWidth={2.5} style={{ color: prev.accent, flexShrink: 0 }} />
+                  <div
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: '50%',
+                      background: 'var(--accent-light)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ArrowLeft size={13} strokeWidth={2.5} style={{ color: prev.accent }} />
+                  </div>
                   <div style={{ overflow: 'hidden' }}>
-                    <div style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    <div style={{ fontSize: 8.5, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
                       Previous
                     </div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {prev.title}
                     </div>
                   </div>
@@ -459,34 +616,47 @@ export default function CertificateDetailPage({
                 <div
                   style={{
                     background: '#ffffff',
-                    border: '1px solid #f1f5f9',
-                    borderRadius: 10,
-                    padding: '10px 14px',
+                    border: '1px solid var(--border)',
+                    borderRadius: 16,
+                    padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'flex-end',
-                    gap: 8,
+                    gap: 10,
                     textAlign: 'right',
-                    transition: 'border-color 0.15s, background 0.15s',
+                    transition: 'border-color 0.15s, box-shadow 0.15s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = next.border;
-                    e.currentTarget.style.background = next.light;
+                    e.currentTarget.style.borderColor = next.accent;
+                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(15,29,21,0.06)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#f1f5f9';
-                    e.currentTarget.style.background = '#ffffff';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <div style={{ overflow: 'hidden' }}>
-                    <div style={{ fontSize: 9, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    <div style={{ fontSize: 8.5, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
                       Next
                     </div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {next.title}
                     </div>
                   </div>
-                  <ArrowRight size={13} strokeWidth={2.5} style={{ color: next.accent, flexShrink: 0 }} />
+                  <div
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: '50%',
+                      background: 'var(--accent-light)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ArrowRight size={13} strokeWidth={2.5} style={{ color: next.accent }} />
+                  </div>
                 </div>
               </Link>
             )}
@@ -495,32 +665,45 @@ export default function CertificateDetailPage({
 
         {/* ── Related certificates ── */}
         {related.length > 0 && (
-          <div style={{ marginTop: 28 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#94a3b8', marginBottom: 10 }}>
-              More in {certificate.category}
+          <div style={{ marginTop: 34 }}>
+            <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 12 }}>
+              More in <span style={{ color: 'var(--accent-deep)' }}>{certificate.category}</span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 12 }}>
               {related.map((rel) => (
                 <Link key={rel.slug} href={`/certificate/${rel.slug}`} style={{ textDecoration: 'none' }}>
                   <div
                     style={{
                       background: '#ffffff',
-                      border: '1px solid #f1f5f9',
-                      borderTop: `2px solid ${rel.accent}`,
-                      borderRadius: '0 0 10px 10px',
-                      padding: '10px 12px',
+                      border: '1px solid var(--border)',
+                      borderRadius: 14,
+                      padding: '14px 14px',
                       height: '100%',
-                      transition: 'box-shadow 0.15s',
+                      transition: 'box-shadow 0.15s, transform 0.15s',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 3px 14px rgba(0,0,0,0.05)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.boxShadow = 'none')}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = '0 10px 24px rgba(15,29,21,0.07)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 4 }}>
-                      <CheckCircle size={11} strokeWidth={2.5} style={{ color: rel.accent, flexShrink: 0, marginTop: 2 }} />
-                      <span style={{ fontSize: 11.5, fontWeight: 700, color: '#0f172a', lineHeight: 1.3 }}>{rel.title}</span>
+                    <div
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        background: rel.accent,
+                        marginBottom: 8,
+                      }}
+                    />
+                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.4, marginBottom: 3 }}>
+                      {rel.title}
                     </div>
-                    <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 500 }}>
-                      {rel.issuer} · {rel.year}
+                    <span style={{ fontSize: 9.5, color: 'var(--muted)', fontWeight: 500 }}>
+                      <span style={{ color: rel.accent, fontWeight: 700 }}>{rel.issuer}</span> · {rel.year}
                     </span>
                   </div>
                 </Link>
@@ -530,10 +713,10 @@ export default function CertificateDetailPage({
         )}
 
         {/* ── Footer note ── */}
-        <div style={{ textAlign: 'center', marginTop: 24, fontSize: 10, color: '#94a3b8', letterSpacing: '0.02em' }}>
+        <div style={{ textAlign: 'center', marginTop: 28, fontSize: 9.5, color: 'var(--muted)', letterSpacing: '0.02em' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-            <CheckCircle size={10} strokeWidth={2.5} style={{ color: certificate.accent }} />
-            Verified by {certificate.issuer} · {certificate.year}
+            <CheckCircle2 size={10} strokeWidth={2.5} style={{ color: 'var(--accent)' }} />
+            Verified by <span style={{ color: 'var(--accent-deep)', fontWeight: 700 }}>{certificate.issuer}</span> · {certificate.year}
           </span>
         </div>
       </div>
@@ -546,7 +729,7 @@ export default function CertificateDetailPage({
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(15,23,42,0.85)',
+            background: 'rgba(15,29,21,0.86)',
             backdropFilter: 'blur(6px)',
             display: 'flex',
             alignItems: 'center',
@@ -585,9 +768,9 @@ export default function CertificateDetailPage({
             style={{
               maxWidth: '85vw',
               maxHeight: '80vh',
-              borderRadius: 14,
+              borderRadius: 16,
               overflow: 'hidden',
-              boxShadow: '0 20px 70px rgba(0,0,0,0.5)',
+              boxShadow: '0 24px 70px rgba(0,0,0,0.5)',
               cursor: 'default',
             }}
           >
@@ -618,15 +801,15 @@ export default function CertificateDetailPage({
               gap: 6,
               background: 'rgba(255,255,255,0.1)',
               border: '1px solid rgba(255,255,255,0.18)',
-              borderRadius: 99,
+              borderRadius: 999,
               padding: '6px 14px',
-              color: '#e2e8f0',
-              fontSize: 10.5,
+              color: '#e9ece7',
+              fontSize: 9.5,
               fontWeight: 600,
               letterSpacing: '0.02em',
             }}
           >
-            {certificate.title} · {certificate.issuer}
+            <span style={{ color: certificate.accent, fontWeight: 700 }}>{certificate.title}</span> · {certificate.issuer}
           </div>
         </div>
       )}

@@ -1,5 +1,3 @@
-
-
 export interface Certificate {
   title: string;
   description: string;
@@ -26,10 +24,7 @@ export interface CertificateWithMeta extends Certificate {
   dot: string;
 }
 
-// ── Unified forest-green palette ──
-// Every category lives in the same green family, distinguished by
-// shade rather than hue, so the whole site reads as one coherent
-// system instead of a rainbow of unrelated accent colors.
+
 export const categories: CertificateCategory[] = [
   {
     label: "Academic",
@@ -43,14 +38,14 @@ export const categories: CertificateCategory[] = [
         description: "Bachelor's degree conferred upon graduation from the Software Engineering program",
         issuer: "Jimma University",
         year: "2026",
-        imageUrl: "/certificates/bsc-software-engineering.jpg",
+        imageUrl: "/certificates/bsc-software-engineering.png",
       },
       {
         title: "Letter of Recommendation",
         description: "Formal recommendation for academic excellence, technical skills & collaboration",
         issuer: "Jimma Institute of Technology",
         year: "2026",
-        imageUrl: "/certificates/letter-of-recommendation.jpg",
+        imageUrl: "/certificates/letter-of-recommendation.png",
       },
     ],
   },
@@ -66,14 +61,14 @@ export const categories: CertificateCategory[] = [
         description: "Enterprise-ready architecture, state management & deployment at scale",
         issuer: "Udemy",
         year: "2026",
-        imageUrl: "/certificates/advanced-flutter.jpg",
+        imageUrl: "/certificates/advanced-flutter.png",
       },
       {
         title: "Advanced Mobile App Development",
         description: "Mastery-level cross-platform engineering & performance optimization",
         issuer: "Yai Technologies",
         year: "2026",
-        imageUrl: "/certificates/advanced-mobile-app-dev.jpg",
+        imageUrl: "/certificates/advanced-mobile-app-dev.png",
       },
     ],
   },
@@ -89,21 +84,21 @@ export const categories: CertificateCategory[] = [
         description: "70hr — protocols, infrastructure & network fundamentals",
         issuer: "JU Cisco Networking Academy",
         year: "2025",
-        imageUrl: "/certificates/introduction-to-networks.jpg",
+        imageUrl: "/certificates/introduction-to-networks.png",
       },
       {
         title: "Switching, Routing & Wireless",
         description: "70hr — enterprise routing, VLANs & wireless essentials",
         issuer: "JU Cisco Networking Academy",
         year: "2025",
-        imageUrl: "/certificates/switching-routing-wireless.jpg",
+        imageUrl: "/certificates/switching-routing-wireless.png",
       },
       {
         title: "Enterprise Networking & Automation",
         description: "70hr — security, automation & enterprise architecture",
         issuer: "JU Cisco Networking Academy",
         year: "2025",
-        imageUrl: "/certificates/enterprise-networking-automation.jpg",
+        imageUrl: "/certificates/enterprise-networking-automation.png",
       },
     ],
   },
@@ -119,14 +114,14 @@ export const categories: CertificateCategory[] = [
         description: "Threat detection, risk mitigation & core security principles",
         issuer: "JU Cisco Networking Academy",
         year: "2025",
-        imageUrl: "/certificates/introduction-to-cyber-security.jpg",
+        imageUrl: "/certificates/introduction-to-cyber-security.png",
       },
       {
         title: "IoT Security Fundamentals",
         description: "Security architecture for connected devices & IoT ecosystems",
         issuer: "JU Cisco Networking Academy",
         year: "2024",
-        imageUrl: "/certificates/iot-security-fundamentals.jpg",
+        imageUrl: "/certificates/iot-security-fundamentals.png",
       },
     ],
   },
@@ -142,14 +137,14 @@ export const categories: CertificateCategory[] = [
         description: "Neural networks, model training & applied AI system design",
         issuer: "AI Center, Jimma University",
         year: "2025",
-        imageUrl: "/certificates/introduction-to-deep-learning.jpg",
+        imageUrl: "/certificates/introduction-to-deep-learning.png",
       },
       {
         title: "Internship Certificate",
         description: "Professional software engineering in a production environment",
         issuer: "Eagle Lion Systems",
         year: "2025",
-        imageUrl: "/certificates/internship-certificate.jpg",
+        imageUrl: "/certificates/internship-certificate.png",
       },
     ],
   },
